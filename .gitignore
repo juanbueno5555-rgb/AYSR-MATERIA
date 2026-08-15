@@ -1,0 +1,21 @@
+# VM/disk images and archives (too large for GitHub, >100MB limit)
+*.ova
+*.ovf
+*.vdi
+*.vmdk
+*.vhd
+*.qcow2
+*.iso
+*.7z
+*.sav
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+
+# Credentials — never commit
+CREDENCIALES.md
+.ssh/
+*.key
+*.pem
