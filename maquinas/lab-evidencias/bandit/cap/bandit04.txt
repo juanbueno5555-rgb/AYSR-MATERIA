@@ -1,0 +1,12 @@
+bandit4@bandit:~$ file inhere/* && cat inhere/-file07
+inhere/-file00: data
+inhere/-file01: data
+inhere/-file02: OpenPGP Secret Key
+inhere/-file03: data
+inhere/-file04: data
+inhere/-file05: data
+inhere/-file06: Non-ISO extended-ASCII text, with NEL line terminators
+inhere/-file07: ASCII text
+inhere/-file08: data
+inhere/-file09: data
+6C7h9GD8M6ai5nr7wo1RonrzFjj9yIrG

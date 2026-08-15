@@ -1,0 +1,14 @@
+﻿=== 770 root:IT ===
+drwxrwx---   2 root     IT             3 Aug  5 22:12 /lab-permisos
+=== fabian escribe ===
+Oracle Corporation	SunOS 5.11	11.4	Aug 2018
+FABIAN_OK
+=== claudia escribe ===
+Oracle Corporation	SunOS 5.11	11.4	Aug 2018
+touch: cannot stat /lab-permisos/claudia.txt: Permission denied
+=== fabian lee archivo ===
+Oracle Corporation	SunOS 5.11	11.4	Aug 2018
+=== claudia lee archivo ===
+Oracle Corporation	SunOS 5.11	11.4	Aug 2018
+cat: cannot open /lab-permisos/archivo.txt: Permission denied
+=== chmod simbolico g-w ===

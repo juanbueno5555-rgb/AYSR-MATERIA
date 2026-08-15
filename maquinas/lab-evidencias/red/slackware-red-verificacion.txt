@@ -1,0 +1,24 @@
+﻿==== rc.inet1.conf ====
+==== resolv.conf ====
+nameserver 10.2.65.1
+==== ip addr eth0 ====
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:26:71:a2 brd ff:ff:ff:ff:ff:ff
+    inet 10.2.78.64/16 brd 10.2.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet 10.0.2.15/24 scope global eth0
+       valid_lft forever preferred_lft forever
+==== ip route ====
+default via 10.2.65.1 dev eth0 
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
+10.2.0.0/16 dev eth0 proto kernel scope link src 10.2.78.64 
+127.0.0.0/8 dev lo scope link 
+==== scripts ====
+-rwxr-xr-x 1 root root 361 Aug  5 17:32 /usr/local/bin/casa
+-rwxr-xr-x 1 root root 491 Aug  5 17:32 /usr/local/bin/uni
+==== rc.local ====
+# commands in there.
+
+loadkeys es 2>/dev/null
+setfont ter-116n 2>/dev/null
+ip addr add 10.0.2.15/24 dev eth0

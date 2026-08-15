@@ -1,0 +1,136 @@
+﻿=== SHELLS ===
+/bin/ash
+/bin/bash
+/bin/csh
+/bin/dash
+/bin/ksh
+/bin/rksh
+/bin/sh
+/bin/sha1sum
+/bin/sha224sum
+/bin/sha256sum
+/bin/sha384sum
+/bin/sha512sum
+/bin/shred
+/bin/shuf
+/bin/tcsh
+/bin/zsh
+/bin/zsh-5.8
+/usr/bin/amuFormat.sh
+/usr/bin/bash
+/usr/bin/brushtopbm
+/usr/bin/btcflash
+/usr/bin/buildhash
+/usr/bin/c_rehash
+/usr/bin/cgsnapshot
+/usr/bin/chsh
+/usr/bin/chsh.ldap
+/usr/bin/defmt-sh
+/usr/bin/gettext.sh
+/usr/bin/git-shell
+/usr/bin/glib-genmarshal
+/usr/bin/hb-ot-shape-closure
+/usr/bin/hb-shape
+/usr/bin/idevicecrashreport
+/usr/bin/idevicescreenshot
+/usr/bin/instmodsh
+/usr/bin/jemalloc.sh
+/usr/bin/lesspipe.sh
+/usr/bin/lprsetup.sh
+/usr/bin/lxc-snapshot
+/usr/bin/lxc-unshare
+/usr/bin/mariadb-show
+/usr/bin/meshdebug-qt5
+/usr/bin/mksquashfs
+/usr/bin/mshortname
+/usr/bin/mshowfat
+/usr/bin/mysqlshow
+/usr/bin/nettle-hash
+/usr/bin/njb-handshake
+/usr/bin/omshell
+/usr/bin/pammasksharpen
+/usr/bin/pamshadedrelief
+/usr/bin/pamsharpmap
+/usr/bin/pamsharpness
+/usr/bin/pamthreshold
+/usr/bin/pax11publish
+/usr/bin/pgmdeshadow
+/usr/bin/pilot-debugsh
+/usr/bin/pilot-dlpsh
+/usr/bin/pilot-read-screenshot
+/usr/bin/pnmshear
+/usr/bin/ppmflash
+/usr/bin/ppmshadow
+/usr/bin/ppmshift
+/usr/bin/pssh
+/usr/bin/pssh-askpass
+/usr/bin/qshape.pl
+/usr/bin/regshell
+/usr/bin/rescan-scsi-bus.sh
+/usr/bin/rsh
+/usr/bin/setup_vars_opencv4.sh
+/usr/bin/sha1pass
+/usr/bin/sha1sum
+/usr/bin/sha224sum
+/usr/bin/sha256sum
+/usr/bin/sha384sum
+/usr/bin/sha512sum
+/usr/bin/shar
+/usr/bin/sharesec
+/usr/bin/shasum
+/usr/bin/shcomp
+/usr/bin/shlibsign
+/usr/bin/showaudio
+/usr/bin/showconsolefont
+/usr/bin/showexternal
+/usr/bin/showkey
+/usr/bin/shownonascii
+/usr/bin/showpartial
+/usr/bin/showpicture
+/usr/bin/shred
+/usr/bin/shuf
+/usr/bin/slsh
+/usr/bin/ssh
+/usr/bin/ssh-add
+/usr/bin/ssh-agent
+/usr/bin/ssh-copy-id
+/usr/bin/ssh-keygen
+/usr/bin/ssh-keyscan
+/usr/bin/sshfs
+/usr/bin/unix-lpr.sh
+/usr/bin/unshar
+/usr/bin/unshare
+/usr/bin/unsquashfs
+/usr/bin/ypchsh
+=== 1 cd ===
+/tmp
+=== 2 ls ===
+total 24
+drwxr-xr-x  6 root    root       4096 Aug  4 01:17 .
+drwxr-xr-x 25 root    root       4096 Aug  6 03:24 ..
+drwxr-xr-x  2 claudia accounting 4096 Aug  4 01:14 claudia
+drwxr-xr-x  2 diego   it         4096 Aug  4 01:17 diego
+drwxr-xr-x  2 fabian  it         4096 Aug  4 01:17 fabian
+drwxr-xr-x  2 john    accounting 4096 Aug  4 01:15 john
+=== 3 cp y mv ===
+=== 4 cat ===
+=== 5 editar ===
+
+=== 3 cp y mv ===
+-rwxr----- 1 root root 0 Aug  6 03:41 /tmp/renombrado.txt
+=== 4 cat ===
+slackware
+=== 5 editar con append ===
+linea-anadida
+=== 6 head y tail ===
+root:x:0:0::/root:/bin/bash
+bin:x:1:1:bin:/bin:/bin/false
+fabian:x:1003:1003:Fabian - usuario con el nombre del profesor:/usuarios/fabian:/bin/bash
+diego:x:1004:1003:Diego - usuario con el nombre del profesor:/usuarios/diego:/bin/bash
+=== 7 grep ===
+claudia:x:1001:1002:Claudia - usuario con el nombre de la profesora:/usuarios/claudia:/bin/bash
+=== 8 find ===
+/usuarios/fabian/.screenrc
+/usuarios/john/.screenrc
+/usuarios/claudia/.screenrc
+/usuarios/diego/.screenrc

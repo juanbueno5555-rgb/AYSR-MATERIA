@@ -1,0 +1,6 @@
+bandit3@bandit:~$ ls -la inhere/ && cat inhere/...Hiding-From-You
+total 12
+drwxr-xr-x 2 root    root    4096 Jun 24 14:59 .
+drwxr-xr-x 3 root    root    4096 Jun 24 14:59 ..
+-rw-r----- 1 bandit4 bandit3   33 Jun 24 14:59 ...Hiding-From-You
+xzTXq1rDJQVVAzdv5cHq1TQytTWufAMq

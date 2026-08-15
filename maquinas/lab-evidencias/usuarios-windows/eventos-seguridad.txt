@@ -1,0 +1,41 @@
+﻿=== 1) INTENTO DE LOGON FALLIDO (password incorrecta) ===
+=== 2) LOGON CORRECTO (claudia) ===
+The command completed successfully.
+
+=== 3) EVENTOS 4625 (logon fallido) ===
+
+
+TimeCreated : 8/5/2026 7:58:49 PM
+Id          : 4625
+Target      : claudia
+SubStatus   : %%2313
+
+TimeCreated : 8/3/2026 8:10:09 PM
+Id          : 4625
+Target      : Administrator
+SubStatus   : %%2313
+
+TimeCreated : 8/3/2026 8:01:56 PM
+Id          : 4625
+Target      : Administrator
+SubStatus   : %%2313
+
+
+
+=== 4) EVENTOS 4624 (logon exitoso) ===
+
+
+TimeCreated : 8/5/2026 7:59:07 PM
+Id          : 4624
+Target      : SYSTEM
+
+TimeCreated : 8/5/2026 7:59:02 PM
+Id          : 4624
+Target      : claudia
+
+TimeCreated : 8/5/2026 7:58:25 PM
+Id          : 4624
+Target      : Administrator
+
+
+

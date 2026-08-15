@@ -1,0 +1,3 @@
+bandit14@bandit:~$ echo 'aaWecNkG4FhxJQxz07uiwzVP6bJiYS65' | nc localhost 30000
+Correct!
+pbLYuZtTg4MgaqfJx8jbA9gKKGqM68A7

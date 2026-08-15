@@ -1,0 +1,44 @@
+﻿=== SHELLS ===
+/usr/bin/bash
+/usr/bin/csh
+/usr/bin/ksh
+/usr/bin/sh
+/usr/bin/zsh
+=== 1 cd ===
+/tmp
+=== 2 ls ===
+total 36
+drwxr-xr-x   6 root     root           6 Aug  3 21:25 .
+drwxr-xr-x  26 root     sys           29 Aug  5 22:12 ..
+drwxr-xr-x   2 claudia  Accounting       7 Aug  3 21:24 claudia
+drwxr-xr-x   2 diego    IT             7 Aug  3 21:25 diego
+drwxr-xr-x   2 fabian   IT             7 Aug  3 21:25 fabian
+drwxr-xr-x   2 john     Accounting       7 Aug  3 21:25 john
+=== 6 head tail ===
+root:x:0:0:Super-User:/root:/usr/bin/bash
+daemon:x:1:1::/:/bin/sh
+diego:x:103:101:Diego - usuario con el nombre del profesor:/usuarios/diego:/usr/bin/bash
+admin:x:104:10::/export/home/admin:/usr/bin/bash
+=== 7 grep ===
+claudia:x:100:100:Claudia - usuario con el nombre de la profesora:/usuarios/claudia:/usr/bin/bash
+=== 8 find ===
+/usuarios/john/local.login
+/usuarios/john/local.profile
+/usuarios/john/.profile
+/usuarios/john/local.cshrc
+/usuarios/john/.bashrc
+/usuarios/fabian/.profile
+/usuarios/fabian/local.cshrc
+/usuarios/fabian/local.profile
+/usuarios/fabian/local.login
+/usuarios/fabian/.bashrc
+/usuarios/claudia/.profile
+/usuarios/claudia/local.login
+/usuarios/claudia/.bashrc
+/usuarios/claudia/local.profile
+/usuarios/claudia/local.cshrc
+/usuarios/diego/local.login
+/usuarios/diego/.bashrc
+/usuarios/diego/.profile
+/usuarios/diego/local.cshrc
+/usuarios/diego/local.profile

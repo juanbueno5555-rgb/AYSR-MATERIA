@@ -1,0 +1,39 @@
+﻿processed file: C:\LabPermisos
+Successfully processed 1 files; Failed processing 0 files
+processed file: C:\LabPermisos
+Successfully processed 1 files; Failed processing 0 files
+processed file: C:\LabPermisos
+Successfully processed 1 files; Failed processing 0 files
+processed file: C:\LabPermisos
+Successfully processed 1 files; Failed processing 0 files
+=== ACL FINAL DE C:\LabPermisos ===
+C:\LabPermisos WIN-3VMPCF0KCDN\diego:(OI)(CI)(N)
+               BUILTIN\Administrators:(F)
+               WIN-3VMPCF0KCDN\fabian:(OI)(CI)(M)
+               WIN-3VMPCF0KCDN\john:(OI)(CI)(R)
+               WIN-3VMPCF0KCDN\claudia:(OI)(CI)(F)
+               NT AUTHORITY\SYSTEM:(I)(OI)(CI)(F)
+               BUILTIN\Administrators:(I)(OI)(CI)(F)
+               BUILTIN\Users:(I)(OI)(CI)(RX)
+               BUILTIN\Users:(I)(CI)(AD)
+               BUILTIN\Users:(I)(CI)(WD)
+               CREATOR OWNER:(I)(OI)(CI)(IO)(F)
+
+Successfully processed 1 files; Failed processing 0 files
+=== ACL DEL ARCHIVO prueba.txt ===
+C:\LabPermisos\prueba.txt WIN-3VMPCF0KCDN\diego:(I)(N)
+                          WIN-3VMPCF0KCDN\fabian:(I)(M)
+                          WIN-3VMPCF0KCDN\john:(I)(R)
+                          WIN-3VMPCF0KCDN\claudia:(I)(F)
+                          NT AUTHORITY\SYSTEM:(I)(F)
+                          BUILTIN\Administrators:(I)(F)
+                          BUILTIN\Users:(I)(RX)
+
+Successfully processed 1 files; Failed processing 0 files
+=== PROPIETARIO ===
+
+
+Owner : BUILTIN\Administrators
+
+
+

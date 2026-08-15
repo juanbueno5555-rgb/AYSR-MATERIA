@@ -1,0 +1,33 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {0.1}Introducción}{2}{section.0.1}%
+\contentsline {section}{\numberline {0.2}Marco teórico}{2}{section.0.2}%
+\contentsline {subsection}{\numberline {0.2.1}Virtualización}{2}{subsection.0.2.1}%
+\contentsline {subsection}{\numberline {0.2.2}Sistemas operativos}{3}{subsection.0.2.2}%
+\contentsline {section}{\numberline {0.3}Desarrollo del tema}{4}{section.0.3}%
+\contentsline {subsection}{\numberline {0.3.1}Software de virtualización (preguntas del punto 1 del lab)}{4}{subsection.0.3.1}%
+\contentsline {subsection}{\numberline {0.3.2}Configuración de servidores Unix: Slackware y Solaris}{4}{subsection.0.3.2}%
+\contentsline {subsubsection}{Instalación y configuración (VMware, modo experto, sin entorno gráfico)}{4}{section*.2}%
+\contentsline {subsubsection}{Usuarios y grupos}{30}{section*.14}%
+\contentsline {subsubsection}{Sistema de archivos}{32}{section*.18}%
+\contentsline {subsubsection}{Red}{32}{section*.19}%
+\contentsline {subsubsection}{Comparación de experiencias de instalación}{35}{section*.21}%
+\contentsline {subsection}{\numberline {0.3.3}Comprensión y administración de los sistemas operativos}{36}{subsection.0.3.3}%
+\contentsline {subsubsection}{Estructura de directorios}{36}{section*.22}%
+\contentsline {subsubsection}{Logs y syslog}{38}{section*.23}%
+\contentsline {subsubsection}{Permisos}{39}{section*.24}%
+\contentsline {subsection}{\numberline {0.3.4}Windows Server --- Fase 1 (Server Core, sin interfaz gráfica)}{40}{subsection.0.3.4}%
+\contentsline {subsubsection}{Instalación}{40}{section*.25}%
+\contentsline {subsubsection}{Primer arranque (SConfig)}{41}{section*.26}%
+\contentsline {subsection}{\numberline {0.3.5}Windows Server --- Fase 2 (Desktop Experience)}{41}{subsection.0.3.5}%
+\contentsline {subsubsection}{Instalación}{42}{section*.27}%
+\contentsline {subsubsection}{Primer arranque (escritorio y Server Manager)}{43}{section*.28}%
+\contentsline {subsection}{\numberline {0.3.6}Android}{45}{subsection.0.3.6}%
+\contentsline {subsubsection}{Instalación}{46}{section*.29}%
+\contentsline {subsubsection}{Primer arranque y escritorio}{50}{section*.30}%
+\contentsline {subsection}{\numberline {0.3.7}Conocimiento de línea de comandos}{52}{subsection.0.3.7}%
+\contentsline {section}{\numberline {0.4}Uso y aplicaciones}{55}{section.0.4}%
+\contentsline {section}{\numberline {0.5}Conclusiones}{55}{section.0.5}%
+\contentsline {section}{\numberline {0.6}Bibliografía}{55}{section.0.6}%
+\contentsline {section}{Anexo A --- Asignación de IPs (10.2.78.n)}{56}{section*.31}%
+\contentsline {section}{Anexo B --- Guion del video (punto 1)}{56}{section*.32}%
+\contentsline {section}{Anexo C --- Conversión a LaTeX}{57}{section*.33}%

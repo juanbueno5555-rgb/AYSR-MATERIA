@@ -1,0 +1,7 @@
+﻿=== SECURE logins SSH ===
+Aug  6 03:00:13 slackware sshd[788]: gkr-pam: unable to locate daemon control file
+Aug  6 03:00:13 slackware sshd[788]: gkr-pam: gnome-keyring-daemon started properly
+Aug  6 03:00:14 slackware sudo:  vagrant : PWD=/home/vagrant ; USER=root ; COMMAND=/usr/bin/tail -6 /var/log/secure
+Aug  6 03:00:14 slackware sudo: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=1000)
+Aug  6 03:00:14 slackware sudo: gkr-pam: unable to locate daemon control file
+Aug  6 03:00:14 slackware sudo: gkr-pam: gnome-keyring-daemon started properly

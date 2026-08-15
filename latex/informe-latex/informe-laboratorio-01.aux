@@ -1,0 +1,180 @@
+\relax 
+\providecommand \babel@aux [2]{\global \let \babel@toc \@gobbletwo }
+\@nameuse{bbl@beforestart}
+\catcode `"\active 
+\catcode `<\active 
+\catcode `>\active 
+\@nameuse{es@quoting}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\babel@aux{spanish}{}
+\@writefile{toc}{\contentsline {section}{\numberline {0.1}Introducción}{2}{section.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {0.2}Marco teórico}{2}{section.0.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.1}Virtualización}{2}{subsection.0.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Máquinas virtuales vs.\ contenedores.}}{3}{table.0.1}\protected@file@percent }
+\newlabel{tab:vm-vs-contenedores}{{1}{3}{Máquinas virtuales vs.\ contenedores}{table.0.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.2.2}Sistemas operativos}{3}{subsection.0.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {0.3}Desarrollo del tema}{4}{section.0.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.1}Software de virtualización (preguntas del punto 1 del lab)}{4}{subsection.0.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.2}Configuración de servidores Unix: Slackware y Solaris}{4}{subsection.0.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Instalación y configuración (VMware, modo experto, sin entorno gráfico)}{4}{section*.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Consola de la VM tras arrancar el medio de instalación: la carga del teclado (\texttt  {loadkeys es-latam}) y el inicio de \texttt  {rc.sshd} fallan porque aún no hay sistema instalado.}}{5}{figure.0.1}\protected@file@percent }
+\newlabel{fig:slack-00}{{1}{5}{Consola de la VM tras arrancar el medio de instalación: la carga del teclado (\texttt {loadkeys es-latam}) y el inicio de \texttt {rc.sshd} fallan porque aún no hay sistema instalado}{figure.0.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Primer intento de lanzar la instalación desde el disquete: \texttt  {sh /mnt/install.sh} responde \texttt  {No such file or directory}.}}{5}{figure.0.2}\protected@file@percent }
+\newlabel{fig:slack-01}{{2}{5}{Primer intento de lanzar la instalación desde el disquete: \texttt {sh /mnt/install.sh} responde \texttt {No such file or directory}}{figure.0.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Diagnóstico del disquete: listado de \texttt  {/dev/fd*} (solo existe \texttt  {/dev/fd0}), intento de montaje y comprobación de la red con \texttt  {ifconfig eth0 | grep inet}.}}{6}{figure.0.3}\protected@file@percent }
+\newlabel{fig:slack-01b}{{3}{6}{Diagnóstico del disquete: listado de \texttt {/dev/fd*} (solo existe \texttt {/dev/fd0}), intento de montaje y comprobación de la red con \texttt {ifconfig eth0 | grep inet}}{figure.0.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Montaje del disquete: error \texttt  {MOUNT\_FAILED} porque \texttt  {/dev/fd0} ya estaba montado en \texttt  {/mnt}; también se ven las direcciones IPv6 asignadas a la interfaz.}}{6}{figure.0.4}\protected@file@percent }
+\newlabel{fig:slack-01c}{{4}{6}{Montaje del disquete: error \texttt {MOUNT\_FAILED} porque \texttt {/dev/fd0} ya estaba montado en \texttt {/mnt}; también se ven las direcciones IPv6 asignadas a la interfaz}{figure.0.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Lectura del contenido del disquete con \texttt  {ls -la /mnt}: aparece el script de instalación \texttt  {INSTALL.SH} (7168 bytes).}}{7}{figure.0.5}\protected@file@percent }
+\newlabel{fig:slack-01d}{{5}{7}{Lectura del contenido del disquete con \texttt {ls -la /mnt}: aparece el script de instalación \texttt {INSTALL.SH} (7168 bytes)}{figure.0.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Instalación en marcha: montaje del ISO (solo lectura) e instalación de la serie \texttt  {a} (129 paquetes, comenzando por \texttt  {aaa\_base}).}}{7}{figure.0.6}\protected@file@percent }
+\newlabel{fig:slack-02}{{6}{7}{Instalación en marcha: montaje del ISO (solo lectura) e instalación de la serie \texttt {a} (129 paquetes, comenzando por \texttt {aaa\_base})}{figure.0.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Primera pasada fallida: los paquetes del ISO se reportan corruptos (\texttt  {tar archive is corrupt, tar returned error code 2}).}}{8}{figure.0.7}\protected@file@percent }
+\newlabel{fig:slack-03}{{7}{8}{Primera pasada fallida: los paquetes del ISO se reportan corruptos (\texttt {tar archive is corrupt, tar returned error code 2})}{figure.0.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Parche del script de instalación: edición de \texttt  {INSTALL.SH} en el disquete (\texttt  {sed} para fijar \texttt  {installpkg ROOT=/mnt}) y errores de espacio (\texttt  {No space left on device}).}}{8}{figure.0.8}\protected@file@percent }
+\newlabel{fig:slack-03b}{{8}{8}{Parche del script de instalación: edición de \texttt {INSTALL.SH} en el disquete (\texttt {sed} para fijar \texttt {installpkg ROOT=/mnt}) y errores de espacio (\texttt {No space left on device})}{figure.0.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Segunda pasada de la instalación: \texttt  {aaa\_base} y \texttt  {aaa\_glibc-solibs} se instalan correctamente (se reinstaló).}}{9}{figure.0.9}\protected@file@percent }
+\newlabel{fig:slack-04}{{9}{9}{Segunda pasada de la instalación: \texttt {aaa\_base} y \texttt {aaa\_glibc-solibs} se instalan correctamente (se reinstaló)}{figure.0.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Instalación de las series de paquetes (1): paquetes \texttt  {python2} y \texttt  {python3} de la serie \texttt  {l}.}}{9}{figure.0.10}\protected@file@percent }
+\newlabel{fig:slack-05}{{10}{9}{Instalación de las series de paquetes (1): paquetes \texttt {python2} y \texttt {python3} de la serie \texttt {l}}{figure.0.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Instalación de las series de paquetes (2): librerías \texttt  {libxklavier} y \texttt  {libxml2} (serie \texttt  {l}).}}{10}{figure.0.11}\protected@file@percent }
+\newlabel{fig:slack-06}{{11}{10}{Instalación de las series de paquetes (2): librerías \texttt {libxklavier} y \texttt {libxml2} (serie \texttt {l})}{figure.0.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Instalación de las series de paquetes (3): firmware \texttt  {zd1211} y configuración final del sistema (advertencia de contraseña débil para \texttt  {root}).}}{10}{figure.0.12}\protected@file@percent }
+\newlabel{fig:slack-07}{{12}{10}{Instalación de las series de paquetes (3): firmware \texttt {zd1211} y configuración final del sistema (advertencia de contraseña débil para \texttt {root})}{figure.0.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Arranque con el kernel PAE habilitado: generación de claves SSH, inicio de servicios y prompt de login de Slackware 15.0 (\texttt  {Welcome to Linux 5.15.19-smp i686}).}}{11}{figure.0.13}\protected@file@percent }
+\newlabel{fig:slack-09-pae}{{13}{11}{Arranque con el kernel PAE habilitado: generación de claves SSH, inicio de servicios y prompt de login de Slackware 15.0 (\texttt {Welcome to Linux 5.15.19-smp i686})}{figure.0.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Primer intento de arranque del sistema instalado: LILO 24.2 no carga el kernel porque la CPU no tiene soporte PAE (\texttt  {Unable to boot}).}}{11}{figure.0.14}\protected@file@percent }
+\newlabel{fig:slack-09-boot}{{14}{11}{Primer intento de arranque del sistema instalado: LILO 24.2 no carga el kernel porque la CPU no tiene soporte PAE (\texttt {Unable to boot})}{figure.0.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Login en resolución HD (800$\times $600): red inicializada por DHCP (10.0.2.15) y prompt de login.}}{12}{figure.0.15}\protected@file@percent }
+\newlabel{fig:slack-10}{{15}{12}{Login en resolución HD (800$\times $600): red inicializada por DHCP (10.0.2.15) y prompt de login}{figure.0.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Login en resolución 1024: arranque completo con \texttt  {fsck} de los filesystems y prompt de login.}}{13}{figure.0.16}\protected@file@percent }
+\newlabel{fig:slack-11}{{16}{13}{Login en resolución 1024: arranque completo con \texttt {fsck} de los filesystems y prompt de login}{figure.0.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Login como \texttt  {root} en la consola (el sistema registra un intento de login fallido previo).}}{13}{figure.0.17}\protected@file@percent }
+\newlabel{fig:slack-12}{{17}{13}{Login como \texttt {root} en la consola (el sistema registra un intento de login fallido previo)}{figure.0.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Sistema funcionando en consola: \texttt  {uname -a}, versión Slackware 15.0, \texttt  {df -h} y \texttt  {free -m}.}}{14}{figure.0.18}\protected@file@percent }
+\newlabel{fig:slack-13}{{18}{14}{Sistema funcionando en consola: \texttt {uname -a}, versión Slackware 15.0, \texttt {df -h} y \texttt {free -m}}{figure.0.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Red configurada por DHCP: \texttt  {ip addr show eth0} (10.0.2.15/24), ruta por defecto y \texttt  {/etc/resolv.conf}.}}{15}{figure.0.19}\protected@file@percent }
+\newlabel{fig:slack-14}{{19}{15}{Red configurada por DHCP: \texttt {ip addr show eth0} (10.0.2.15/24), ruta por defecto y \texttt {/etc/resolv.conf}}{figure.0.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Pruebas de conectividad: \texttt  {ping} a 8.8.8.8 y a \texttt  {www.google.com} con 0\,\% de pérdida de paquetes.}}{16}{figure.0.20}\protected@file@percent }
+\newlabel{fig:slack-15}{{20}{16}{Pruebas de conectividad: \texttt {ping} a 8.8.8.8 y a \texttt {www.google.com} con 0\,\% de pérdida de paquetes}{figure.0.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Estructura de directorios de la raíz (\texttt  {ls -la /}): \texttt  {bin}, \texttt  {dev}, \texttt  {etc}, \texttt  {lib}, \texttt  {mnt}, \texttt  {opt}, \texttt  {root}, \texttt  {run}, \texttt  {srv}, \texttt  {sys}, \texttt  {tmpmount}, \texttt  {usr} y \texttt  {var}.}}{17}{figure.0.21}\protected@file@percent }
+\newlabel{fig:slack-16}{{21}{17}{Estructura de directorios de la raíz (\texttt {ls -la /}): \texttt {bin}, \texttt {dev}, \texttt {etc}, \texttt {lib}, \texttt {mnt}, \texttt {opt}, \texttt {root}, \texttt {run}, \texttt {srv}, \texttt {sys}, \texttt {tmpmount}, \texttt {usr} y \texttt {var}}{figure.0.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Cambio de teclado a español con \texttt  {loadkeys es} desde la consola.}}{17}{figure.0.22}\protected@file@percent }
+\newlabel{fig:slack-17}{{22}{17}{Cambio de teclado a español con \texttt {loadkeys es} desde la consola}{figure.0.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Arranque del medio de instalación de Solaris 11.4: selección del layout de teclado (\texttt  {Spanish}).}}{18}{figure.0.23}\protected@file@percent }
+\newlabel{fig:sol-02}{{23}{18}{Arranque del medio de instalación de Solaris 11.4: selección del layout de teclado (\texttt {Spanish})}{figure.0.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces Menú principal del instalador en modo texto (\texttt  {Install Oracle Solaris}, \texttt  {Additional Drivers}, \texttt  {Terminal type}, \texttt  {Reboot}) con una alerta de diagnóstico del kernel (\texttt  {SUNW-MSG-ID}).}}{19}{figure.0.24}\protected@file@percent }
+\newlabel{fig:sol-03}{{24}{19}{Menú principal del instalador en modo texto (\texttt {Install Oracle Solaris}, \texttt {Additional Drivers}, \texttt {Terminal type}, \texttt {Reboot}) con una alerta de diagnóstico del kernel (\texttt {SUNW-MSG-ID})}{figure.0.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces Definición del nombre del sistema en \texttt  {System Identity}: \texttt  {solaris}.}}{19}{figure.0.25}\protected@file@percent }
+\newlabel{fig:sol-04}{{25}{19}{Definición del nombre del sistema en \texttt {System Identity}: \texttt {solaris}}{figure.0.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces Selección de la interfaz de red a configurar (\texttt  {net0}, \texttt  {e1000g0}) o \texttt  {No network}.}}{20}{figure.0.26}\protected@file@percent }
+\newlabel{fig:sol-05}{{26}{20}{Selección de la interfaz de red a configurar (\texttt {net0}, \texttt {e1000g0}) o \texttt {No network}}{figure.0.26}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {27}{\ignorespaces Método de configuración de la interfaz: \texttt  {Static} (IP fija) o \texttt  {DHCP}.}}{21}{figure.0.27}\protected@file@percent }
+\newlabel{fig:sol-05b}{{27}{21}{Método de configuración de la interfaz: \texttt {Static} (IP fija) o \texttt {DHCP}}{figure.0.27}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {28}{\ignorespaces Selección del disco de destino: disco SATA de 25,0 GB, uso del disco completo o de una partición GPT.}}{21}{figure.0.28}\protected@file@percent }
+\newlabel{fig:sol-06}{{28}{21}{Selección del disco de destino: disco SATA de 25,0 GB, uso del disco completo o de una partición GPT}{figure.0.28}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {29}{\ignorespaces Zona horaria: selección de la región (\texttt  {Americas}).}}{22}{figure.0.29}\protected@file@percent }
+\newlabel{fig:sol-07a}{{29}{22}{Zona horaria: selección de la región (\texttt {Americas})}{figure.0.29}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {30}{\ignorespaces Zona horaria: selección de la ciudad (\texttt  {America/Bogota}).}}{23}{figure.0.30}\protected@file@percent }
+\newlabel{fig:sol-07b}{{30}{23}{Zona horaria: selección de la ciudad (\texttt {America/Bogota})}{figure.0.30}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {31}{\ignorespaces Locale: selección del idioma de soporte del sistema (\texttt  {Spanish}).}}{24}{figure.0.31}\protected@file@percent }
+\newlabel{fig:sol-07c}{{31}{24}{Locale: selección del idioma de soporte del sistema (\texttt {Spanish})}{figure.0.31}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {32}{\ignorespaces Territorio del locale: España (\texttt  {es\_ES.ISO8859-1}, \texttt  {es\_ES.ISO8859-15}, \texttt  {es\_ES.UTF-8}).}}{24}{figure.0.32}\protected@file@percent }
+\newlabel{fig:sol-07d}{{32}{24}{Territorio del locale: España (\texttt {es\_ES.ISO8859-1}, \texttt {es\_ES.ISO8859-15}, \texttt {es\_ES.UTF-8})}{figure.0.32}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {33}{\ignorespaces Configuración de fecha y hora del sistema (formato 24\,h, hora UTC).}}{25}{figure.0.33}\protected@file@percent }
+\newlabel{fig:sol-07e}{{33}{25}{Configuración de fecha y hora del sistema (formato 24\,h, hora UTC)}{figure.0.33}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {34}{\ignorespaces Selección del teclado: \texttt  {Latin-American}.}}{25}{figure.0.34}\protected@file@percent }
+\newlabel{fig:sol-07f}{{34}{25}{Selección del teclado: \texttt {Latin-American}}{figure.0.34}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {35}{\ignorespaces Credenciales del sistema: contraseña de \texttt  {root} y creación opcional de una cuenta de usuario.}}{26}{figure.0.35}\protected@file@percent }
+\newlabel{fig:sol-08}{{35}{26}{Credenciales del sistema: contraseña de \texttt {root} y creación opcional de una cuenta de usuario}{figure.0.35}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {36}{\ignorespaces Opción de registro de soporte de My Oracle Support (telemetría opcional).}}{27}{figure.0.36}\protected@file@percent }
+\newlabel{fig:sol-08b}{{36}{27}{Opción de registro de soporte de My Oracle Support (telemetría opcional)}{figure.0.36}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {37}{\ignorespaces Resumen de configuración antes de instalar: Solaris 11.4 x86, disco 25,0 GB, red por DHCP, \texttt  {America/Bogota}, español y teclado Latin-American.}}{27}{figure.0.37}\protected@file@percent }
+\newlabel{fig:sol-09}{{37}{27}{Resumen de configuración antes de instalar: Solaris 11.4 x86, disco 25,0 GB, red por DHCP, \texttt {America/Bogota}, español y teclado Latin-American}{figure.0.37}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {38}{\ignorespaces Instalación de Oracle Solaris en curso (inicialización del destino completada).}}{28}{figure.0.38}\protected@file@percent }
+\newlabel{fig:sol-10}{{38}{28}{Instalación de Oracle Solaris en curso (inicialización del destino completada)}{figure.0.38}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {39}{\ignorespaces Instalación finalizada: el sistema indica reiniciar para arrancar Solaris 11.4.}}{28}{figure.0.39}\protected@file@percent }
+\newlabel{fig:sol-11}{{39}{28}{Instalación finalizada: el sistema indica reiniciar para arrancar Solaris 11.4}{figure.0.39}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {40}{\ignorespaces Primer arranque: SunOS 5.11 (Solaris 11.4), hostname \texttt  {solaris} y prompt de login de consola.}}{29}{figure.0.40}\protected@file@percent }
+\newlabel{fig:sol-12}{{40}{29}{Primer arranque: SunOS 5.11 (Solaris 11.4), hostname \texttt {solaris} y prompt de login de consola}{figure.0.40}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {41}{\ignorespaces Login como \texttt  {root} en la consola de Solaris 11.4 (\texttt  {Oracle Corporation SunOS 5.11}).}}{29}{figure.0.41}\protected@file@percent }
+\newlabel{fig:sol-13}{{41}{29}{Login como \texttt {root} en la consola de Solaris 11.4 (\texttt {Oracle Corporation SunOS 5.11})}{figure.0.41}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Usuarios y grupos}{30}{section*.14}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Usuarios creados en Slackware 15.0.}}{31}{table.0.2}\protected@file@percent }
+\newlabel{tab:slack-users}{{2}{31}{Usuarios creados en Slackware 15.0}{table.0.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Usuarios creados en Solaris 11.4.}}{32}{table.0.3}\protected@file@percent }
+\newlabel{tab:sol-users}{{3}{32}{Usuarios creados en Solaris 11.4}{table.0.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Sistema de archivos}{32}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Red}{32}{section*.19}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Resultados reales de las pruebas de conectividad en la red de la universidad.}}{35}{table.0.4}\protected@file@percent }
+\newlabel{tab:ping}{{4}{35}{Resultados reales de las pruebas de conectividad en la red de la universidad}{table.0.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {42}{\ignorespaces Pruebas de ping desde Android-x86 (continuación): conectividad externa e inter-VM.}}{35}{figure.0.42}\protected@file@percent }
+\newlabel{fig:and-ping-2}{{42}{35}{Pruebas de ping desde Android-x86 (continuación): conectividad externa e inter-VM}{figure.0.42}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Comparación de experiencias de instalación}{35}{section*.21}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Comparación de la experiencia de instalación: Slackware vs.\ Solaris.}}{36}{table.0.5}\protected@file@percent }
+\newlabel{tab:cmp-instalacion}{{5}{36}{Comparación de la experiencia de instalación: Slackware vs.\ Solaris}{table.0.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.3}Comprensión y administración de los sistemas operativos}{36}{subsection.0.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Estructura de directorios}{36}{section*.22}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {43}{\ignorespaces Estructura raíz de Slackware (\texttt  {ls -la /}): \texttt  {bin}, \texttt  {boot}, \texttt  {cdrom}, \texttt  {dev}, \texttt  {etc}, \texttt  {home}, \texttt  {lib}, \texttt  {lost+found}, \texttt  {media}, \texttt  {mnt}, \texttt  {opt}, \texttt  {root}, \texttt  {run}, \texttt  {sbin}, \texttt  {tmp}, \texttt  {tmpmount}, \texttt  {usuarios} y \texttt  {var}.}}{37}{figure.0.43}\protected@file@percent }
+\newlabel{fig:est-raiz}{{43}{37}{Estructura raíz de Slackware (\texttt {ls -la /}): \texttt {bin}, \texttt {boot}, \texttt {cdrom}, \texttt {dev}, \texttt {etc}, \texttt {home}, \texttt {lib}, \texttt {lost+found}, \texttt {media}, \texttt {mnt}, \texttt {opt}, \texttt {root}, \texttt {run}, \texttt {sbin}, \texttt {tmp}, \texttt {tmpmount}, \texttt {usuarios} y \texttt {var}}{figure.0.43}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {44}{\ignorespaces Estructura raíz de Slackware (2): detalle de la consola durante el listado (comando \texttt  {ls -} con error de sintaxis).}}{38}{figure.0.44}\protected@file@percent }
+\newlabel{fig:est-raiz-1}{{44}{38}{Estructura raíz de Slackware (2): detalle de la consola durante el listado (comando \texttt {ls -} con error de sintaxis)}{figure.0.44}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Logs y syslog}{38}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Permisos}{39}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.4}Windows Server --- Fase 1 (Server Core, sin interfaz gráfica)}{40}{subsection.0.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Instalación}{40}{section*.25}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {45}{\ignorespaces Instalación de Windows Server 2025 en curso: copia de archivos y preparación del sistema (edición Core).}}{40}{figure.0.45}\protected@file@percent }
+\newlabel{fig:win-01}{{45}{40}{Instalación de Windows Server 2025 en curso: copia de archivos y preparación del sistema (edición Core)}{figure.0.45}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Primer arranque (SConfig)}{41}{section*.26}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {46}{\ignorespaces Primer arranque con SConfig: Windows Server 2025 Standard Evaluation, hostname \texttt  {WIN-095R63R3HG}, dominio \texttt  {WORKGROUP} y RDP habilitado.}}{41}{figure.0.46}\protected@file@percent }
+\newlabel{fig:win-02}{{46}{41}{Primer arranque con SConfig: Windows Server 2025 Standard Evaluation, hostname \texttt {WIN-095R63R3HG}, dominio \texttt {WORKGROUP} y RDP habilitado}{figure.0.46}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.5}Windows Server --- Fase 2 (Desktop Experience)}{41}{subsection.0.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Instalación}{42}{section*.27}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {47}{\ignorespaces Instalación de Windows Server 2025 (edición Desktop Experience) en curso: copia de archivos.}}{42}{figure.0.47}\protected@file@percent }
+\newlabel{fig:wingui-01}{{47}{42}{Instalación de Windows Server 2025 (edición Desktop Experience) en curso: copia de archivos}{figure.0.47}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Primer arranque (escritorio y Server Manager)}{43}{section*.28}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {48}{\ignorespaces Escritorio de Windows Server 2025 con Server Manager abierto (resumen del servidor local y aviso de Azure Arc).}}{43}{figure.0.48}\protected@file@percent }
+\newlabel{fig:wingui-02}{{48}{43}{Escritorio de Windows Server 2025 con Server Manager abierto (resumen del servidor local y aviso de Azure Arc)}{figure.0.48}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Niveles de permiso asignados sobre \texttt  {C:\textbackslash {}LabPermisos}.}}{44}{table.0.6}\protected@file@percent }
+\newlabel{tab:win-acl}{{6}{44}{Niveles de permiso asignados sobre \texttt {C:\textbackslash {}LabPermisos}}{table.0.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {49}{\ignorespaces Edición del registro con \texttt  {regedit} en Windows Server 2025: árbol de claves de HKLM.}}{45}{figure.0.49}\protected@file@percent }
+\newlabel{fig:win-registry}{{49}{45}{Edición del registro con \texttt {regedit} en Windows Server 2025: árbol de claves de HKLM}{figure.0.49}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.6}Android}{45}{subsection.0.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Instalación}{46}{section*.29}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {50}{\ignorespaces Menú de arranque de Android-x86 9.0-r2: \texttt  {Live CD}, instalación en disco y opciones avanzadas.}}{46}{figure.0.50}\protected@file@percent }
+\newlabel{fig:and-01}{{50}{46}{Menú de arranque de Android-x86 9.0-r2: \texttt {Live CD}, instalación en disco y opciones avanzadas}{figure.0.50}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {51}{\ignorespaces Selección de la partición de destino para instalar Android-x86 (disco con 8 GB de espacio libre).}}{46}{figure.0.51}\protected@file@percent }
+\newlabel{fig:and-02}{{51}{46}{Selección de la partición de destino para instalar Android-x86 (disco con 8 GB de espacio libre)}{figure.0.51}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {52}{\ignorespaces Confirmación del esquema de particionado: \texttt  {Do you want to use GPT?}}}{47}{figure.0.52}\protected@file@percent }
+\newlabel{fig:and-03}{{52}{47}{Confirmación del esquema de particionado: \texttt {Do you want to use GPT?}}{figure.0.52}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {53}{\ignorespaces Particionado del disco con \texttt  {cfdisk}: disco \texttt  {/dev/sdd} de 17,1 GB.}}{47}{figure.0.53}\protected@file@percent }
+\newlabel{fig:and-04}{{53}{47}{Particionado del disco con \texttt {cfdisk}: disco \texttt {/dev/sdd} de 17,1 GB}{figure.0.53}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {54}{\ignorespaces Partición creada y visible en la pantalla de selección para la instalación.}}{48}{figure.0.54}\protected@file@percent }
+\newlabel{fig:and-05}{{54}{48}{Partición creada y visible en la pantalla de selección para la instalación}{figure.0.54}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {55}{\ignorespaces Selección de la partición de destino para la instalación (segunda vista de la misma pantalla de elección).}}{48}{figure.0.55}\protected@file@percent }
+\newlabel{fig:and-06}{{55}{48}{Selección de la partición de destino para la instalación (segunda vista de la misma pantalla de elección)}{figure.0.55}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {56}{\ignorespaces Selección de la partición en modo automático (confirmación del destino de instalación).}}{49}{figure.0.56}\protected@file@percent }
+\newlabel{fig:and-07}{{56}{49}{Selección de la partición en modo automático (confirmación del destino de instalación)}{figure.0.56}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {57}{\ignorespaces Instalación completada con éxito: Android-x86 9.0-r2 instalado en el disco.}}{49}{figure.0.57}\protected@file@percent }
+\newlabel{fig:and-08}{{57}{49}{Instalación completada con éxito: Android-x86 9.0-r2 instalado en el disco}{figure.0.57}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {58}{\ignorespaces Selección de la aplicación de inicio (Home): \texttt  {Quickstep} o \texttt  {Taskbar}.}}{50}{figure.0.58}\protected@file@percent }
+\newlabel{fig:and-09}{{58}{50}{Selección de la aplicación de inicio (Home): \texttt {Quickstep} o \texttt {Taskbar}}{figure.0.58}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Primer arranque y escritorio}{50}{section*.30}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {59}{\ignorespaces Escritorio de Android funcionando (1).}}{51}{figure.0.59}\protected@file@percent }
+\newlabel{fig:and-10}{{59}{51}{Escritorio de Android funcionando (1)}{figure.0.59}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {60}{\ignorespaces Escritorio de Android funcionando (vista final).}}{51}{figure.0.60}\protected@file@percent }
+\newlabel{fig:and-11}{{60}{51}{Escritorio de Android funcionando (vista final)}{figure.0.60}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {0.3.7}Conocimiento de línea de comandos}{52}{subsection.0.3.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Comparativa de comandos Linux/Unix vs.\ Windows.}}{52}{table.0.7}\protected@file@percent }
+\newlabel{tab:shells}{{7}{52}{Comparativa de comandos Linux/Unix vs.\ Windows}{table.0.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {0.4}Uso y aplicaciones}{55}{section.0.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {0.5}Conclusiones}{55}{section.0.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {0.6}Bibliografía}{55}{section.0.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Anexo A --- Asignación de IPs (10.2.78.n)}{56}{section*.31}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Asignación de direcciones IP (10.2.78.n).}}{56}{table.0.8}\protected@file@percent }
+\newlabel{tab:ips}{{8}{56}{Asignación de direcciones IP (10.2.78.n)}{table.0.8}{}}
+\@writefile{toc}{\contentsline {section}{Anexo B --- Guion del video (punto 1)}{56}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Anexo C --- Conversión a LaTeX}{57}{section*.33}\protected@file@percent }
+\gdef \@abspage@last{59}

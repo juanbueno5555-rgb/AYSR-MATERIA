@@ -1,0 +1,25 @@
+﻿=== NUMERICO 750/640 ===
+=== SIMBOLICO g+w ===
+=== 770 final ===
+drwxrwx--- 2 root it 4096 Aug  6 03:24 /lab-permisos
+=== PRUEBA fabian escribe ===
+FABIAN_OK
+=== PRUEBA claudia escribe ===
+touch: cannot touch '/lab-permisos/claudia.txt': Permission denied
+=== PRUEBA fabian lee archivo ===
+cat: /lab-permisos/archivo.txt: Permission denied
+=== PRUEBA claudia lee archivo ===
+cat: /lab-permisos/archivo.txt: Permission denied
+=== LS como root ===
+total 8
+drwxrwx---  2 root   it   4096 Aug  6 03:24 .
+drwxr-xr-x 25 root   root 4096 Aug  6 03:24 ..
+-rw-r-----  1 root   root    0 Aug  6 03:24 archivo.txt
+-rw-r--r--  1 fabian it      0 Aug  6 03:24 fabian.txt
+=== archivo ahora ===
+-rw-r----- 1 root it 0 Aug  6 03:24 /lab-permisos/archivo.txt
+=== fabian LEE ===
+=== claudia LEE ===
+cat: /lab-permisos/archivo.txt: Permission denied
+=== chmod simbolico u+x,g-w ===
+-rwxr----- 1 root it 0 Aug  6 03:24 /lab-permisos/archivo.txt

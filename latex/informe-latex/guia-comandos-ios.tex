@@ -1,0 +1,803 @@
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=2.2cm}
+
+\definecolor{codegreen}{rgb}{0.1,0.5,0.1}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.97}
+
+\lstdefinestyle{ios}{
+  language=bash,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codepurple}\bfseries,
+  commentstyle=\color{codegreen},
+  stringstyle=\color{codegray},
+  backgroundcolor=\color{backcolour},
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  framerule=0.3pt,
+  aboveskip=8pt,
+  belowskip=8pt
+}
+\lstset{style=ios,
+  literate=
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+    {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {¡}{{!`}}1 {¿}{{?`}}1
+}
+
+\newcommand{\cmd}[1]{\texttt{\textbf{#1}}}
+\newcommand{\prompt}[1]{\texttt{#1}}
+
+\begin{document}
+
+\sloppy
+
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+
+  {\Huge \bfseries Guía de Comandos IOS \par}
+  \vspace{0.8cm}
+  {\LARGE Cisco Packet Tracer --- Lab de Redes \par}
+  \vspace{1.5cm}
+
+  {\large VLANs, Trunks, SVIs, Multilayer y Verificación \par}
+  \vspace{2cm}
+
+  {\large Basada en el lab \texttt{Primer-paso.pkt} \par}
+  \vspace{1cm}
+
+  {\large --- Guía de estudio --- \par}
+
+  \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\chapter{Cómo leer esta guía}
+
+\section{La regla de oro}
+
+\begin{quote}
+\textbf{El cable define el puerto. No al revés.}
+\end{quote}
+
+Antes de configurar cualquier interfaz, mirá qué hay conectado: si el cable lleva UNA sola red, es \emph{access} o puerto de router con IP directa; si lleva VARIAS VLANs juntas, es \emph{trunk}. El comando se elige mirando el cable.
+
+\section{Tipos de puerto y qué aceptan}
+
+\begin{longtable}{@{}p{4.5cm}p{6.5cm}p{4.5cm}@{}}
+\toprule
+\textbf{Tipo de puerto} & \textbf{Qué es} & \textbf{Comandos que acepta} \\
+\midrule
+\endhead
+Puerto nativo de router & El que viene en el chasis del router (\texttt{G0/0}, \texttt{G0/1}, \texttt{F0/0}, \texttt{F0/1}) & \cmd{ip address}, \cmd{no shutdown} \\
+\addlinespace
+Puerto de switch (L2) & Los de un switch o del módulo \texttt{HWIC-4ESW} (\texttt{F0/1/0}, \texttt{F0/1/1}\dots) & \cmd{switchport mode access}, \cmd{switchport access vlan}, \cmd{switchport mode trunk} \\
+\addlinespace
+Puerto de módulo de router & Módulo \texttt{WIC-1ENET} (\texttt{Ethernet0/1/0}) & \cmd{ip address} (¡como puerto nativo!) \\
+\addlinespace
+Puerto de multilayer (3560) & Puerto físico de un switch de capa 3 & \cmd{no switchport} + \cmd{ip address}, o \cmd{switchport\dots} si queda como L2 \\
+\bottomrule
+\end{longtable}
+
+\section{Errores comunes y qué significan}
+
+\begin{longtable}{@{}p{5.5cm}p{10cm}@{}}
+\toprule
+\textbf{Mensaje} & \textbf{Qué te está diciendo} \\
+\midrule
+\endhead
+\texttt{\% Invalid input detected at '\^{}'} & El comando no existe o la sintaxis está mal. El \texttt{\^{}} marca el lugar exacto del error (ej: \cmd{switchport access vlan20} sin espacio). \\
+\addlinespace
+\texttt{\% Incomplete command} & El comando existe pero le falta parte (ej: \cmd{no switchport} en un puerto del módulo \texttt{HWIC-4ESW}, que es L2 puro y ese comando NO existe para él). \\
+\addlinespace
+\texttt{\% Ambiguous command: "en"} & Hay varios comandos que empiezan igual. Escribí más letras: \cmd{enable} completo. \\
+\addlinespace
+\texttt{\% Bad mask} & Pusiste la dirección de red donde iba la máscara o al revés. \\
+\bottomrule
+\end{longtable}
+
+% ============================================================
+\chapter{Comandos de navegación y configuración básica}
+
+\section{Modos del IOS}
+
+El IOS tiene una jerarquía de modos. Cada modo te deja hacer más cosas:
+
+\begin{lstlisting}
+Router>              ! modo usuario (solo ver, nada configurable)
+Router>enable        ! entrás a modo privilegiado
+Router#              ! modo privilegiado (show, ping, copy)
+Router#configure terminal
+Router(config)#      ! modo configuración global
+Router(config)#interface g0/0
+Router(config-if)#   ! modo configuración de interfaz
+Router(config-if)#exit       ! subís un nivel
+Router(config)#exit
+Router#end           ! saltás directo a Router# (o Ctrl+Z)
+Router#
+\end{lstlisting}
+
+\begin{longtable}{@{}p{6cm}p{9.5cm}@{}}
+\toprule
+\textbf{Comando} & \textbf{Qué hace} \\
+\midrule
+\endhead
+\cmd{enable} & Entra al modo privilegiado (\prompt{Router\#}). \\
+\addlinespace
+\cmd{configure terminal} (o \cmd{conf t}) & Entra al modo de configuración global (\prompt{Router(config)\#}). \\
+\addlinespace
+\cmd{exit} & Sube un nivel de modo. \\
+\addlinespace
+\cmd{end} (o \texttt{Ctrl+Z}) & Salta directo a \prompt{Router\#} desde cualquier modo de config. \\
+\addlinespace
+\cmd{hostname R1} & Cambia el nombre del equipo. El prompt pasa a \prompt{R1\#}. \textbf{Primer comando de todo lab real.} \\
+\addlinespace
+\cmd{no shutdown} & Enciende la interfaz (por defecto las de router vienen apagadas). \\
+\addlinespace
+\cmd{show running-config} & Muestra la config actual (la que vive en RAM). \\
+\addlinespace
+\cmd{show startup-config} & Muestra la config guardada (la que sobrevive al apagado). \\
+\bottomrule
+\end{longtable}
+
+\section{Guardar la configuración (¡nunca lo olvides!)}
+
+El router tiene DOS configuraciones: la \textbf{running-config} (RAM, se borra al apagar) y la \textbf{startup-config} (NVRAM, sobrevive). Si no guardás, al reiniciar perdés TODO.
+
+\begin{lstlisting}
+Router#copy running-config startup-config
+Router#write memory        ! atajo
+Router#wr                  ! atajo corto (el más usado en el mundo real)
+Router#show startup-config ! verificar que quedó guardada
+\end{lstlisting}
+
+% ============================================================
+\chapter{VLANs en switches}
+
+\section{Crear las VLANs}
+
+\begin{lstlisting}
+Switch#configure terminal
+Switch(config)#vlan 10
+Switch(config-vlan)#name VLAN10
+Switch(config-vlan)#vlan 20
+Switch(config-vlan)#name VLAN20
+Switch(config-vlan)#vlan 30
+Switch(config-vlan)#name VLAN30
+Switch(config-vlan)#exit
+Switch(config)#
+\end{lstlisting}
+
+\begin{itemize}
+  \item \cmd{vlan 10} crea la VLAN y te mete en el modo \prompt{Switch(config-vlan)\#}.
+  \item \cmd{name VLAN10} le pone nombre (opcional pero ordena la casa).
+  \item El switch solo tiene la VLAN 1 por defecto. Sin este paso no hay nada que asignar.
+\end{itemize}
+
+\section{Asignar puertos a las VLANs (puertos access)}
+
+Cada puerto declara a qué red pertenece:
+
+\begin{lstlisting}
+Switch(config)#interface f0/3
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport access vlan 10
+Switch(config-if)#interface f0/4
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport access vlan 20
+Switch(config-if)#interface f0/5
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport access vlan 30
+\end{lstlisting}
+
+\begin{longtable}{@{}p{7cm}p{8.5cm}@{}}
+\toprule
+\textbf{Comando} & \textbf{Qué hace} \\
+\midrule
+\endhead
+\cmd{switchport mode access} & Declara el puerto como puerto de acceso: pertenece a UNA sola VLAN. \\
+\addlinespace
+\cmd{switchport access vlan 10} & Asigna el puerto a la VLAN 10. \\
+\addlinespace
+\textbf{Ojo:} \cmd{switchport access vlan20} & Error clásico: falta el espacio entre \texttt{vlan} y el número. \\
+\bottomrule
+\end{longtable}
+
+\textbf{Concepto:} el orden de configuración no importa, importa el \textbf{estado final} de cada interfaz. Cada comando se aplica a la interfaz donde estás parado.
+
+\section{Verificar las VLANs}
+
+\begin{lstlisting}
+Switch#show vlan brief
+Switch#show interfaces f0/3 switchport
+\end{lstlisting}
+
+\cmd{show vlan brief} muestra la tabla: cada VLAN con sus puertos al lado. Si un puerto no aparece en su VLAN, no quedó asignado.
+
+% ============================================================
+\chapter{Trunks}
+
+\section{Configurar un trunk}
+
+El trunk es el pasillo que transporta VARIAS VLANs a la vez entre dos dispositivos (switch--switch o switch--router con módulo switch):
+
+\begin{lstlisting}
+Switch(config)#interface f0/2
+Switch(config-if)#switchport mode trunk
+Switch(config-if)#switchport trunk allowed vlan 10,30
+\end{lstlisting}
+
+\begin{longtable}{@{}p{7.5cm}p{8cm}@{}}
+\toprule
+\textbf{Comando} & \textbf{Qué hace} \\
+\midrule
+\endhead
+\cmd{switchport mode trunk} & Convierte el puerto en pasillo multiuso: lleva todas las VLANs etiquetadas (802.1Q). \\
+\addlinespace
+\cmd{switchport trunk allowed vlan 10,30} & Restringe qué VLANs cruzan. Por defecto permite TODAS; acá decís ``solo estas'' (higiene de seguridad). \\
+\bottomrule
+\end{longtable}
+
+\textbf{Gotcha clásico:} si dos switches se conectan con puertos access de VLANs distintas, el enlace funciona pero el tráfico no se comparte: sin trunk NO se comparten VLANs. El mensaje \texttt{\% SPANTREE-2-RECV\_PVID\_ERR} aparece justo cuando un lado está en trunk y el otro no.
+
+% ============================================================
+\chapter{IPs en routers y multilayers}
+
+\section{IP directa en puerto de router}
+
+\begin{lstlisting}
+Router(config)#interface g0/0
+Router(config-if)#ip address 7.0.0.1 255.255.255.252
+Router(config-if)#no shutdown
+\end{lstlisting}
+
+\begin{longtable}{@{}p{6.5cm}p{9cm}@{}}
+\toprule
+\textbf{Comando} & \textbf{Qué hace} \\
+\midrule
+\endhead
+\cmd{ip address 7.0.0.1 255.255.255.252} & Asigna IP y máscara. Los extremos de un cable deben estar en la MISMA red (ej: 7.0.0.1 y 7.0.0.2). \\
+\addlinespace
+\cmd{no shutdown} & Enciende la interfaz. Sin esto queda \emph{administratively down} y el enlace no funciona. \\
+\bottomrule
+\end{longtable}
+
+\textbf{Ojo:} si un extremo tiene \texttt{7.0.0.2} y el otro \texttt{70.0.0.1}, están en redes distintas y el ping falla. Verificá SIEMPRE con \cmd{show ip interface brief}.
+
+\section{Convertir un puerto de multilayer en puerto de router}
+
+En un switch multilayer (3560), los puertos nacen como L2. Para hacer un enlace router--router necesitás la llave:
+
+\begin{lstlisting}
+MLS(config)#interface g0/1
+MLS(config-if)#no switchport
+MLS(config-if)#ip address 10.0.1.2 255.255.255.252
+MLS(config-if)#no shutdown
+\end{lstlisting}
+
+\cmd{no switchport} dice: ``ya no sos puerto de switch, ahora sos puerto de router''. Recién ahí acepta \cmd{ip address}.
+
+\textbf{Ojo:} en el módulo \texttt{HWIC-4ESW} (switch L2 puro) ese comando NO existe (da \texttt{Incomplete command}). Para puerto de router en un router, el módulo correcto es \texttt{WIC-1ENET}.
+
+% ============================================================
+\chapter{SVIs y multilayer (router-on-a-stick)}
+
+\section{¿Qué es una SVI?}
+
+SVI = \emph{Switch Virtual Interface}. Es la ``IP del departamento virtual'' en un switch: el gateway de una VLAN vive en \cmd{interface vlan X}, no en un puerto físico. Se usa en multilayers (3560) y en routers con módulo switch (\texttt{HWIC-4ESW}).
+
+\section{Configurar SVIs en un multilayer}
+
+\begin{lstlisting}
+MLS(config)#ip routing
+MLS(config)#vlan 40
+MLS(config-vlan)#name VLAN40
+MLS(config-vlan)#exit
+MLS(config)#interface vlan 40
+MLS(config-if)#ip address 10.0.40.1 255.255.255.0
+MLS(config-if)#no shutdown
+\end{lstlisting}
+
+\begin{longtable}{@{}p{6.5cm}p{9cm}@{}}
+\toprule
+\textbf{Comando} & \textbf{Qué hace} \\
+\midrule
+\endhead
+\cmd{ip routing} & \textbf{El comando que nadie se acuerda.} Un router enruta por defecto; un switch NO. Esto habilita el ruteo entre VLANs en el multilayer. \\
+\addlinespace
+\cmd{interface vlan 40} & Entra a la interfaz virtual de la VLAN 40 (el ``buzón'' de esa red). \\
+\addlinespace
+\cmd{ip address 10.0.40.1 255.255.255.0} & Esa IP es el \textbf{gateway} de todos los equipos de la VLAN 40. \\
+\bottomrule
+\end{longtable}
+
+\section{Router-on-a-stick con subinterfaces}
+
+Cuando el router tiene un puerto nativo libre y el switch manda un trunk, se usan subinterfaces (una por VLAN):
+
+\begin{lstlisting}
+Router(config)#interface f0/0.10
+Router(config-if)#encapsulation dot1Q 10
+Router(config-if)#ip address 10.0.10.1 255.255.255.0
+Router(config-if)#interface f0/0.30
+Router(config-if)#encapsulation dot1Q 30
+Router(config-if)#ip address 10.0.30.1 255.255.255.0
+\end{lstlisting}
+
+\begin{itemize}
+  \item \cmd{interface f0/0.10} crea una interfaz \emph{lógica} hija del puerto físico \texttt{f0/0}.
+  \item \cmd{encapsulation dot1Q 10} le dice al buzón: ``abrí los sobres etiquetados con la VLAN 10''. Sin esto, la subinterfaz no sabe qué etiqueta leer.
+  \item Una subinterfaz divide un puerto en varios caminos lógicos, pero \textbf{NO crea agujeros físicos nuevos}: un puerto = un cable.
+\end{itemize}
+
+% ============================================================
+\chapter{Verificación (la parte que todos se saltan)}
+
+\begin{longtable}{@{}p{7cm}p{8.5cm}@{}}
+\toprule
+\textbf{Comando} & \textbf{Qué te muestra} \\
+\midrule
+\endhead
+\cmd{show ip interface brief} & Todas las interfaces, sus IPs y estado (up/down). Un puerto \texttt{up/up} tiene cable y funciona. \\
+\addlinespace
+\cmd{show vlan brief} & Las VLANs con sus puertos asignados. \\
+\addlinespace
+\cmd{show interfaces trunk} & Los trunks: modo, VLANs permitidas y activas. \\
+\addlinespace
+\cmd{show interfaces description} & Cada puerto con su estado y descripción. \\
+\addlinespace
+\cmd{show cdp neighbors} & \textbf{El ``¿quién sos?'' de Cisco.} Muestra qué dispositivo hay del otro lado de cada puerto. \\
+\addlinespace
+\cmd{show cdp neighbors detail} & Igual pero con IP, modelo y más detalle. \\
+\addlinespace
+\cmd{ping 10.0.10.2} & Prueba de conectividad. El primer paquete suele perderse (ARP), 4/5 o 5/5 es éxito. \\
+\bottomrule
+\end{longtable}
+
+\section{Cómo leer un ping}
+
+\begin{lstlisting}
+Router#ping 10.0.10.2
+Sending 5, 100-byte ICMP Echos to 10.0.10.2:
+.!!!!
+Success rate is 80 percent (4/5)
+\end{lstlisting}
+
+\begin{itemize}
+  \item \texttt{.} = paquete perdido (el primero, mientras aprende la MAC con ARP).
+  \item \texttt{!} = respuesta. 4/5 o 5/5 = enlace funcionando.
+  \item \texttt{....} con 0\% = NO hay camino. Revisá IPs, máscaras y \cmd{no shutdown}.
+\end{itemize}
+
+% ============================================================
+\chapter{Módulos del router (Packet Tracer)}
+
+\section{Tabla de módulos}
+
+\begin{longtable}{@{}p{3.5cm}p{5.5cm}p{3.5cm}p{3cm}@{}}
+\toprule
+\textbf{Módulo} & \textbf{Qué te da} & \textbf{¿Acepta \cmd{ip address}?} & \textbf{Para qué usarlo} \\
+\midrule
+\endhead
+\texttt{WIC-1ENET} & 1 puerto FastEthernet de \textbf{router} & \textbf{SÍ} & Enlace a multilayer u otro router. El módulo que necesitás. \\
+\addlinespace
+\texttt{HWIC-4ESW} & 4 puertos switch L2 & NO (solo SVIs) & Conectar switches/PCs. Es un switch dentro del router. \\
+\addlinespace
+\texttt{WIC-2T} / \texttt{HWIC-2T} & 2 puertos seriales & SÍ (seriales) & Enlaces WAN punto a punto con clock rate. \\
+\addlinespace
+\texttt{HWIC-1GE-SFP} & 1 puerto Gigabit (SFP) & SÍ & Gigabit de router con módulo SFP. \\
+\addlinespace
+\texttt{HWIC-8A} / \texttt{HWIC-4A/S} & Puertos seriales async & SÍ (seriales) & Casos raros, casi no se usan. \\
+\bottomrule
+\end{longtable}
+
+\section{Cómo instalar un módulo en Packet Tracer}
+
+\begin{enumerate}
+  \item Clic en el router $\rightarrow$ pestaña \textbf{Physical}.
+  \item \textbf{Apagá el equipo} (interruptor de power abajo a la derecha). ¡Siempre con el equipo apagado!
+  \item Arrastrá el módulo desde la lista al slot libre.
+  \item Prendelo de nuevo.
+  \item Verificá con \cmd{show ip interface brief}: el nuevo puerto aparece (ej: \texttt{Ethernet0/1/0} para \texttt{WIC-1ENET}).
+\end{enumerate}
+
+\textbf{Advertencia:} instalar/quitar módulos reinicia el equipo y puede sacar configuraciones que no estén guardadas. Guardá con \cmd{wr} antes de tocar módulos.
+
+% ============================================================
+\chapter{Ejemplo completo: nuestro lab}
+
+\section{Topología}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Dispositivo} & \textbf{Rol} & \textbf{Conexiones} \\
+\midrule
+Router0 & Core + router-on-a-stick & G0/0$\rightarrow$R1, G0/1$\rightarrow$R3, F0/1/0$\rightarrow$Switch1 \\
+Router1 & Distribución & F0/0$\rightarrow$R0, F0/1$\rightarrow$R2, E0/1/0$\rightarrow$MLS0 \\
+Router2 & Acceso (VLAN 20) & F0/0$\rightarrow$R1, F0/1$\rightarrow$Switch1 \\
+Router3 & Edge & G0/0$\rightarrow$Laptop4, G0/1$\rightarrow$R0 \\
+Switch1 & Acceso (VLANs 10/20/30) & F0/2$\rightarrow$R0, F0/1$\rightarrow$R2, F0/3/4/5$\rightarrow$laptops \\
+MLS0 (3560) & Multilayer & G0/1$\rightarrow$R1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Tabla de direccionamiento}
+
+\begin{longtable}{@{}p{4cm}p{3.5cm}p{4cm}p{4cm}@{}}
+\toprule
+\textbf{Red} & \textbf{Máscara} & \textbf{Dispositivo: IP} & \textbf{Gateway} \\
+\midrule
+\endhead
+7.0.0.0/30 & 255.255.255.252 & R0 G0/0: 7.0.0.1, R1 F0/0: 7.0.0.2 & --- \\
+\addlinespace
+8.0.0.0/30 & 255.255.255.252 & R1 F0/1: 8.0.0.1, R2 F0/0: 8.0.0.2 & --- \\
+\addlinespace
+10.0.1.0/30 & 255.255.255.252 & R1 E0/1/0: 10.0.1.1, MLS0 G0/1: 10.0.1.2 & --- \\
+\addlinespace
+10.0.10.0/24 & 255.255.255.0 & R0 Vlan10: 10.0.10.1 & Laptop0: 10.0.10.2 \\
+\addlinespace
+10.0.20.0/24 & 255.255.255.0 & R2 F0/1: 10.0.20.1 & Laptop2: 10.0.20.2 \\
+\addlinespace
+10.0.30.0/24 & 255.255.255.0 & R0 Vlan30: 10.0.30.1 & Laptop2(1): 10.0.30.2 \\
+\bottomrule
+\end{longtable}
+
+\textbf{Truco de la casa:} el tercer octeto coincide con la VLAN: VLAN 10 $\rightarrow$ 10.0.10.0/24, VLAN 20 $\rightarrow$ 10.0.20.0/24, VLAN 30 $\rightarrow$ 10.0.30.0/24. La red se lee sola.
+
+\section{Secuencia completa de configuración}
+
+\subsection{Paso 1: Switch1 (VLANs y puertos)}
+
+\begin{lstlisting}
+Switch(config)#vlan 10
+Switch(config-vlan)#name VLAN10
+Switch(config-vlan)#vlan 20
+Switch(config-vlan)#name VLAN20
+Switch(config-vlan)#vlan 30
+Switch(config-vlan)#name VLAN30
+Switch(config-vlan)#exit
+Switch(config)#interface f0/3
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport access vlan 10
+Switch(config-if)#interface f0/4
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport access vlan 20
+Switch(config-if)#interface f0/5
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport access vlan 30
+Switch(config-if)#interface f0/2
+Switch(config-if)#switchport mode trunk
+Switch(config-if)#switchport trunk allowed vlan 10,30
+Switch(config-if)#end
+Switch#copy running-config startup-config
+\end{lstlisting}
+
+\subsection{Paso 2: Router0 (SVIs y enlaces)}
+
+\begin{lstlisting}
+Router(config)#hostname R0
+R0(config)#interface g0/0
+R0(config-if)#ip address 7.0.0.1 255.255.255.252
+R0(config-if)#no shutdown
+R0(config-if)#interface vlan 10
+R0(config-if)#ip address 10.0.10.1 255.255.255.0
+R0(config-if)#no shutdown
+R0(config-if)#interface vlan 30
+R0(config-if)#ip address 10.0.30.1 255.255.255.0
+R0(config-if)#no shutdown
+R0(config-if)#end
+R0#copy running-config startup-config
+\end{lstlisting}
+
+\subsection{Paso 3: Router2 (enlace dedicado VLAN 20)}
+
+\begin{lstlisting}
+Router(config)#hostname R2
+R2(config)#interface f0/0
+R2(config-if)#ip address 8.0.0.2 255.255.255.252
+R2(config-if)#no shutdown
+R2(config-if)#interface f0/1
+R2(config-if)#ip address 10.0.20.1 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#end
+R2#copy running-config startup-config
+\end{lstlisting}
+
+\subsection{Paso 4: Router1 (enlaces)}
+
+\begin{lstlisting}
+Router(config)#hostname R1
+R1(config)#interface f0/0
+R1(config-if)#ip address 7.0.0.2 255.255.255.252
+R1(config-if)#no shutdown
+R1(config-if)#interface f0/1
+R1(config-if)#ip address 8.0.0.1 255.255.255.252
+R1(config-if)#no shutdown
+R1(config-if)#interface ethernet0/1/0
+R1(config-if)#ip address 10.0.1.1 255.255.255.252
+R1(config-if)#no shutdown
+R1(config-if)#end
+R1#copy running-config startup-config
+\end{lstlisting}
+
+\subsection{Paso 5: Multilayer Switch0}
+
+\begin{lstlisting}
+Switch(config)#hostname MLS0
+MLS0(config)#ip routing
+MLS0(config)#interface g0/1
+MLS0(config-if)#no switchport
+MLS0(config-if)#ip address 10.0.1.2 255.255.255.252
+MLS0(config-if)#no shutdown
+MLS0(config-if)#end
+MLS0#copy running-config startup-config
+\end{lstlisting}
+
+\subsection{Paso 6: Verificación final}
+
+\begin{lstlisting}
+R1#ping 7.0.0.1     ! R1 -> R0
+R2#ping 8.0.0.1     ! R2 -> R1
+MLS0#ping 10.0.1.1  ! MLS0 -> R1
+R2#ping 10.0.20.2   ! R2 -> Laptop2 (VLAN 20)
+R0#ping 10.0.10.2   ! R0 -> Laptop0 (VLAN 10)
+R0#ping 10.0.30.2   ! R0 -> Laptop2(1) (VLAN 30)
+\end{lstlisting}
+
+Resultado esperado: \texttt{!!!!!} o \texttt{.!!!!} (80--100\%) en todos.
+
+% ============================================================
+\chapter{OSPF (convergencia completa)}
+
+Cuando los enlaces estén verificados, el siguiente paso es OSPF para que todas las redes se conozcan entre sí. Cada router declara SOLO sus redes conectadas directas (las que aprende por OSPF no se declaran).
+
+\section{Configuración por router}
+
+\begin{lstlisting}
+! ROUTER0 (core) - redes: R0-R1, R0-R3, VLAN 10, VLAN 30
+R0(config)#router ospf 130
+R0(config-router)#network 7.0.0.0 0.0.0.3 area 0
+R0(config-router)#network 98.15.15.0 0.0.0.255 area 0
+R0(config-router)#network 10.0.10.0 0.0.0.255 area 0
+R0(config-router)#network 10.0.30.0 0.0.0.255 area 0
+
+! ROUTER1 (distribucion) - redes: R1-R0, R1-R2, R1-MLS0
+R1(config)#router ospf 130
+R1(config-router)#network 7.0.0.0 0.0.0.3 area 0
+R1(config-router)#network 8.0.0.0 0.0.0.3 area 0
+R1(config-router)#network 10.0.1.0 0.0.0.3 area 0
+
+! ROUTER2 (acceso VLAN 20) - redes: R2-R1, VLAN 20
+R2(config)#router ospf 130
+R2(config-router)#network 8.0.0.0 0.0.0.3 area 0
+R2(config-router)#network 10.0.20.0 0.0.0.255 area 0
+
+! ROUTER3 (edge) - redes: R3-R0, Laptop4
+R3(config)#router ospf 130
+R3(config-router)#network 98.15.15.0 0.0.0.255 area 0
+R3(config-router)#network 200.0.0.0 0.0.0.255 area 0
+\end{lstlisting}
+
+\section{Verificación de OSPF}
+
+\begin{lstlisting}
+show ip ospf neighbor    ! vecinos: FULL = convergido
+show ip route ospf       ! rutas aprendidas por OSPF (marcadas "O")
+\end{lstlisting}
+
+\textbf{Cómo leerlo:} cada vecino en estado \texttt{FULL} es un router que ya intercambió toda su información. Cuando \cmd{show ip route ospf} muestra rutas con prefijo \texttt{O}, la red sabe llegar a esos destinos.
+
+% ============================================================
+\chapter{VTP (VLAN Trunking Protocol)}
+
+\section{¿Qué es VTP?}
+
+VTP es el protocolo que \textbf{propaga las VLANs automáticamente} entre switches. Un solo switch crea las VLANs y los demás las copian — no hace falta configurarlas a mano en cada uno.
+
+\section{Los tres modos}
+
+\begin{longtable}{@{}p{3.5cm}p{6cm}p{6cm}@{}}
+\toprule
+\textbf{Modo} & \textbf{Qué hace} & \textbf{En el lab} \\
+\midrule
+\endhead
+\textbf{Server} & Crea, modifica y propaga las VLANs. Es el que manda. & Multilayer Switch0 \\
+\addlinespace
+\textbf{Client} & Recibe y copia las VLANs del server automáticamente. No puede crearlas. & Switch1, Switch1(2) \\
+\addlinespace
+\textbf{Transparent} & Deja pasar los mensajes VTP pero no participa: mantiene sus propias VLANs locales. & Switch1(1) \\
+\bottomrule
+\end{longtable}
+
+\textbf{Regla de oro:} todos los switches deben tener el \textbf{mismo nombre de dominio} para comunicarse. Si el dominio no coincide, no se propagan VLANs.
+
+\section{Configuración}
+
+\begin{lstlisting}
+! SERVER (el que crea las VLANs) - en el MLS0
+MLS0(config)#vtp domain facil
+MLS0(config)#vtp mode server
+
+! CLIENT (recibe las VLANs) - en Switch1 y Switch1(2)
+Switch1(config)#vtp domain facil
+Switch1(config)#vtp mode client
+
+! TRANSPARENT (no participa, solo deja pasar) - en Switch1(1)
+Switch1(1)(config)#vtp domain facil
+Switch1(1)(config)#vtp mode transparent
+\end{lstlisting}
+
+\section{Verificación}
+
+\begin{lstlisting}
+show vtp status
+\end{lstlisting}
+
+Mirá tres cosas:
+\begin{itemize}
+  \item \textbf{VTP Operating Mode}: Server / Client / Transparent.
+  \item \textbf{VTP Domain Name}: debe decir \texttt{facil} en todos.
+  \item \textbf{Configuration Revision} y \textbf{Number of existing VLANs}: en un client, si suben solos, ¡está recibiendo las VLANs del server! (En el lab Switch1 pasó de 5 a 7 VLANs sin tocarlas.)
+\end{itemize}
+
+% ============================================================
+\chapter{Multilayer: SVIs + OSPF}
+
+El MLS0 (3560) es el switch de capa 3 del lab: maneja las VLANs 40/50/99 con SVIs y participa en OSPF.
+
+\section{Configuración completa del MLS0}
+
+\begin{lstlisting}
+MLS0(config)#ip routing
+MLS0(config)#vlan 40
+MLS0(config-vlan)#name VLAN40
+MLS0(config-vlan)#vlan 50
+MLS0(config-vlan)#name VLAN50
+MLS0(config-vlan)#vlan 99
+MLS0(config-vlan)#name VLAN99
+MLS0(config-vlan)#exit
+
+! SVIs = gateways de cada VLAN
+MLS0(config)#interface vlan 40
+MLS0(config-if)#ip address 10.0.40.1 255.255.255.0
+MLS0(config-if)#no shutdown
+MLS0(config-if)#interface vlan 50
+MLS0(config-if)#ip address 10.0.50.1 255.255.255.0
+MLS0(config-if)#no shutdown
+MLS0(config-if)#interface vlan 99
+MLS0(config-if)#ip address 10.0.99.1 255.255.255.0
+MLS0(config-if)#no shutdown
+
+! Enlace al R1 (puerto de router)
+MLS0(config)#interface g0/1
+MLS0(config-if)#no switchport
+MLS0(config-if)#ip address 10.0.1.2 255.255.255.252
+MLS0(config-if)#no shutdown
+
+! OSPF: el MLS0 tambien enruta
+MLS0(config)#router ospf 130
+MLS0(config-router)#network 10.0.1.0 0.0.0.3 area 0
+MLS0(config-router)#network 10.0.40.0 0.0.0.255 area 0
+MLS0(config-router)#network 10.0.50.0 0.0.0.255 area 0
+MLS0(config-router)#network 10.0.99.0 0.0.0.255 area 0
+\end{lstlisting}
+
+\textbf{Recordá:} \cmd{ip routing} es el comando que convierte al switch en router de verdad. Sin él, las SVIs existen pero no mueven tráfico entre VLANs.
+
+% ============================================================
+\chapter{Servidores del lab}
+
+Los servidores viven en la red \texttt{67.20.20.0/24}, conectados por un switch (Switch0):
+
+\begin{longtable}{@{}p{5cm}p{4cm}p{6.5cm}@{}}
+\toprule
+\textbf{Servidor} & \textbf{IP} & \textbf{Función} \\
+\midrule
+\endhead
+RADIUS Server & 67.20.20.50 & Autenticación de usuarios de red \\
+\addlinespace
+SYSLOG Server & 67.20.20.100 & Registro centralizado de logs \\
+\addlinespace
+DHCP Server & 67.20.20.190 & Entrega de IPs automáticas por VLAN \\
+\bottomrule
+\end{longtable}
+
+\section{Configuración en Packet Tracer}
+
+En cada Server-PT: pestaña \textbf{Desktop} $\rightarrow$ \textbf{IP Configuration} $\rightarrow$ IP estática, y después \textbf{Services} para activar el servicio correspondiente (RADIUS, SYSLOG o DHCP) con su pool de direcciones por VLAN.
+
+\section{ip helper-address (para el DHCP)}
+
+Cuando las VLANs no tienen el servidor DHCP en su misma red, los routers/switches de capa 3 reenvían las peticiones DHCP con \cmd{ip helper-address}:
+
+\begin{lstlisting}
+! En la interfaz de cada VLAN que necesita DHCP
+R0(config)#interface vlan 10
+R0(config-if)#ip helper-address 67.20.20.190
+\end{lstlisting}
+
+\begin{itemize}
+  \item El helper convierte el broadcast DHCP en unicast hacia el servidor.
+  \item Se pone en la interfaz de la VLAN (SVI o subinterfaz), apuntando al servidor.
+  \item El servidor DHCP responde con una IP del pool correcto para esa VLAN (si está configurado con pools por VLAN).
+\end{itemize}
+
+% ============================================================
+\chapter{Tabla de direccionamiento completa}
+
+\begin{longtable}{@{}p{4cm}p{3.2cm}p{4.5cm}p{3.8cm}@{}}
+\toprule
+\textbf{Red} & \textbf{Máscara} & \textbf{Dispositivo: IP} & \textbf{Equipos} \\
+\midrule
+\endhead
+7.0.0.0/30 & 255.255.255.252 & R0 G0/0: 7.0.0.1, R1 F0/0: 7.0.0.2 & --- \\
+\addlinespace
+8.0.0.0/30 & 255.255.255.252 & R1 F0/1: 8.0.0.1, R2 F0/0: 8.0.0.2 & --- \\
+\addlinespace
+10.0.1.0/30 & 255.255.255.252 & R1 E0/1/0: 10.0.1.1, MLS0 G0/1: 10.0.1.2 & --- \\
+\addlinespace
+98.15.15.0/24 & 255.255.255.0 & R0 G0/1: 98.15.15.15, R3 G0/1: 98.15.15.14 & --- \\
+\addlinespace
+200.0.0.0/24 & 255.255.255.0 & R3 G0/0: 200.0.0.1 & Laptop4: 200.0.0.16 \\
+\addlinespace
+10.0.10.0/24 & 255.255.255.0 & R0 Vlan10: 10.0.10.1 & Laptop0: 10.0.10.2 \\
+\addlinespace
+10.0.20.0/24 & 255.255.255.0 & R2 F0/1: 10.0.20.1 & Laptop2: 10.0.20.2 \\
+\addlinespace
+10.0.30.0/24 & 255.255.255.0 & R0 Vlan30: 10.0.30.1 & Laptop2(1): 10.0.30.2 \\
+\addlinespace
+10.0.40.0/24 & 255.255.255.0 & MLS0 Vlan40: 10.0.40.1 & Laptop3: 10.0.40.2 \\
+\addlinespace
+10.0.50.0/24 & 255.255.255.0 & MLS0 Vlan50: 10.0.50.1 & Laptop3(1): 10.0.50.2 \\
+\addlinespace
+10.0.99.0/24 & 255.255.255.0 & MLS0 Vlan99: 10.0.99.1 & Laptop3(2): 10.0.99.2 \\
+\addlinespace
+67.20.20.0/24 & 255.255.255.0 & Switch0 (servidores) & RADIUS .50, SYSLOG .100, DHCP .190 \\
+\bottomrule
+\end{longtable}
+
+\textbf{Truco de la casa:} el tercer octeto coincide con la VLAN: VLAN 10 $\rightarrow$ 10.0.10.0/24, VLAN 40 $\rightarrow$ 10.0.40.0/24, etc. La red se lee sola.
+
+% ============================================================
+\chapter{Orden de configuración del lab completo}
+
+\begin{enumerate}
+  \item \textbf{Switch1}: crear VLANs 10/20/30, asignar puertos access, trunk a R0 (allowed 10,30).
+  \item \textbf{Router0}: IPs de enlaces + SVIs Vlan10/Vlan30 + OSPF.
+  \item \textbf{Router1}: IPs de enlaces (F0/0, F0/1, E0/1/0) + OSPF.
+  \item \textbf{Router2}: IPs (F0/0 enlace, F0/1 VLAN 20) + OSPF.
+  \item \textbf{Router3}: IPs (G0/0 Laptop4, G0/1 enlace) + OSPF.
+  \item \textbf{MLS0}: \cmd{ip routing} + VLANs 40/50/99 + SVIs + G0/1 ($\rightarrow$R1) + OSPF + \textbf{VTP server}.
+  \item \textbf{VTP}: dominio \texttt{facil} en todos los switches; Switch1/Switch1(2) client, Switch1(1) transparent.
+  \item \textbf{Servidores}: IPs estáticas + servicios RADIUS/SYSLOG/DHCP + \cmd{ip helper-address} en las VLANs.
+  \item \textbf{Laptops}: IP estática + gateway de su VLAN (Laptop3$\rightarrow$10.0.40.1, etc.).
+  \item \textbf{Verificación final}: \cmd{show ip ospf neighbor} (FULL), \cmd{show vtp status} (dominio facil), pings entre VLANs distintas.
+  \item \textbf{Guardar TODO}: \cmd{copy running-config startup-config} en cada equipo.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,21 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Nivel 0 -- Primer contacto}{2}{section.1}%
+\contentsline {section}{\numberline {2}Nivel 1 -- El archivo llamado \texttt {-}}{2}{section.2}%
+\contentsline {section}{\numberline {3}Nivel 2 -- Archivo con espacios en el nombre}{3}{section.3}%
+\contentsline {section}{\numberline {4}Nivel 3 -- Archivo oculto}{4}{section.4}%
+\contentsline {section}{\numberline {5}Nivel 4 -- El archivo legible por humanos}{4}{section.5}%
+\contentsline {section}{\numberline {6}Nivel 5 -- Buscar por propiedades}{5}{section.6}%
+\contentsline {section}{\numberline {7}Nivel 6 -- Buscar en todo el sistema}{6}{section.7}%
+\contentsline {section}{\numberline {8}Nivel 7 -- grep}{7}{section.8}%
+\contentsline {section}{\numberline {9}Nivel 8 -- La línea única}{7}{section.9}%
+\contentsline {section}{\numberline {10}Nivel 9 -- strings}{8}{section.10}%
+\contentsline {section}{\numberline {11}Nivel 10 -- base64}{8}{section.11}%
+\contentsline {section}{\numberline {12}Nivel 11 -- ROT13}{9}{section.12}%
+\contentsline {section}{\numberline {13}Nivel 12 -- Cadena de compresiones}{9}{section.13}%
+\contentsline {section}{\numberline {14}Nivel 13 -- Clave privada SSH}{11}{section.14}%
+\contentsline {section}{\numberline {15}Nivel 14 -- Netcat}{12}{section.15}%
+\contentsline {section}{\numberline {16}Nivel 15 -- Servicio SSL/TLS}{12}{section.16}%
+\contentsline {section}{\numberline {17}Nivel 16 -- Escaneo de puertos + TLS}{13}{section.17}%
+\contentsline {section}{\numberline {18}Nivel 17 -- diff}{14}{section.18}%
+\contentsline {section}{\numberline {19}Nivel 18 -- Sesión que se cierra sola}{15}{section.19}%
+\contentsline {section}{\numberline {20}Nivel 19 -- Binario setuid}{15}{section.20}%

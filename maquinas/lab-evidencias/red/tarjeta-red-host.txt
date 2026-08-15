@@ -1,0 +1,32 @@
+﻿====================================================================
+FICHA DE TARJETA DE RED - HOST (LAB 02, seccion Network Cards)
+====================================================================
+ADAPTADOR PRINCIPAL (Wi-Fi - el que tiene internet)
+--------------------------------------------------------------------
+Fabricante/Modelo : Realtek 8852CE WiFi 6E PCI-E NIC
+Tipo              : Inalambrica (Wi-Fi 6E / 802.11ax)
+Velocidad de enlace: 866.7 Mbps
+MAC Address       : 08-F9-7E-9E-25-03
+IPv4 Address      : 192.168.1.6/24 (por DHCP)
+Gateway           : 192.168.1.1
+DNS Servers       : 192.168.1.1 (el router hace de DNS)
+IPv6 Link-Local   : fe80::7a67:ecca:4ea2:4cd0%12
+Bytes recibidos   : 1.290.644.339 (1,29 GB)
+Bytes enviados    : 503.619.468 (503 MB)
+SSID              : EVANGELIO_5G (red 5 GHz del router)
+
+OTROS ADAPTADORES
+--------------------------------------------------------------------
+Ethernet (cable)  : Realtek PCIe GbE Family Controller (1 Gbps) - DESCONECTADO
+                     MAC: 30-C5-99-8B-F5-8A (sin IP asignada)
+VirtualBox Host-Only: VirtualBox Host-Only Ethernet Adapter (1 Gbps)
+                     IPv4: 192.168.56.1 - MAC: 0A-00-27-00-00-23 (para las VMs)
+Wi-Fi Direct x2   : Adaptadores virtuales de Windows (MACs 0A-F9... y 0E-F9...)
+
+OBSERVACIONES
+--------------------------------------------------------------------
+- La conexion activa es Wi-Fi 6E a 866 Mbps en la banda de 5 GHz
+- 1,29 GB recibidos = la captura de Wireshark + el streaming de Google
+- El Ethernet esta desconectado (cuando vayas a la uni se usa ese)
+- El adaptador VirtualBox es la "tarjeta" que usan tus VMs en modo host-only
+====================================================================

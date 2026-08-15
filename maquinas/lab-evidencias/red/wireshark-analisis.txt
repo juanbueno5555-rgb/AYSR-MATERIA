@@ -1,0 +1,39 @@
+﻿ANALISIS DE CAPTURA WIRESHARK - LAB 02
+======================================
+Archivo: wireshark-scielo.pcapng (2742 paquetes, 30 segundos, interfaz Wi-Fi)
+Fecha: 2026-08-10 21:20 (hora local)
+
+RESUMEN DE PROTOCOLOS (Protocol Hierarchy)
+------------------------------------------
+frame: 2742 paquetes / 3004210 bytes
+  eth (Ethernet II): 2742
+    ip (IPv4): 2728
+      tcp: 79  -> tls (HTTPS): 16, http: 3
+      udp: 2648 -> data: 2601, quic: 47
+      icmp: 1
+    ipv6: 11 -> icmpv6: 9, dns: 2
+    arp: 3
+
+PAQUETE GET (el que pide el lab)
+--------------------------------
+Frame #395: 192.168.1.6 (PC) -> 168.176.28.57 (www.scielo.org.co)
+GET / HTTP/1.1
+Host: www.scielo.org.co
+User-Agent: Mozilla/5.0 (Windows NT 10.0; es-CO) WindowsPowerShell/5.1
+216 bytes en el cable
+
+ENCAPSULAMIENTO CAPA POR CAPA (Frame 395)
+------------------------------------------
+1. Frame (fisica/datos): 216 bytes, llegada 21:20:06.506
+2. Ethernet II (capa 2): Src 08:f9:7e:9e:25:03 (CloudNetwork), Dst e0:a1:ce:d2:85:76 (ZTE router), Type: IPv4 (0x0800)
+3. IPv4 (capa 3): Src 192.168.1.6, Dst 168.176.28.57, TTL 128, Protocol: TCP (6), Total Length 202
+4. TCP (capa 4): Src Port 62341, Dst Port 80, Seq 1, Ack 1, Len 162
+5. HTTP (capa 7): GET / HTTP/1.1, Host: www.scielo.org.co, Connection: Keep-Alive
+
+OBSERVACIONES
+-------------
+- El trafico dominante es UDP "data" (2601 paquetes) = trafico de streaming/background
+- QUIC (47) = protocolo de Chrome sobre UDP (HTTP/3)
+- DNS: 2 paquetes (resolucion de www.scielo.org.co)
+- ARP: 3 paquetes (resolucion MAC del router)
+- El GET viaja por TCP puerto 80 (HTTP plano, no cifrado) - por eso se ve el contenido

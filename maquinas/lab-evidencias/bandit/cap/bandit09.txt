@@ -1,0 +1,6 @@
+bandit9@bandit:~$ strings data.txt | grep '=='
+========== the
+[==p+
+========== password
+Y========== is
+========== B0s2khmbT9u0geKuOoVGW3JZKhndE3BG

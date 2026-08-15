@@ -1,0 +1,35 @@
+bandit12@bandit:~$ sh /tmp/b12doc/b12doc.sh
+f0: gzip compressed data, was "data2.bin", last modified: Wed Jun 24 14:58:46 2026, max compression, from Unix, original size modulo 2^32 580
+f1: bzip2 compressed data, block size = 900k
+f2: gzip compressed data, was "data4.bin", last modified: Wed Jun 24 14:58:46 2026, max compression, from Unix, original size modulo 2^32 20480
+f3: POSIX tar archive (GNU)
+data.txt
+data5.bin
+f0
+f1
+f2
+f3
+data5.bin: POSIX tar archive (GNU)
+data.txt
+data5.bin
+data6.bin
+f0
+f1
+f2
+f3
+data6.bin: bzip2 compressed data, block size = 900k
+f4: POSIX tar archive (GNU)
+data.txt
+data5.bin
+data6.bin
+data8.bin
+f0
+f1
+f2
+f3
+f4
+== data5.bin: POSIX tar archive (GNU)
+== data6.bin: bzip2 compressed data, block size = 900k
+== data8.bin: gzip compressed data, was "data9.bin", last modified: Wed Jun 24 14:58:46 2026, max compression, from Unix, original size modulo 2^32 49
+f5: ASCII text
+The password is qQYQiHOBPR8zR61qxYqX45quvihF2uzk

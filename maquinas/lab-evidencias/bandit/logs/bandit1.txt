@@ -1,0 +1,8 @@
+total 24
+-rw-r-----   1 bandit2 bandit1   33 Jun 24 14:58 -
+drwxr-xr-x   2 root    root    4096 Jun 24 14:58 .
+drwxr-xr-x 150 root    root    4096 Jun 24 15:02 ..
+-rw-r--r--   1 root    root     220 Feb 13 12:16 .bash_logout
+-rw-r--r--   1 root    root    3851 Jun 24 14:50 .bashrc
+-rw-r--r--   1 root    root     807 Feb 13 12:16 .profile
+PK8fYLZg2hnHSz83plBL1iEPKdD3QToB

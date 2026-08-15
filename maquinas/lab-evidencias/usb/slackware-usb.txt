@@ -1,0 +1,21 @@
+﻿Disk /dev/sdb: 512 MiB, 536870912 bytes, 1048576 sectors
+Disk model: VBOX HARDDISK   
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+=== FORMATEAR ===
+Creating journal (4096 blocks): done
+Writing superblocks and filesystem accounting information: 0/4   done
+
+=== MONTAR ===
+/dev/sdb        488M   24K  452M   1% /mnt/usb
+=== COPIAR ARCHIVO ===
+total 28
+drwxr-xr-x  3 root root  4096 Aug  6 04:00 .
+drwxr-xr-x 11 root root  4096 Aug  6 04:00 ..
+-rw-r--r--  1 root root    23 Aug  6 04:00 evidencia.txt
+drwx------  2 root root 16384 Aug  6 04:00 lost+found
+=== DESMONTAR ===
+sdb desmontado OK
+=== PUNTOS DE MONTAJE ===
+/media
+/mnt

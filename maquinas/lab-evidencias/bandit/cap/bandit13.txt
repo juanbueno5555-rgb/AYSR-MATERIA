@@ -1,0 +1,17 @@
+bandit13@bandit:~$ ls -la sshkey.private
+-rw-r----- 1 bandit14 bandit13 2602 Jun 24 14:58 sshkey.private
+
+C:\Users\RANGE> ssh -i bandit13key -p 2220 bandit14@bandit.labs.overthewire.org
+                         _                     _ _ _   
+ 
+                        | |__   __ _ _ __   __| (_) |_ 
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_ 
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+                                                       
+
+                      This is an OverTheWire game server. 
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-1
+aaWecNkG4FhxJQxz07uiwzVP6bJiYS65

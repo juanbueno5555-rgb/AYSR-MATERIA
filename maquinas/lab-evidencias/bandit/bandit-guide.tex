@@ -1,0 +1,513 @@
+% ============================================================
+% OverTheWire - Bandit: Guia completa (Niveles 0-19)
+% ------------------------------------------------------------
+% Compilar local (Windows + MiKTeX):
+%   pdflatex -interaction=nonstopmode bandit-guide.tex
+% Requiere la carpeta png/ (bandit00.png ... bandit19.png).
+% El delimitador de \lstinline es ~ (tilde), que no aparece en
+% ningun contenido inline.
+% ============================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+
+\lstdefinestyle{bash}{
+  language=bash,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!45!black}\itshape,
+  stringstyle=\color{red!70!black},
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{gray!40},
+  backgroundcolor=\color{gray!8},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  aboveskip=10pt,
+  belowskip=10pt,
+}
+\lstset{style=bash}
+
+\newcommand{\nivelpassword}[2]{%
+  \medskip
+  \begin{tcolorbox}[colback=blue!5,colframe=blue!55!black,arc=2pt,boxrule=0.5pt,
+    left=8pt,right=8pt,top=5pt,bottom=5pt]
+    \textbf{Contrase\~na para bandit#1:} \texttt{\small #2}
+  \end{tcolorbox}
+}
+
+\newcommand{\nota}[1]{%
+  \medskip
+  \begin{tcolorbox}[colback=gray!8,colframe=gray!60!black,arc=2pt,boxrule=0.5pt,
+    left=8pt,right=8pt,top=5pt,bottom=5pt]
+    \small\textbf{Nota:} #1
+  \end{tcolorbox}
+}
+
+\begin{document}
+
+\title{\textbf{OverTheWire --- Bandit: Gu\'a completa}\\ \large Niveles 0--19 con explicaci\'on de cada comando}
+\author{Juan David Rangel}
+\date{}
+\maketitle
+
+\tableofcontents
+\newpage
+Guía paso a paso de los primeros 20 niveles de Bandit con capturas de terminal renderizadas, explicación detallada de cada comando y la contraseña para el siguiente nivel.
+
+\section*{Cómo conectarse}
+\begin{lstlisting}
+ssh -p 2220 bandit<N>@bandit.labs.overthewire.org
+\end{lstlisting}
+\nota{\textbf{Nota sobre el puerto:} SSH usa por defecto el puerto 22, pero Bandit corre en el puerto \textbf{2220} para no interferir con el servicio normal del servidor. Por eso siempre hay que indicarlo con \lstinline~-p 2220~. La contraseña del nivel 0 es simplemente \lstinline~bandit0~.}
+\section{Nivel 0  --  Primer contacto}
+\textbf{Objetivo:} conectarse por SSH y leer el archivo \lstinline~readme~ que está en el directorio personal.
+\textbf{Comando:}
+\begin{lstlisting}
+cat readme
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit00.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~cat~ (del inglés \emph{concatenate}) imprime el contenido de un archivo en la salida estándar. Es la herramienta más básica para leer archivos de texto en Linux.
+  \item Al iniciar sesión, el shell te deja en el directorio personal (\lstinline~/home/bandit0~), que contiene un único archivo llamado \lstinline~readme~ con la contraseña del nivel 1.
+  \item Concepto importante: si el archivo no existe, \lstinline~cat~ muestra un error de tipo \emph{No such file or directory}. Leer bien los errores es parte del oficio.
+\end{itemize}
+\nivelpassword{1}{6y2kwnwK6grgvwvpvLaa2T1cpFEKOhNR}
+\section{Nivel 1  --  El archivo llamado \texttt{-}}
+\textbf{Objetivo:} leer un archivo cuyo nombre es un guion solo (\lstinline~-~).
+\textbf{Comando:}
+\begin{lstlisting}
+cat ./-
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit01.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item El guion (\lstinline~-~) es un carácter reservado en muchas herramientas de Unix: significa \emph{entrada estándar}. Si ejecutás \lstinline~cat -~, el programa espera a que escribas por teclado en lugar de leer un archivo.
+  \item La solución es desambiguar con la ruta explícita: \lstinline~./-~ indica "el archivo llamado \lstinline~-~ dentro del directorio actual". El prefijo \lstinline~./~ elimina cualquier interpretación especial.
+  \item Lección: los nombres de archivo pueden contener cualquier carácter salvo \lstinline~/~ y el nulo; los caracteres "especiales" se neutralizan con rutas explícitas o comillas (ver nivel 2).
+\end{itemize}
+\nivelpassword{2}{PK8fYLZg2hnHSz83plBL1iEPKdD3QToB}
+\section{Nivel 2  --  Archivo con espacios en el nombre}
+\textbf{Objetivo:} leer un archivo cuyo nombre contiene espacios.
+\textbf{Comandos:}
+\begin{lstlisting}
+ls -la
+cat -- '--spaces in this filename--'
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit02.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~ls -la~ lista todos los archivos (incluso ocultos, por la \lstinline~-a~) con detalles (por la \lstinline~-l~). Aquí se ve el nombre real: \lstinline~--spaces in this filename--~, que tiene guiones \textbf{al inicio y al final}.
+  \item Las \textbf{comillas simples} agrupan todo lo que está entre ellas en un único argumento, de modo que los espacios no se interpreten como separadores. Sin comillas, \lstinline~cat~ recibiría cinco argumentos sueltos (\lstinline~spaces~, \lstinline~in~, \lstinline~this~, \lstinline~filename~).
+  \item El doble guion (\lstinline~--~) es la convención universal de GNU para "fin de opciones": le dice a \lstinline~cat~ que todo lo que sigue es un archivo y no una bandera. Sin él, un nombre que empieza con \lstinline~-~ se interpretaría como opción (prueba de ello: \lstinline~cat~ falla con \emph{unexpected argument}).
+  \item \lstinline~ls -la~ es el primer reflejo de cualquier persona que trabaja en un sistema Linux: ver qué hay, con qué permisos y qué oculto.
+\end{itemize}
+\nivelpassword{3}{7ZZ2LFrykP2zEyvBl4m3clcL7tGYJPME}
+\section{Nivel 3  --  Archivo oculto}
+\textbf{Objetivo:} encontrar y leer el archivo oculto dentro de \lstinline~inhere/~.
+\textbf{Comandos:}
+\begin{lstlisting}
+ls -la inhere/
+cat inhere/...Hiding-From-You
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit03.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item En Linux, un archivo es "oculto" cuando su nombre empieza con un punto (\lstinline~.~). \lstinline~ls~ a secas no lo muestra; \lstinline~ls -a~ (o \lstinline~-la~) sí.
+  \item El truco de este nivel es doble: además de estar oculto, el nombre empieza con \textbf{tres puntos} (\lstinline~...Hiding-From-You~), lo que lo hace fácil de pasar por alto incluso mirando el listado.
+  \item \lstinline~ls -la inhere/~ muestra los permisos y el propietario: el archivo pertenece al usuario \lstinline~bandit4~, que es justamente el siguiente nivel  --  pista clásica de Bandit.
+  \item Lección: cuando un desafío dice "hay un archivo oculto", lo primero es \lstinline~ls -la~; y si el nombre empieza con puntos, mirá con atención.
+\end{itemize}
+\nivelpassword{4}{xzTXq1rDJQVVAzdv5cHq1TQytTWufAMq}
+\section{Nivel 4  --  El archivo legible por humanos}
+\textbf{Objetivo:} entre diez archivos de \lstinline~inhere/~, encontrar el único que es texto plano legible.
+\textbf{Comandos:}
+\begin{lstlisting}
+file inhere/*
+cat inhere/-file07
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit04.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~file~ identifica el \textbf{tipo real} de un archivo inspeccionando su contenido (los llamados \emph{magic bytes} de los primeros bytes), no su extensión ni su nombre. Es la herramienta correcta cuando el contenido es desconocido.
+  \item El comodín \lstinline~*~ se expande a todos los archivos del directorio, así que \lstinline~inhere/*~ analiza los diez de una vez.
+  \item El resultado: la mayoría son \lstinline~data~ (binarios sin tipo reconocible), hay un par de casos raros (\lstinline~OpenPGP Secret Key~, texto con caracteres extendidos) y solo \lstinline~-file07~ es \lstinline~ASCII text~  --  texto plano puro. Ese es el que contiene la contraseña.
+  \item \lstinline~cat inhere/-file07~ la muestra. Nota: el archivo también empieza con \lstinline~-~, pero \lstinline~inhere/~ ya desambigua la ruta.
+\end{itemize}
+\nivelpassword{5}{6C7h9GD8M6ai5nr7wo1RonrzFjj9yIrG}
+\section{Nivel 5  --  Buscar por propiedades}
+\textbf{Objetivo:} localizar un archivo de exactamente 1033 bytes, que \textbf{no} sea ejecutable, en algún lugar del árbol \lstinline~inhere/~.
+\textbf{Comandos:}
+\begin{lstlisting}
+find inhere/ -type f -size 1033c ! -executable
+cat inhere/maybehere07/.file2
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit05.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~find~ recorre directorios de forma recursiva aplicando filtros. Es la herramienta definitiva para "encontrar algo cuando no sé dónde está".
+  \item Los filtros usados:
+\begin{itemize}
+  \item \lstinline~-type f~ $\rightarrow$ solo archivos regulares (excluye directorios, enlaces, etc.).
+  \item \lstinline~-size 1033c~ $\rightarrow$ tamaño exacto de 1033 bytes. La \lstinline~c~ es la unidad: \emph{bytes}. Sin unidad, \lstinline~find~ interpreta bloques de 512 bytes.
+  \item \lstinline~! -executable~ $\rightarrow$ negación: NO debe tener bit de ejecución.
+\end{itemize}
+  \item El único resultado es un archivo \textbf{oculto} (\lstinline~maybehere07/.file2~) en un subdirectorio profundo  --  otro recordatorio de que \lstinline~ls -la~ es tu amigo.
+  \item Lección: \lstinline~find~ con \lstinline~-size~, \lstinline~-user~, \lstinline~-group~, \lstinline~-type~ y negaciones (\lstinline~!~) resuelve la mayoría de búsquedas "por características".
+\end{itemize}
+\nivelpassword{6}{pXa26xhMWaC2SvDotA4r9EgZkulOeSBW}
+\section{Nivel 6  --  Buscar en todo el sistema}
+\textbf{Objetivo:} encontrar un archivo de 33 bytes propiedad del usuario \lstinline~bandit7~ y del grupo \lstinline~bandit6~, en cualquier parte del sistema.
+\textbf{Comando:}
+\begin{lstlisting}
+F=$(find / -type f -user bandit7 -group bandit6 -size 33c 2>/dev/null)
+echo "RUTA: $F"
+cat $F
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit06.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item La búsqueda ahora arranca en \lstinline~/~ (raíz del sistema de archivos completo), no en el directorio actual.
+  \item Filtros nuevos: \lstinline~-user bandit7~ (propietario) y \lstinline~-group bandit6~ (grupo). Combinados con \lstinline~-type f~ y \lstinline~-size 33c~, queda una sola coincidencia.
+  \item \lstinline~2>/dev/null~ redirige los \textbf{errores estándar} (stderr) a la papelera: al recorrer todo el sistema, \lstinline~find~ intenta entrar en directorios sin permiso y escupe muchísimos \emph{Permission denied}. Silenciarlos permite ver solo el resultado útil. Este patrón (\lstinline~comando 2>/dev/null~) es ubicuo en administración de sistemas.
+  \item La variable \lstinline~F~ guarda la ruta encontrada (\lstinline~$(...)~ es \emph{sustitución de comando}: ejecuta y captura la salida) para poder leerla después con \lstinline~cat~.
+  \item El archivo vive en \lstinline~/var/lib/dpkg/info/bandit7.password~  --  los niveles de Bandit suelen esconder archivos entre los datos de paquetes del sistema.
+\end{itemize}
+\nivelpassword{7}{Bmnnvf82KzQlfxgAI2d1zYbr1u9pr3E3}
+\section{Nivel 7  --  grep}
+\textbf{Objetivo:} encontrar, dentro de \lstinline~data.txt~, la línea que contiene la palabra \lstinline~millionth~.
+\textbf{Comando:}
+\begin{lstlisting}
+grep millionth data.txt
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit07.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~grep~ busca patrones dentro de archivos e imprime las líneas que coinciden. Es probablemente el comando más usado de Linux después de \lstinline~ls~.
+  \item El archivo tiene miles de líneas con el formato \lstinline~palabra<TAB>password~. Pedir \lstinline~grep millionth~ devuelve exactamente la línea que nos interesa.
+  \item La salida muestra el separador tabulador: \lstinline~millionth~ seguido de la contraseña en el mismo renglón.
+  \item Sintaxis básica: \texttt{grep PATRÓN ARCHIVO}. Los patrones pueden ser expresiones regulares (ahí se vuelve realmente poderoso).
+\end{itemize}
+\nivelpassword{8}{VR1ljMayciFxbnUokuQmJFw6QC9VKtub}
+\section{Nivel 8  --  La línea única}
+\textbf{Objetivo:} \lstinline~data.txt~ contiene muchas líneas repetidas; encontrar la única que aparece una sola vez.
+\textbf{Comando:}
+\begin{lstlisting}
+sort data.txt | uniq -u
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit08.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item La tubería (\lstinline~|~) conecta la salida de un comando con la entrada del siguiente: \lstinline~sort~ ordena todas las líneas y su salida alimenta a \lstinline~uniq~.
+  \item \lstinline~uniq~ solo detecta líneas \textbf{adyacentes} duplicadas; por eso primero hay que ordenar: las repeticiones quedan juntas.
+  \item \lstinline~uniq -u~ (de \emph{unique}) imprime únicamente las líneas que aparecen una sola vez. Como la contraseña es la única línea no repetida, es lo único que sale.
+  \item Concepto central de Unix: \textbf{componer herramientas pequeñas} con tuberías en lugar de escribir programas grandes. \lstinline~sort | uniq~ es un clásico.
+\end{itemize}
+\nivelpassword{9}{EjmOSvuAu7sGAHqHVcBDPirRe9T03kxl}
+\section{Nivel 9  --  strings}
+\textbf{Objetivo:} encontrar la contraseña dentro de un archivo binario.
+\textbf{Comando:}
+\begin{lstlisting}
+strings data.txt | grep '=='
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit09.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~data.txt~ es un archivo binario: \lstinline~cat~ lo mostraría como basura ilegible. \lstinline~strings~ extrae las secuencias de caracteres imprimibles que contiene (todo archivo binario arrastra fragmentos de texto).
+  \item El filtro \lstinline~grep '=='~ conserva solo las líneas que parecen marcas de contraseña. La salida muestra un patrón armado: \lstinline~========== the~, \lstinline~========== password~, \lstinline~========== is~, y por fin \lstinline~========== B0s2k...~  --  la contraseña.
+  \item Lección de seguridad: los datos "ocultos" en binarios se recuperan con \lstinline~strings~; por eso los programas serios no guardan secretos en texto plano ni en el binario.
+\end{itemize}
+\nivelpassword{10}{B0s2khmbT9u0geKuOoVGW3JZKhndE3BG}
+\section{Nivel 10  --  base64}
+\textbf{Objetivo:} decodificar el contenido del archivo.
+\textbf{Comando:}
+\begin{lstlisting}
+base64 -d data.txt
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit10.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item Base64 es una codificación que representa datos binarios con un alfabeto de 64 caracteres imprimibles (letras, dígitos, \lstinline~+~ y \lstinline~/~). Se usa mucho en la web (adjuntos, tokens JWT, etc.).
+  \item \lstinline~base64~ sin opciones \textbf{codifica}; \lstinline~base64 -d~ (de \emph{decode}) \textbf{decodifica}.
+  \item El archivo contiene una frase completa codificada: al decodificarla aparece \lstinline~The password is pYfOY...~.
+  \item Nota: base64 \textbf{no es cifrado}  --  es codificación, cualquiera puede revertirla sin clave. Este nivel enseña a reconocerla: bloques de letras/dígitos que terminan en \lstinline~=~.
+\end{itemize}
+\nivelpassword{11}{pYfOY6HwUsDj5rL9UvyhU7MCmv8vN5Ro}
+\section{Nivel 11  --  ROT13}
+\textbf{Objetivo:} decodificar un cifrado César de 13 posiciones.
+\textbf{Comando:}
+\begin{lstlisting}
+tr 'A-Za-z' 'N-ZA-Mn-za-m' < data.txt
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit11.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item ROT13 es un cifrado César que desplaza cada letra 13 posiciones en el alfabeto (A$\rightarrow$N, B$\rightarrow$O, ... M$\rightarrow$Z, N$\rightarrow$A, ...). Es el cifrado "de juguete" clásico de Usenet.
+  \item \lstinline~tr~ (de \emph{translate}) reemplaza caracteres del primer conjunto por los del segundo, uno a uno:
+\begin{itemize}
+  \item \lstinline~A-Za-z~ $\rightarrow$ todas las letras mayúsculas y minúsculas.
+  \item \lstinline~N-ZA-Mn-za-m~ $\rightarrow$ el alfabeto desplazado 13 (\lstinline~N-Z~ + \lstinline~A-M~ para mayúsculas, igual para minúsculas).
+\end{itemize}
+  \item La redirección de entrada (\lstinline~<~) hace que \lstinline~tr~ lea de \lstinline~data.txt~ en lugar del teclado.
+  \item Propiedad elegante: ROT13 aplicado dos veces vuelve al texto original, así que \textbf{decodificar = codificar} con el mismo comando.
+  \item Lección: distinguir cifrado real (con clave) de ofuscaciones triviales que cualquier \lstinline~tr~ revierte.
+\end{itemize}
+\nivelpassword{12}{GROozWPO8QyN0mGrjUkID0WCYkZiQxrN}
+\section{Nivel 12  --  Cadena de compresiones}
+\textbf{Objetivo:} recuperar la contraseña desde un volcado hexadecimal que, invertido, revela un archivo comprimido repetidamente con distintas herramientas.
+\textbf{Comandos:}
+\begin{lstlisting}
+xxd -r data.txt > f0
+file f0
+gzip -dc f0 > f1
+bzip2 -dc f1 > f2
+gzip -dc f2 > f3
+tar xf f3
+tar xf data5.bin
+bzip2 -dc data6.bin > f4
+tar xf f4
+gzip -dc data8.bin > f5
+cat f5
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit12.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~xxd -r~ (de \emph{reverse}) convierte el volcado hexadecimal de vuelta a binario. La salida se guarda en \lstinline~f0~ con la redirección \lstinline~>~.
+  \item A partir de ahí comienza un ciclo: \lstinline~file~ dice qué tipo es, y se descomprime con la herramienta correspondiente:
+\begin{itemize}
+  \item \lstinline~gzip -dc~: \lstinline~-d~ descomprime, \lstinline~-c~ escribe en la salida estándar (en vez de crear un archivo).
+  \item \lstinline~bzip2 -dc~: lo mismo para el formato bzip2 (más compresión, más lento).
+  \item \lstinline~tar xf~: \lstinline~tar~ empaqueta archivos; \lstinline~x~ extrae, \lstinline~f~ indica el archivo. Al extraer aparecen \lstinline~data5.bin~, \lstinline~data6.bin~, \lstinline~data8.bin~...
+\end{itemize}
+  \item La cadena completa es: hex $\rightarrow$ gzip $\rightarrow$ bzip2 $\rightarrow$ gzip $\rightarrow$ tar $\rightarrow$ tar $\rightarrow$ bzip2 $\rightarrow$ tar $\rightarrow$ gzip $\rightarrow$ \textbf{texto ASCII}.
+  \item Lección: \lstinline~file~ antes de descomprimir evita adivinar. En el mundo real, recibir datos de fuentes desconocidas sin saber su formato es moneda corriente, y esta secuencia de detección es la práctica correcta.
+\end{itemize}
+\nivelpassword{13}{qQYQiHOBPR8zR61qxYqX45quvihF2uzk}
+\section{Nivel 13  --  Clave privada SSH}
+\textbf{Objetivo:} usar la clave privada \lstinline~sshkey.private~ para iniciar sesión como \lstinline~bandit14~ y leer su contraseña.
+\textbf{Comandos:}
+\begin{lstlisting}
+ls -la sshkey.private
+ssh -i sshkey.private -p 2220 bandit14@bandit.labs.overthewire.org
+cat /etc/bandit_pass/bandit14
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit13.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item El directorio personal contiene una \textbf{clave privada SSH}: \lstinline~sshkey.private~. El listado muestra que pertenece al usuario \lstinline~bandit14~, con permisos \lstinline~-rw-r-----~ (legible por el grupo \lstinline~bandit13~).
+  \item \lstinline~ssh -i clave~ autentica con esa clave en lugar de pedir contraseña. Las claves SSH reemplazan el secreto compartido por un par criptográfico: la clave pública vive en el servidor y la privada (que jamás debe compartirse) en tu máquina.
+  \item \textbf{Detalle importante:} OpenSSH rechaza claves con permisos demasiado abiertos (por seguridad), así que suele ser necesario \lstinline~chmod 600 sshkey.private~.
+  \item En este caso concreto, conectar a \lstinline~localhost~ desde dentro del servidor de juego está bloqueado; la clave se usa desde la máquina local contra \lstinline~bandit.labs.overthewire.org~.
+  \item \lstinline~cat /etc/bandit_pass/bandit14~ lee el archivo donde el servidor guarda la contraseña del nivel  --  nótese que todos los passwords de Bandit viven en \lstinline~/etc/bandit_pass/~.
+\end{itemize}
+\nivelpassword{14}{aaWecNkG4FhxJQxz07uiwzVP6bJiYS65}
+\section{Nivel 14  --  Netcat}
+\textbf{Objetivo:} enviar la contraseña actual a un servicio que escucha en el puerto \lstinline~30000~ de localhost.
+\textbf{Comando:}
+\begin{lstlisting}
+echo 'aaWecNkG4FhxJQxz07uiwzVP6bJiYS65' | nc localhost 30000
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit14.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~nc~ (netcat) es la "navaja suiza" de las redes: abre una \textbf{conexión TCP cruda} con un host y un puerto, sin protocolo de aplicación. Útil para probar servicios y para este tipo de desafíos.
+  \item \lstinline~echo '...'~ imprime la contraseña y la tubería la envía por la conexión. El servicio, al recibir el texto correcto, responde \lstinline~Correct!~ y la contraseña del siguiente nivel.
+  \item Concepto: un servicio de red no es más que un programa que escucha en un puerto y procesa bytes. Con \lstinline~nc~ podés hablarle "a mano" a cualquier puerto, igual que el telnet clásico.
+  \item Si el texto no es el esperado, el servicio responde \lstinline~Wrong!~  --  pista para revisar qué se está enviando.
+\end{itemize}
+\nivelpassword{15}{pbLYuZtTg4MgaqfJx8jbA9gKKGqM68A7}
+\section{Nivel 15  --  Servicio SSL/TLS}
+\textbf{Objetivo:} enviar la contraseña al servicio protegido por TLS del puerto \lstinline~30001~.
+\textbf{Comando:}
+\begin{lstlisting}
+echo 'pbLYuZtTg4MgaqfJx8jbA9gKKGqM68A7' | openssl s_client -connect localhost:30001 -quiet
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit15.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item El puerto \lstinline~30001~ \textbf{no} es texto plano: habla TLS (el cifrado que protege HTTPS). \lstinline~nc~ no serviría porque el servicio espera primero el handshake criptográfico.
+  \item \lstinline~openssl s_client~ es el cliente de prueba TLS de OpenSSL: establece el handshake y luego deja pasar bytes en claro por el canal cifrado.
+  \item \lstinline~-connect localhost:30001~ indica destino; \lstinline~-quiet~ suprime todo el ruido del certificado y deja solo la conversación útil.
+  \item Al igual que el nivel 14, \lstinline~echo~ + tubería envía la contraseña y el servicio responde \lstinline~Correct!~ + la siguiente contraseña.
+  \item Lección: cuando un servicio "no responde" con \lstinline~nc~, probar si está cifrado con \lstinline~openssl s_client~ es el siguiente paso natural.
+\end{itemize}
+\nivelpassword{16}{kS0Hf0u5HiXFwKMKFqXvPdOTNGGa0X8V}
+\section{Nivel 16  --  Escaneo de puertos + TLS}
+\textbf{Objetivo:} encontrar, entre los puertos \lstinline~31000~ -- \lstinline~32000~, el servicio SSL que al recibir la contraseña devuelve la clave privada del siguiente nivel.
+\textbf{Comandos:}
+\begin{lstlisting}
+nmap -p 31000-32000 localhost
+echo '<password>' | openssl s_client -connect localhost:<PUERTO> -quiet
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit16.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~nmap~ es el escáner de puertos por excelencia. \lstinline~-p 31000-32000~ limita el rango y \lstinline~localhost~ el objetivo. El resultado: cinco puertos abiertos (\lstinline~31046~, \lstinline~31518~, \lstinline~31691~, \lstinline~31790~, \lstinline~31960~) y el resto cerrados.
+  \item Tener un puerto \textbf{abierto} no dice nada sobre el \textbf{protocolo}: hay que probar cada uno. Los cinco se recorren con \lstinline~openssl s_client~ enviando la contraseña.
+  \item Resultado del recorrido: la mayoría no responde o solo repite el eco; el puerto \lstinline~31790~ responde \lstinline~Correct!~ y devuelve una \textbf{clave privada OpenSSH} completa (\lstinline~-----BEGIN OPENSSH PRIVATE KEY-----~).
+  \item Con esa clave se aplica la técnica del nivel 13 para entrar como \lstinline~bandit17~.
+  \item Lección: "puerto abierto" $\neq$ "servicio útil". Escanear y luego identificar el protocolo (con \lstinline~file~ para archivos, \lstinline~s_client~/\lstinline~nc~ para servicios) es el método.
+\end{itemize}
+\nivelpassword{17}{pWXMAZoxGC8JmDMfmT5MGEsobMM3vnj2}
+\section{Nivel 17  --  diff}
+\textbf{Objetivo:} encontrar la única línea que cambió entre \lstinline~passwords.old~ y \lstinline~passwords.new~.
+\textbf{Comando:}
+\begin{lstlisting}
+diff passwords.old passwords.new
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit17.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item \lstinline~diff~ compara dos archivos línea por línea y muestra las diferencias en un formato estándar.
+  \item La notación \lstinline~42c42~ significa: en la línea 42 de ambos archivos hubo un \textbf{cambio} (la \lstinline~c~). Otras notaciones: \lstinline~a~ (añadido) y \lstinline~d~ (borrado).
+  \item Las líneas siguientes: \lstinline~<~ es el contenido \textbf{viejo} (de \lstinline~passwords.old~) y \lstinline~>~ el contenido \textbf{nuevo} (de \lstinline~passwords.new~). Entre ambos, una línea \lstinline~---~ separa los dos lados.
+  \item La contraseña es la línea que existe solo en el archivo nuevo: \lstinline~OQxXZjELndr90zuhOTDYBEomI0SZITXI~.
+  \item \lstinline~diff~ es la base de los sistemas de control de versiones (git los usa internamente) y de los parches. Comparar versiones de archivos de configuración es su uso diario.
+\end{itemize}
+\nivelpassword{18}{OQxXZjELndr90zuhOTDYBEomI0SZITXI}
+\section{Nivel 18  --  Sesión que se cierra sola}
+\textbf{Objetivo:} leer \lstinline~readme~ aunque el shell cierra la sesión inmediatamente después de iniciar.
+\textbf{Comando:}
+\begin{lstlisting}
+ssh -p 2220 bandit18@bandit.labs.overthewire.org "cat readme"
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit18.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item Al conectar de forma interactiva, el servidor muestra un mensaje (\emph{Byebye!}) y corta la sesión al instante: el shell configurado para esta cuenta sale apenas arranca.
+  \item La clave está en que \lstinline~ssh~ acepta un \textbf{comando como argumento}: \lstinline~ssh host "comando"~ no abre un shell interactivo, sino que ejecuta ese comando directamente en el servidor y devuelve la salida.
+  \item Como el comando corre antes de que el shell de login tenga oportunidad de cortar, \lstinline~cat readme~ funciona igual.
+  \item Lección de automatización: pasar comandos a \lstinline~ssh~ sin sesión interactiva es la base de los scripts de administración remota.
+\end{itemize}
+\nivelpassword{19}{KpsOfPkcP7i1FlIExk2QEjyt6dw8dxZI}
+\section{Nivel 19  --  Binario setuid}
+\textbf{Objetivo:} usar el binario \lstinline~bandit20-do~ para ejecutar comandos como el usuario \lstinline~bandit20~.
+\textbf{Comandos:}
+\begin{lstlisting}
+ls -la
+file bandit20-do
+./bandit20-do cat /etc/bandit_pass/bandit20
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.95\textwidth,keepaspectratio]{png/bandit19.png}
+\end{center}
+\textbf{Explicación:}
+\begin{itemize}
+  \item El listado revela la pista: \lstinline~-rwsr-x--- 1 bandit20 bandit19 bandit20-do~. El archivo es propiedad de \lstinline~bandit20~, y en la posición del bit de ejecución del propietario aparece una \lstinline~s~ en lugar de \lstinline~x~.
+  \item Esa \lstinline~s~ es el bit \textbf{setuid}: cuando se ejecuta el programa, el sistema operativo le asigna el ID de usuario \textbf{del propietario} (\lstinline~bandit20~) en lugar del de quien lo lanza (\lstinline~bandit19~). Es el mecanismo clásico de Unix para escalar privilegios de forma controlada (así funcionan \lstinline~sudo~ y \lstinline~passwd~).
+  \item \lstinline~file~ confirma que es un ELF ejecutable (un binario real, no un script), con setuid activo.
+  \item \lstinline~./bandit20-do cat /etc/bandit_pass/bandit20~ le pide al programa que ejecute \lstinline~cat~ sobre el archivo de contraseñas del nivel 20: como el binario corre como \lstinline~bandit20~, puede leerlo y lo imprime.
+  \item Lección de seguridad: setuid es poderoso y peligroso; un binario setuid mal diseñado es una puerta de escalada de privilegios. Este nivel muestra exactamente por qué.
+\end{itemize}
+\nivelpassword{20}{4pIjcunZ0fK2vmp3IwfG8Vf7VhxD6pOA}
+\section*{Resumen de contraseñas}
+\begin{longtable}{@{}ll@{}}
+\toprule \textbf{Nivel} & \textbf{Contraseña para el siguiente nivel} \\
+\midrule
+\endfirsthead
+\toprule \textbf{Nivel} & \textbf{Contraseña para el siguiente nivel} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\texttt{0} & \texttt{6y2kwnwK6grgvwvpvLaa2T1cpFEKOhNR} \\
+\texttt{1} & \texttt{PK8fYLZg2hnHSz83plBL1iEPKdD3QToB} \\
+\texttt{2} & \texttt{7ZZ2LFrykP2zEyvBl4m3clcL7tGYJPME} \\
+\texttt{3} & \texttt{xzTXq1rDJQVVAzdv5cHq1TQytTWufAMq} \\
+\texttt{4} & \texttt{6C7h9GD8M6ai5nr7wo1RonrzFjj9yIrG} \\
+\texttt{5} & \texttt{pXa26xhMWaC2SvDotA4r9EgZkulOeSBW} \\
+\texttt{6} & \texttt{Bmnnvf82KzQlfxgAI2d1zYbr1u9pr3E3} \\
+\texttt{7} & \texttt{VR1ljMayciFxbnUokuQmJFw6QC9VKtub} \\
+\texttt{8} & \texttt{EjmOSvuAu7sGAHqHVcBDPirRe9T03kxl} \\
+\texttt{9} & \texttt{B0s2khmbT9u0geKuOoVGW3JZKhndE3BG} \\
+\texttt{10} & \texttt{pYfOY6HwUsDj5rL9UvyhU7MCmv8vN5Ro} \\
+\texttt{11} & \texttt{GROozWPO8QyN0mGrjUkID0WCYkZiQxrN} \\
+\texttt{12} & \texttt{qQYQiHOBPR8zR61qxYqX45quvihF2uzk} \\
+\texttt{13} & \texttt{aaWecNkG4FhxJQxz07uiwzVP6bJiYS65} \\
+\texttt{14} & \texttt{pbLYuZtTg4MgaqfJx8jbA9gKKGqM68A7} \\
+\texttt{15} & \texttt{kS0Hf0u5HiXFwKMKFqXvPdOTNGGa0X8V} \\
+\texttt{16} & \texttt{pWXMAZoxGC8JmDMfmT5MGEsobMM3vnj2} \\
+\texttt{17} & \texttt{OQxXZjELndr90zuhOTDYBEomI0SZITXI} \\
+\texttt{18} & \texttt{KpsOfPkcP7i1FlIExk2QEjyt6dw8dxZI} \\
+\texttt{19} & \texttt{4pIjcunZ0fK2vmp3IwfG8Vf7VhxD6pOA} \\
+\end{longtable}
+\section*{Herramientas usadas (resumen rápido)}
+\begin{longtable}{@{}lp{9.5cm}@{}}
+\toprule \textbf{Comando} & \textbf{Para qué sirve} \\
+\midrule
+\endfirsthead
+\toprule \textbf{Comando} & \textbf{Para qué sirve} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\texttt{cat} & Imprimir contenido de archivos \\
+\texttt{ls -la} & Listar archivos, incluidos ocultos, con permisos \\
+\texttt{file} & Identificar el tipo real de un archivo \\
+\texttt{find} & Buscar archivos por nombre, tamaño, permisos, propietario \\
+\texttt{grep} & Filtrar líneas por patrón \\
+\texttt{sort} / \texttt{uniq} & Ordenar y detectar líneas únicas/duplicadas \\
+\texttt{strings} & Extraer texto legible de binarios \\
+\texttt{base64 -d} & Decodificar base64 \\
+\texttt{tr} & Traducir/rotar caracteres (ROT13) \\
+\texttt{xxd -r} & Revertir un volcado hexadecimal \\
+\texttt{gzip -dc} / \texttt{bzip2 -dc} / \texttt{tar xf} & Descomprimir y extraer archivos \\
+\texttt{ssh -i} & Autenticarse con clave privada \\
+\texttt{nc} & Conexiones TCP crudas \\
+\texttt{openssl s\_client} & Cliente TLS de prueba \\
+\texttt{nmap} & Escanear puertos \\
+\texttt{diff} & Comparar archivos \\
+\texttt{2>/dev/null} & Silenciar errores (redirección de stderr) \\
+\end{longtable}
+\end{document}

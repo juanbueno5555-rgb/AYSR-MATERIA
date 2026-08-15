@@ -1,0 +1,6 @@
+﻿IFNAME[0]="eth0"
+IPADDR[0]="10.2.78.64"
+NETMASK[0]="255.255.0.0"
+USE_DHCP[0]="no"
+DHCP_HOSTNAME[0]="slackware"
+GATEWAY="10.2.65.1"

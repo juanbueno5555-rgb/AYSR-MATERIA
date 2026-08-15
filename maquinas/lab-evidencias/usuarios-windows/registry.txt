@@ -1,0 +1,19 @@
+﻿=== CLAVES PRINCIPALES HKLM === 
+BCD00000000
+HARDWARE
+SAM
+SECURITY
+SOFTWARE
+SYSTEM
+=== HOSTNAME EN EL REGISTRO === 
+
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName
+    (Default)    REG_SZ    mnmsrvc
+    ComputerName    REG_SZ    WIN-3VMPCF0KCDN
+
+=== PROGRAM FILES DIR === 
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion
+    ProgramFilesDir    REG_SZ    C:\Program Files
+
+=== VERSION DE WINDOWS === 

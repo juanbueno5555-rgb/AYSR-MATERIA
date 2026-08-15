@@ -1,0 +1,33 @@
+﻿=== USUARIOS ===
+
+Name               Enabled Description                                                                                 
+----               ------- -----------                                                                                 
+Administrator         True Built-in account for administering the computer/domain                                      
+claudia               True Usuario con el nombre de la profesora                                                       
+DefaultAccount       False A user account managed by the system.                                                       
+diego                 True Usuario con el nombre del profesor                                                          
+fabian                True Usuario con el nombre del profesor                                                          
+Guest                False Built-in account for guest access to the computer/domain                                    
+john                  True Usuario con el nombre del profesor                                                          
+WDAGUtilityAccount   False A user account managed and used by the system for Windows Defender Application Guard scen...
+
+
+
+=== GRUPO ACCOUNTING ===
+
+Name                   
+----                   
+WIN-3VMPCF0KCDN\claudia
+WIN-3VMPCF0KCDN\john   
+
+
+
+=== GRUPO IT ===
+
+Name                  
+----                  
+WIN-3VMPCF0KCDN\diego 
+WIN-3VMPCF0KCDN\fabian
+
+
+

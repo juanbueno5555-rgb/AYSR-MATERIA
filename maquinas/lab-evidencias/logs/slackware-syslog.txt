@@ -1,0 +1,43 @@
+﻿=== ARCHIVOS DE LOG ===
+btmp
+cron
+cups
+debug
+dmesg
+faillog
+httpd
+icecream
+iptraf-ng
+lastlog
+maillog
+messages
+nfsd
+packages
+pkgtools
+removed_packages
+removed_scripts
+removed_uninstall_scripts
+sa
+samba
+scripts
+secure
+setup
+syslog
+uucp
+vboxadd-install.log
+vboxadd-setup.log
+vboxadd-setup.log.1
+vboxadd-setup.log.2
+vboxadd-setup.log.3
+vboxadd-setup.log.4
+wtmp
+=== SYSLOG ultimas 8 ===
+20:24:19.475053 main     Package type: LINUX_32BITS_GENERIC
+Aug  5 20:24:19 slackware kernel: 20:24:19.490060 main     7.2.12 r174389 started. Verbose level = 0
+Aug  5 20:24:19 slackware kernel: 20:24:19.500853 main     vbglR3GuestCtrlDetectPeekGetCancelSupport: Supported (#1)
+Aug  6 01:24:31 slackware kernel: 01:24:31.193131 timesync vgsvcTimeSyncWorker: Radical guest time change: 18 011 676 443 000ns (GuestNow=1 785 979 471 193 044 000 ns GuestLast=1 785 961 459 516 601 000 ns fSetTimeLastLoop=true)
+Aug  6 01:31:13 slackware gnome-keyring-daemon[731]: couldn't create socket directory: /root/.cache/keyring-8DSNT3: Permission denied
+Aug  6 01:31:13 slackware gnome-keyring-daemon[731]: couldn't bind to control socket: /root/.cache/keyring-8DSNT3/control: Permission denied
+Aug  6 02:59:55 slackware gnome-keyring-daemon[781]: couldn't create socket directory: /root/.cache/keyring-UPDXT3: Permission denied
+Aug  6 02:59:55 slackware gnome-keyring-daemon[781]: couldn't bind to control socket: /root/.cache/keyring-UPDXT3/control: Permission denied
+=== AUTH logins SSH ===

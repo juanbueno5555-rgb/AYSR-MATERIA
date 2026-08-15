@@ -1,0 +1,23 @@
+﻿acct
+exacct
+lastlog
+log
+messages
+pool
+sa
+sm.bin
+streams
+utmpx
+wtmpx
+=== MESSAGES ultimas 10 ===
+Aug  5 22:05:09 solaris genunix: [ID 936769 kern.info] pm0 is /pseudo/pm@0
+Aug  5 22:05:09 solaris pseudo: [ID 129642 kern.info] pseudo-device: pool0
+Aug  5 22:05:09 solaris genunix: [ID 936769 kern.info] pool0 is /pseudo/pool@0
+Aug  5 22:05:09 solaris isa: [ID 202937 kern.info] ISA-device: pit_beep0
+Aug  5 22:05:09 solaris genunix: [ID 936769 kern.info] pit_beep0 is /pci@0,0/isa@1/pit_beep
+Aug  5 22:05:16 solaris genunix: [ID 227219 kern.info] This Solaris instance has UUID 831e6682-1313-4457-8890-f12a40899675
+Aug  5 22:05:17 solaris genunix: [ID 529163 kern.info] dump device is /dev/zvol/dsk/rpool/dump size 1024 MB
+Aug  5 22:05:22 solaris mac: [ID 435574 kern.info] NOTICE: e1000g0 link up, 1000 Mbps, full duplex
+Aug  5 22:05:57 solaris asr-notify[1053]: [ID 610409 daemon.warning] System is not registered with Auto Service Request. Please register system using asradm(8) or visit http://www.oracle.com/asr for more information.
+Aug  5 22:09:36 solaris sendmail[902]: [ID 702911 mail.crit] My unqualified host name (solaris) unknown; sleeping for retry
+=== AUTHLOG ultimas 6 ===

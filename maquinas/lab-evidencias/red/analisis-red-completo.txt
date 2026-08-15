@@ -1,0 +1,85 @@
+﻿====================================================================
+ANALISIS COMPLETO DE LA RED - LAB 02 (Wireshark)
+====================================================================
+Captura: wireshark-scielo.pcapng | 2742 paquetes | 30 segundos
+Interfaz: Wi-Fi | Fecha: 2026-08-10 21:20 | Host: 192.168.1.6 (GW 192.168.1.1)
+
+--------------------------------------------------------------------
+1. IDENTIDAD DE LA RED
+--------------------------------------------------------------------
+- IP local: 192.168.1.6/24 (red domestica, clase C)
+- Gateway: 192.168.1.1 (router ZTE - MAC e0:a1:ce:d2:85:76)
+- Tarjeta de red: CloudNetwork (MAC 08:f9:7e:9e:25:03)
+- DNS usado: resuelve www.scielo.org.co correctamente
+
+--------------------------------------------------------------------
+2. TRAFICO POR PROTOCOLO (Protocol Hierarchy)
+--------------------------------------------------------------------
+frame       : 2742 paquetes / 3.004.210 bytes
+  eth       : 2742 (todo es Ethernet)
+    ip      : 2728 (IPv4)
+      tcp   : 79 -> tls (HTTPS): 16, http: 3
+      udp   : 2648 -> data: 2601 (streaming), quic: 47
+      icmp  : 1 (un ping)
+    ipv6    : 11 -> icmpv6: 9, dns: 2
+    arp     : 3 (resolucion de MACs)
+
+--------------------------------------------------------------------
+3. CONVERSACIONES PRINCIPALES (quien hablo con quien)
+--------------------------------------------------------------------
+192.168.1.6 <-> 173.194.184.10 : 2582 paq / 2.949 kB  (Google - video/stream)
+192.168.1.6 <-> 168.176.28.57  : 36 paq / 17 kB      (SCIelo.org.co - la visita)
+192.168.1.6 <-> 142.251.154.4  : 30 paq / 20 kB      (Google)
+192.168.1.6 <-> 104.21.22.243  : 21 paq / 9,6 kB     (Cloudflare)
++ 14 conversaciones menores (2-6 paq, conexiones cortas TLS)
+
+--------------------------------------------------------------------
+4. ANALISIS DE LA VISITA A SCIELO (168.176.28.57)
+--------------------------------------------------------------------
+- DNS: 2 paquetes (query + respuesta) - resuelve www.scielo.org.co
+- Handshake TCP completo: SYN -> SYN,ACK -> ACK (frames 361-394)
+- Peticion: GET / HTTP/1.1 (frame 395, Host: scielo.org.co)
+- Respuesta: HTTP 200, 9.200 bytes
+- Latencia (RTT): promedio 150 ms | minimo 0,13 ms | maximo 1.021 ms
+- Hubo retransmisiones: el servidor esta en Colombia (Bogota), la conexion
+  por Wi-Fi domestico perdio algunos segmentos y se recuperaron (TCP lo
+  garantiza: orden, retransmision y control de flujo)
+
+--------------------------------------------------------------------
+5. SERVICIOS DETECTADOS
+--------------------------------------------------------------------
+- Puerto 80 (HTTP): scielo.org.co (texto plano, visible)
+- Puerto 443 (HTTPS/TLS 1.3): Google, Cloudflare, Microsoft (cifrado)
+- QUIC (UDP 443): protocolo HTTP/3 de Chrome
+- DNS (UDP 53): resolucion de nombres
+- ARP: resolucion de MAC en la LAN
+
+--------------------------------------------------------------------
+6. SALUD DE LA RED
+--------------------------------------------------------------------
+- Retransmisiones TCP: 17 (0,6% del trafico - normal en Wi-Fi)
+- ACKs duplicados: 14 (recuperacion rapida de perdidas)
+- Ventanas TCP llenas: 0 (sin congestion)
+- CONCLUSION: red saludable, sin congestion ni errores graves.
+  El Wi-Fi pierde algunos paquetes (normal) y TCP los recupera.
+
+--------------------------------------------------------------------
+7. SEGURIDAD
+--------------------------------------------------------------------
+- La visita a scielo fue por HTTP (sin cifrar): el contenido GET era
+  visible en la captura (se ve el User-Agent, Host, etc.)
+- Todo lo demas (Google, Cloudflare) usa TLS 1.3 (cifrado moderno)
+- Solo hubo 1 query DNS (scielo) - sin trafico sospechoso
+- ARP normal (3 paquetes) - sin indicios de envenenamiento ARP
+- CONCLUSION: sin amenazas visibles en la ventana de 30 segundos
+
+--------------------------------------------------------------------
+8. DATOS PARA EL INFORME DEL LAB
+--------------------------------------------------------------------
+- Paquete GET: frame #395, 192.168.1.6 -> 168.176.28.57
+- Encapsulamiento: Frame > Ethernet II > IPv4 > TCP > HTTP
+- Modo promiscuo: la tarjeta capturo TODO el trafico del segmento
+  (incluido el streaming de Google que no era "nuestro" directamente)
+- Cada capa agrega informacion: MACs (capa 2), IPs (capa 3),
+  puertos (capa 4), datos HTTP (capa 7)
+====================================================================

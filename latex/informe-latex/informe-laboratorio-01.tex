@@ -1,0 +1,1347 @@
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=2.5cm}
+\graphicspath{{../lab-evidencias/}}
+
+\lstset{
+  language=bash,
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  framerule=0.3pt
+}
+
+\begin{document}
+
+\sloppy
+
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+
+
+  {\large Laboratorio No. 01 --- Base Platform \par}
+  \vspace{1.5cm}
+
+  {\large Por: \par}
+  {\large Camilo Aguirre \par}
+  {\large Juan David Rangel \par}
+  \vspace{1cm}
+
+  {\large Profesor: John Alexander Pachón Pinzón \par}
+  \vspace{1.5cm}
+
+  {\large Escuela Colombiana de Ingeniería Julio Garavito \par}
+  {\large Universidad \par}
+  \vspace{0.5cm}
+
+  {\large ISIS AYSR - 1 \par}
+  {\large Arquitectura y Servicios de Red \par}
+  \vspace{1.5cm}
+
+  {\large Bogotá, D.C., viernes 7 de agosto de 2026 \par}
+
+  \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introducción}
+
+Objetivo del laboratorio: instalar y configurar distintas distribuciones de Unix y Windows como parte del montaje de una plataforma, y familiarizarse con el software de virtualización.
+
+\begin{itemize}
+  \item \textbf{Contexto:} una empresa opera servicios de TI (estaciones de trabajo cableadas e inalámbricas, servidores físicos y virtualizados, switches L2/L3, routers y nube).
+  \item \textbf{Alcance:} instalación de Slackware, Solaris, Windows Server (2 fases), Android y CentOS (solo grupos de 3; este grupo es de 2, no aplica).
+  \item \textbf{Herramientas:} VMware, máquinas del laboratorio, ISO descargadas.
+\end{itemize}
+
+\section{Marco teórico}
+
+\subsection{Virtualización}
+
+\textbf{¿Qué es un hipervisor?}
+
+Un hipervisor (o monitor de máquina virtual, VMM) es una capa de software que crea y administra máquinas virtuales sobre un mismo hardware físico. Actúa como intermediario entre el hardware y los sistemas operativos invitados: asigna recursos (CPU, memoria, almacenamiento y red), atiende las instrucciones privilegiadas de cada invitado y garantiza el aislamiento entre máquinas: una VM no puede acceder a la memoria ni a los datos de otra.
+
+\textbf{Clasificación}
+
+\begin{itemize}
+  \item \textbf{Hipervisor Tipo 1 (bare-metal):} se instala directamente sobre el hardware físico, sin sistema operativo anfitrión. Ejemplos: VMware ESXi, Microsoft Hyper-V, Xen y KVM. Es el modelo de los centros de datos y de la nube.
+  \item \textbf{Hipervisor Tipo 2 (hosted):} se ejecuta como una aplicación sobre un sistema operativo anfitrión. Ejemplos: Oracle VirtualBox y VMware Workstation. Es el modelo usado en este laboratorio para probar varias distribuciones sobre el mismo equipo.
+\end{itemize}
+
+\textbf{Características}
+
+\begin{itemize}
+  \item Aislamiento: cada VM es independiente; un fallo en una no afecta a las demás.
+  \item Partición de recursos: el hipervisor divide CPU, memoria y disco entre las VM.
+  \item Encapsulación: la VM completa se representa como archivos (\texttt{.vmx}, \texttt{.vmdk}), portables y copiables.
+  \item Independencia del hardware: la VM puede migrar entre anfitriones compatibles.
+  \item Instantáneas (snapshots) y, en Tipo 1, migración en vivo sin interrupción del servicio.
+\end{itemize}
+
+\textbf{Arquitectura}
+
+Cada VM ejecuta un sistema operativo invitado que cree estar sobre hardware real: CPU virtual (apoyada en las extensiones de virtualización VT-x/AMD-V), memoria virtual, disco virtual y tarjeta de red virtual. El hipervisor intercepta las instrucciones privilegiadas del invitado y las ejecuta en modo supervisor, o las emula mediante dispositivos virtuales; en un Tipo 2, un proceso del anfitrión atiende además las operaciones de entrada/salida (disco y red).
+
+\textbf{Cloud computing}
+
+El cómputo en la nube entrega servicios de procesamiento, almacenamiento, redes, bases de datos y software a través de internet, bajo demanda y con pago por uso. Se distinguen tres modelos de servicio: IaaS (infraestructura como servicio: máquinas virtuales, redes y almacenamiento), PaaS (plataforma para desplegar aplicaciones) y SaaS (software completo). El despliegue puede ser público, privado o híbrido.
+
+\textbf{¿Se usan hipervisores en la nube? Sí.}
+
+La infraestructura de los proveedores de nube pública (AWS, Azure, Google Cloud) está construida sobre hipervisores (KVM, Xen, Hyper-V): el modelo IaaS expone directamente máquinas virtuales; la multitenencia (varios clientes sobre el mismo hardware físico) y la elasticidad (crear o liberar máquinas en segundos) son posibles gracias a la virtualización.
+
+\textbf{Comparación de costos: servidor físico vs.\ servidor en la nube}
+
+\begin{itemize}
+  \item Servidor físico: alta inversión inicial (CAPEX) en hardware, más costos fijos de energía, enfriamiento, espacio, mantenimiento y personal; suele quedar sobredimensionado para cubrir los picos de carga.
+  \item Servidor en la nube: gasto operativo (OPEX) bajo demanda, sin mantenimiento de hardware y con elasticidad real, pero con costo continuo: en usos 24/7 constantes a largo plazo puede superar el costo del hardware propio.
+  \item Conclusión: la nube conviene cuando la carga es variable o el proyecto es nuevo; el hardware propio conviene con carga constante y alta utilización, o cuando se requiere control total sobre el equipo.
+\end{itemize}
+
+\textbf{Contenedores}
+
+Un contenedor es una forma de virtualización a nivel del sistema operativo: varios contenedores comparten el kernel del anfitrión, pero sus procesos, sistema de archivos y red están aislados mediante namespaces y cgroups. El contenedor empaqueta la aplicación con todas sus dependencias en una imagen portable y liviana. Ejemplos: Docker, Podman y containerd; la orquestación se hace con Kubernetes.
+
+\textbf{Similitudes y diferencias entre máquinas virtuales y contenedores}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{Aspecto} & \textbf{Máquinas virtuales} & \textbf{Contenedores} \\
+    \midrule
+    Qué virtualizan & el hardware & el sistema operativo \\
+    Kernel & uno por VM (invitado) & compartido con el anfitrión \\
+    Aislamiento & completo y fuerte & a nivel de procesos \\
+    Tamaño y arranque & gigabytes, minutos & megabytes, segundos \\
+    Densidad por servidor & decenas & cientos o miles \\
+    Caso de uso & consolidación, SO heterogéneos & microservicios, CI/CD \\
+    \bottomrule
+  \end{tabular}
+  \caption{Máquinas virtuales vs.\ contenedores.}
+  \label{tab:vm-vs-contenedores}
+\end{table}
+
+\textbf{Similitudes:} ambos aíslan aplicaciones y recursos, encapsulan la aplicación con su entorno y permiten densidades de despliegue mucho mayores que las físicas. En la práctica se complementan: los contenedores corren sobre las máquinas virtuales en lugar de competir con ellas.
+
+\subsection{Sistemas operativos}
+
+\begin{itemize}
+  \item \textbf{Sistema de archivos:} estructura con la que el sistema organiza y almacena los datos en disco: jerarquía de directorios desde la raíz \texttt{/}, archivos con metadatos (permisos, fechas, propietario). En el laboratorio se usaron ext4 (Slackware, con journaling), ZFS (Solaris, con pools, instantáneas y sumas de verificación) y NTFS (Windows).
+  \item \textbf{Permisos:} control de acceso a archivos y directorios: tripleta r/w/x para propietario, grupo y otros, con equivalente octal (4/2/1); en Windows se usan ACL (NTFS). Ver sección 3.3.3.
+  \item \textbf{Logs:} archivos donde el sistema y los servicios registran eventos: syslog en Unix, Visor de eventos en Windows. Ver sección 3.3.2.
+  \item \textbf{Shell:} intérprete de comandos que ejecuta programas y da acceso a los servicios del sistema: interactivo y de scripting en Unix; \texttt{cmd} y PowerShell en Windows. Ver sección 3.7.
+\end{itemize}
+
+\section{Desarrollo del tema}
+
+\subsection{Software de virtualización (preguntas del punto 1 del lab)}
+
+\begin{itemize}
+  \item ¿Qué son los hipervisores?
+  \item ¿Cómo se clasifican?
+  \item ¿Cuáles son sus características?
+  \item Explicar su arquitectura.
+  \item ¿Qué es cloud computing?
+  \item ¿Se usan hipervisores en cloud computing? Justificar.
+  \item ¿Cuál es la diferencia de costo entre un servidor físico y uno en la nube?
+  \item ¿Qué son los contenedores? Explicar su arquitectura.
+  \item Similitudes y diferencias entre máquinas virtuales y contenedores.
+\end{itemize}
+
+\begin{quote}
+\emph{Nota:} este tema se presenta en un video de hasta 5 min (participación de todos los integrantes). El guion/borrador puede ir en esta sección o en un anexo.
+\end{quote}
+
+\subsection{Configuración de servidores Unix: Slackware y Solaris}
+
+\subsubsection{Instalación y configuración (VMware, modo experto, sin entorno gráfico)}
+
+\paragraph*{Slackware 15.0}
+Instalación en modo consola, sin entorno gráfico, proceso paso a paso. Evidencias del proceso:
+
+\paragraph*{Fase 1 --- Arranque del medio e intento inicial de instalación desde disquete}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{00-estado-inicial-instalador.png}
+  \caption{Consola de la VM tras arrancar el medio de instalación: la carga del teclado (\texttt{loadkeys es-latam}) y el inicio de \texttt{rc.sshd} fallan porque aún no hay sistema instalado.}
+  \label{fig:slack-00}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{01-inicio-instalacion.png}
+  \caption{Primer intento de lanzar la instalación desde el disquete: \texttt{sh /mnt/install.sh} responde \texttt{No such file or directory}.}
+  \label{fig:slack-01}
+\end{figure}
+
+Diagnóstico, montaje y lectura del contenido del disquete de instalación:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{01b-diagnostico-floppy.png}
+  \caption{Diagnóstico del disquete: listado de \texttt{/dev/fd*} (solo existe \texttt{/dev/fd0}), intento de montaje y comprobación de la red con \texttt{ifconfig eth0 | grep inet}.}
+  \label{fig:slack-01b}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{01c-mount-floppy.png}
+  \caption{Montaje del disquete: error \texttt{MOUNT\_FAILED} porque \texttt{/dev/fd0} ya estaba montado en \texttt{/mnt}; también se ven las direcciones IPv6 asignadas a la interfaz.}
+  \label{fig:slack-01c}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{01d-contenido-floppy.png}
+  \caption{Lectura del contenido del disquete con \texttt{ls -la /mnt}: aparece el script de instalación \texttt{INSTALL.SH} (7168 bytes).}
+  \label{fig:slack-01d}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{02-instalacion-arrancando.png}
+  \caption{Instalación en marcha: montaje del ISO (solo lectura) e instalación de la serie \texttt{a} (129 paquetes, comenzando por \texttt{aaa\_base}).}
+  \label{fig:slack-02}
+\end{figure}
+
+\paragraph*{Fase 2 --- Instalación de paquetes desde el ISO}
+
+Instalación de paquetes y del parche de instalación:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{03-instalando-paquetes.png}
+  \caption{Primera pasada fallida: los paquetes del ISO se reportan corruptos (\texttt{tar archive is corrupt, tar returned error code 2}).}
+  \label{fig:slack-03}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{03b-patch-install.png}
+  \caption{Parche del script de instalación: edición de \texttt{INSTALL.SH} en el disquete (\texttt{sed} para fijar \texttt{installpkg ROOT=/mnt}) y errores de espacio (\texttt{No space left on device}).}
+  \label{fig:slack-03b}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{04-reinstalando.png}
+  \caption{Segunda pasada de la instalación: \texttt{aaa\_base} y \texttt{aaa\_glibc-solibs} se instalan correctamente (se reinstaló).}
+  \label{fig:slack-04}
+\end{figure}
+
+\paragraph*{Fase 3 --- Series de paquetes}
+
+Instalación de las series de paquetes:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{05-instalando-series.png}
+  \caption{Instalación de las series de paquetes (1): paquetes \texttt{python2} y \texttt{python3} de la serie \texttt{l}.}
+  \label{fig:slack-05}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{06-instalando-series2.png}
+  \caption{Instalación de las series de paquetes (2): librerías \texttt{libxklavier} y \texttt{libxml2} (serie \texttt{l}).}
+  \label{fig:slack-06}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{07-instalando-series3.png}
+  \caption{Instalación de las series de paquetes (3): firmware \texttt{zd1211} y configuración final del sistema (advertencia de contraseña débil para \texttt{root}).}
+  \label{fig:slack-07}
+\end{figure}
+
+\paragraph*{Fase 4 --- Primer arranque y login}
+
+Arranque del sistema instalado:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{09-boot-con-pae.png}
+  \caption{Arranque con el kernel PAE habilitado: generación de claves SSH, inicio de servicios y prompt de login de Slackware 15.0 (\texttt{Welcome to Linux 5.15.19-smp i686}).}
+  \label{fig:slack-09-pae}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{09-primer-boot.png}
+  \caption{Primer intento de arranque del sistema instalado: LILO 24.2 no carga el kernel porque la CPU no tiene soporte PAE (\texttt{Unable to boot}).}
+  \label{fig:slack-09-boot}
+\end{figure}
+
+Pantallas de login (HD, resolución 1024 y login como root):
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{10-login-hd.png}
+  \caption{Login en resolución HD (800$\times$600): red inicializada por DHCP (10.0.2.15) y prompt de login.}
+  \label{fig:slack-10}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{11-login-1024.png}
+  \caption{Login en resolución 1024: arranque completo con \texttt{fsck} de los filesystems y prompt de login.}
+  \label{fig:slack-11}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{12-login-root.png}
+  \caption{Login como \texttt{root} en la consola (el sistema registra un intento de login fallido previo).}
+  \label{fig:slack-12}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{13-sistema.png}
+  \caption{Sistema funcionando en consola: \texttt{uname -a}, versión Slackware 15.0, \texttt{df -h} y \texttt{free -m}.}
+  \label{fig:slack-13}
+\end{figure}
+
+\paragraph*{Fase 5 --- Red y verificación final}
+
+Red y verificación del sistema:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{14-red-dhcp.png}
+  \caption{Red configurada por DHCP: \texttt{ip addr show eth0} (10.0.2.15/24), ruta por defecto y \texttt{/etc/resolv.conf}.}
+  \label{fig:slack-14}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{15-ping-tests.png}
+  \caption{Pruebas de conectividad: \texttt{ping} a 8.8.8.8 y a \texttt{www.google.com} con 0\,\% de pérdida de paquetes.}
+  \label{fig:slack-15}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{16-directorios.png}
+  \caption{Estructura de directorios de la raíz (\texttt{ls -la /}): \texttt{bin}, \texttt{dev}, \texttt{etc}, \texttt{lib}, \texttt{mnt}, \texttt{opt}, \texttt{root}, \texttt{run}, \texttt{srv}, \texttt{sys}, \texttt{tmpmount}, \texttt{usr} y \texttt{var}.}
+  \label{fig:slack-16}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{17-teclado-es.png}
+  \caption{Cambio de teclado a español con \texttt{loadkeys es} desde la consola.}
+  \label{fig:slack-17}
+\end{figure}
+
+\paragraph*{Solaris 11.4}
+Instalación con el Text Installer, en modo texto, proceso paso a paso. Evidencias del proceso:
+
+\paragraph*{Fase 1 --- Arranque del medio e identidad del sistema}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-02-language.png}
+  \caption{Arranque del medio de instalación de Solaris 11.4: selección del layout de teclado (\texttt{Spanish}).}
+  \label{fig:sol-02}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-03-menu-instalacion.png}
+  \caption{Menú principal del instalador en modo texto (\texttt{Install Oracle Solaris}, \texttt{Additional Drivers}, \texttt{Terminal type}, \texttt{Reboot}) con una alerta de diagnóstico del kernel (\texttt{SUNW-MSG-ID}).}
+  \label{fig:sol-03}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-04-hostname.png}
+  \caption{Definición del nombre del sistema en \texttt{System Identity}: \texttt{solaris}.}
+  \label{fig:sol-04}
+\end{figure}
+
+Configuración de red y método de configuración:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-05-network.png}
+  \caption{Selección de la interfaz de red a configurar (\texttt{net0}, \texttt{e1000g0}) o \texttt{No network}.}
+  \label{fig:sol-05}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-05b-network-method.png}
+  \caption{Método de configuración de la interfaz: \texttt{Static} (IP fija) o \texttt{DHCP}.}
+  \label{fig:sol-05b}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-06-disks.png}
+  \caption{Selección del disco de destino: disco SATA de 25,0 GB, uso del disco completo o de una partición GPT.}
+  \label{fig:sol-06}
+\end{figure}
+
+\paragraph*{Fase 2 --- Zona horaria, localización y teclado}
+
+Zona horaria: región América, ciudad Bogotá (\texttt{America/Bogota}):
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-07a-timezone-region.png}
+  \caption{Zona horaria: selección de la región (\texttt{Americas}).}
+  \label{fig:sol-07a}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-07b-timezone-bogota.png}
+  \caption{Zona horaria: selección de la ciudad (\texttt{America/Bogota}).}
+  \label{fig:sol-07b}
+\end{figure}
+
+Locale en español, territorio, fecha/hora y teclado Latin-American:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-07c-locale.png}
+  \caption{Locale: selección del idioma de soporte del sistema (\texttt{Spanish}).}
+  \label{fig:sol-07c}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-07d-territory.png}
+  \caption{Territorio del locale: España (\texttt{es\_ES.ISO8859-1}, \texttt{es\_ES.ISO8859-15}, \texttt{es\_ES.UTF-8}).}
+  \label{fig:sol-07d}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-07e-datetime.png}
+  \caption{Configuración de fecha y hora del sistema (formato 24\,h, hora UTC).}
+  \label{fig:sol-07e}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-07f-keyboard.png}
+  \caption{Selección del teclado: \texttt{Latin-American}.}
+  \label{fig:sol-07f}
+\end{figure}
+
+\paragraph*{Fase 3 --- Credenciales y resumen de configuración}
+
+Credenciales del usuario \texttt{root} y opción de registro de soporte:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-08-users.png}
+  \caption{Credenciales del sistema: contraseña de \texttt{root} y creación opcional de una cuenta de usuario.}
+  \label{fig:sol-08}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-08b-support-registration.png}
+  \caption{Opción de registro de soporte de My Oracle Support (telemetría opcional).}
+  \label{fig:sol-08b}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-09-summary.png}
+  \caption{Resumen de configuración antes de instalar: Solaris 11.4 x86, disco 25,0 GB, red por DHCP, \texttt{America/Bogota}, español y teclado Latin-American.}
+  \label{fig:sol-09}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-10-instalando.png}
+  \caption{Instalación de Oracle Solaris en curso (inicialización del destino completada).}
+  \label{fig:sol-10}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-11-completado.png}
+  \caption{Instalación finalizada: el sistema indica reiniciar para arrancar Solaris 11.4.}
+  \label{fig:sol-11}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-12-login.png}
+  \caption{Primer arranque: SunOS 5.11 (Solaris 11.4), hostname \texttt{solaris} y prompt de login de consola.}
+  \label{fig:sol-12}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{solaris-13-sistema.png}
+  \caption{Login como \texttt{root} en la consola de Solaris 11.4 (\texttt{Oracle Corporation SunOS 5.11}).}
+  \label{fig:sol-13}
+\end{figure}
+
+\paragraph*{Fase 4 --- Instalación, primer arranque y login}
+
+Otros temas de la sección:
+
+\begin{itemize}
+  \item Paquetes instalados: solo los necesarios para operación básica y conectividad de red.
+  \item Archivos generados durante la instalación por el software de virtualización y su propósito (\texttt{.vmx}, \texttt{.vmdk}, \texttt{.nvram}, \texttt{.vmsd}, \texttt{.vmxf}, logs\ldots).
+  \item ¿Es posible convertir una VM de VMware a VirtualBox y viceversa? (OVF/OVA, \texttt{vmware-vdiskmanager}, \texttt{VBoxManage clonehd}\ldots)
+\end{itemize}
+
+\subsubsection{Usuarios y grupos}
+
+En cada sistema Unix (Slackware y Solaris) se crearon 4 usuarios con una descripción significativa (campo \texttt{-c}), con su directorio home dentro de \texttt{/usuarios} en la raíz del filesystem y perteneciendo a \emph{un solo grupo}: los usuarios 1 y 2 (\texttt{claudia}, \texttt{john}) al grupo Accounting, y los usuarios 3 y 4 (\texttt{fabian}, \texttt{diego}) al grupo IT.
+
+\paragraph*{Slackware 15.0}
+
+En Slackware los nombres de grupo no pueden contener mayúsculas: el \texttt{shadow-utils} de la distribución rechaza \texttt{groupadd Accounting} con \texttt{'Accounting' is not a valid group name}. Por eso los grupos se crearon en minúsculas: \texttt{accounting} e \texttt{it}.
+
+Comandos ejecutados (como \texttt{root}, o con \texttt{sudo} desde el usuario \texttt{vagrant}):
+
+\begin{lstlisting}
+# Directorio base de los homes
+mkdir -p /usuarios
+
+# Grupos (en minusculas por la limitacion de shadow-utils)
+groupadd accounting
+groupadd it
+
+# Usuarios 1 y 2 -> solo accounting
+useradd -d /usuarios/claudia -m -c "Claudia - usuario con el nombre de la profesora" -g accounting claudia
+useradd -d /usuarios/john    -m -c "John - usuario con el nombre del profesor"     -g accounting john
+
+# Usuarios 3 y 4 -> solo it
+useradd -d /usuarios/fabian -m -c "Fabian - usuario con el nombre del profesor" -g it fabian
+useradd -d /usuarios/diego  -m -c "Diego - usuario con el nombre del profesor"  -g it diego
+
+# Asignar contrasena a cada usuario
+passwd claudia
+passwd john
+passwd fabian
+passwd diego
+\end{lstlisting}
+
+Significado de las opciones: \texttt{-d} define la ruta del home; \texttt{-m} lo crea y copia las plantillas de \texttt{/etc/skel}; \texttt{-c "..."} guarda la descripción del usuario (visible en el campo GECOS de \texttt{/etc/passwd}); \texttt{-g} fija el grupo \emph{primario}, con lo que cada usuario queda en ese único grupo (cumple la consigna ``solo Accounting / solo IT'', sin grupos secundarios). Si hubiera que corregir algo posteriormente, se usa \texttt{usermod -g <grupo> <usuario>} para cambiar el grupo primario o \texttt{groupdel <grupo>} para eliminar un grupo vacío.
+
+Resultado verificado (04/08/2026):
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{@{}lllll@{}}
+    \toprule
+    \textbf{Usuario} & \textbf{uid} & \textbf{Grupo primario} & \textbf{gid} & \textbf{Home} \\
+    \midrule
+    claudia & 1001 & accounting & 1002 & /usuarios/claudia \\
+    john    & 1002 & accounting & 1002 & /usuarios/john \\
+    fabian  & 1003 & it         & 1003 & /usuarios/fabian \\
+    diego   & 1004 & it         & 1003 & /usuarios/diego \\
+    \bottomrule
+  \end{tabular}
+  \caption{Usuarios creados en Slackware 15.0.}
+  \label{tab:slack-users}
+\end{table}
+
+Verificación con \texttt{id}, \texttt{getent} y \texttt{ls}:
+
+\begin{lstlisting}[language={}]
+# id claudia
+uid=1001(claudia) gid=1002(accounting) groups=1002(accounting)
+
+# getent group accounting
+accounting:x:1002:
+
+# ls -ld /usuarios
+drwxr-xr-x 3 root root 4096 /usuarios
+
+# ls -la /usuarios
+drwxr-xr-x  2 claudia accounting 4096 ... claudia
+\end{lstlisting}
+
+Notas de la ejecución:
+
+\begin{itemize}
+  \item El acceso a la VM es con el usuario \texttt{vagrant} (SSH o consola). Desde esa cuenta, el PATH \emph{no} incluye \texttt{/usr/sbin} (Slackware solo lo agrega al PATH de root), por lo que \texttt{sudo groupadd} falla con \texttt{sudo: groupadd: command not found}. Se resolvió logueándose como \texttt{root} o invocando la ruta completa: \texttt{sudo /usr/sbin/groupadd it}, \texttt{sudo /usr/sbin/useradd \ldots}
+  \item \texttt{groupadd accounting} puede responder ``already exists'' (el grupo existía de una prueba anterior); no es un error, el grupo queda correcto.
+\end{itemize}
+
+\paragraph*{Solaris 11.4}
+
+En Solaris los nombres de grupo sí admiten mayúsculas, por lo que los grupos se crearon como pide el lab: \texttt{Accounting} (GID 100) e \texttt{IT} (GID 101). Los nombres de usuario van en minúsculas.
+
+Comandos ejecutados (como \texttt{root} en la consola de la VM):
+
+\begin{lstlisting}
+# Directorio base de los homes
+mkdir -p /usuarios
+
+# Grupos
+groupadd Accounting
+groupadd IT
+
+# Usuarios 1 y 2 -> solo Accounting
+useradd -d /usuarios/claudia -m -c "Claudia - usuario con el nombre de la profesora" -g Accounting -s /usr/bin/bash claudia
+useradd -d /usuarios/john    -m -c "John - usuario con el nombre del profesor"     -g Accounting -s /usr/bin/bash john
+
+# Usuarios 3 y 4 -> solo IT
+useradd -d /usuarios/fabian -m -c "Fabian - usuario con el nombre del profesor" -g IT -s /usr/bin/bash fabian
+useradd -d /usuarios/diego  -m -c "Diego - usuario con el nombre del profesor"  -g IT -s /usr/bin/bash diego
+
+# Asignar contrasena a cada usuario
+passwd claudia
+passwd john
+passwd fabian
+passwd diego
+\end{lstlisting}
+
+Mismas opciones que en Slackware, con dos diferencias de sintaxis: \texttt{-s /usr/bin/bash} define el shell de login (por defecto Solaris usa \texttt{/usr/bin/sh}), y el directorio padre \texttt{/usuarios} debe existir antes de \texttt{useradd -m} (si falta, \texttt{useradd} falla con \texttt{UX: useradd: ERROR: \ldots /usuarios: No such file or directory}; el \texttt{mkdir -p} del paso 1 lo resuelve).
+
+Resultado verificado (04/08/2026):
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{@{}lllll@{}}
+    \toprule
+    \textbf{Usuario} & \textbf{uid} & \textbf{Grupo primario} & \textbf{gid} & \textbf{Home} \\
+    \midrule
+    claudia & 100 & Accounting & 100 & /usuarios/claudia \\
+    john    & 101 & Accounting & 100 & /usuarios/john \\
+    fabian  & 102 & IT         & 101 & /usuarios/fabian \\
+    diego   & 103 & IT         & 101 & /usuarios/diego \\
+    \bottomrule
+  \end{tabular}
+  \caption{Usuarios creados en Solaris 11.4.}
+  \label{tab:sol-users}
+\end{table}
+
+La verificación se hizo con los mismos comandos (\texttt{id <usuario>}, \texttt{getent group Accounting IT}, \texttt{ls -la /usuarios}), comprobando que cada home pertenece a su usuario y a su grupo, y que cada usuario aparece en un solo grupo.
+
+\paragraph*{Diferencia entre ambos sistemas}
+
+Más allá de la limitación de mayúsculas de Slackware, los UID/GID de Solaris comienzan en 100 (numeración del instalador), mientras que Slackware los asigna desde 1000/1001; en el resto, la sintaxis y el resultado final son equivalentes.
+
+\subsubsection{Sistema de archivos}
+
+\begin{itemize}
+  \item ¿Qué es el sistema de archivos?
+  \item ¿Cuál se usó en la instalación? \textbf{Slackware 15.0: ext4}; \textbf{Solaris 11.4: ZFS} (el instalador de Solaris crea el pool \texttt{rpool} sobre el disco de destino por defecto).
+  \item Características de cada uno.
+\end{itemize}
+
+\subsubsection{Red}
+
+\begin{itemize}
+  \item En el hogar la red se configuró automáticamente por DHCP en modo bridge: en Slackware quedó registrada la configuración DHCP (Figura~\ref{fig:slack-14}) y se ejecutaron pruebas de ping (Figura~\ref{fig:slack-15}). La red de la universidad, en cambio, \textbf{no tiene DHCP}: es una red estática (10.2.0.0/16, gateway y DNS 10.2.65.1, dominio \texttt{is.escuelaing.edu.co}) en la que cada equipo debe configurarse a mano.
+  \item ¿Qué significan ``Bridge Mode'' y ``NAT Mode''?
+    \begin{itemize}
+      \item \textbf{Bridge:} la VM comparte la tarjeta de red física y aparece en la LAN como un equipo más, con su propia dirección IP; los demás equipos la ven directamente.
+      \item \textbf{NAT:} la VM sale a la red a través del anfitrión, que traduce las direcciones; la VM queda oculta detrás del host y solo tiene salida, no es alcanzable desde fuera.
+    \end{itemize}
+  \item Configuración manual (estática):
+    \begin{itemize}
+      \item IP: \texttt{10.2.78.n} (rango asignado por el instructor; sin duplicar entre sistemas) $\rightarrow$ Slackware=\texttt{10.2.78.64}, Windows Core=\texttt{10.2.78.66}, Windows GUI=\texttt{10.2.78.67}, Android=\texttt{10.2.78.68}, host=\texttt{10.2.78.69}; Solaris=\texttt{10.2.78.65}
+      \item Máscara: \texttt{255.255.0.0}
+      \item Gateway: \texttt{10.2.65.1}
+      \item DNS: \texttt{10.2.65.1}
+    \end{itemize}
+\end{itemize}
+
+\textbf{Configuración estática en Slackware 15.0 (editada con nano)}
+
+En Slackware la configuración de red se edita en \texttt{/etc/rc.d/rc.inet1.conf} con el editor \texttt{nano}.
+
+\begin{enumerate}
+  \item Abrir el archivo de red:
+  \begin{verbatim}
+nano /etc/rc.d/rc.inet1.conf
+  \end{verbatim}
+  \item Dentro de nano, con las flechas, se modificaron 4 valores (guardar con \texttt{Ctrl+O}, salir con \texttt{Ctrl+X}):
+  \begin{center}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Línea} & \textbf{Valor} \\
+    \midrule
+    \texttt{USE\_DHCP[0]="yes"} & \texttt{USE\_DHCP[0]="no"} \\
+    \texttt{IPADDR[0]=""} & \texttt{IPADDR[0]="10.2.78.64"} \\
+    \texttt{NETMASK[0]=""} & \texttt{NETMASK[0]="255.255.0.0"} \\
+    \texttt{GATEWAY=""} (agregada al final) & \texttt{GATEWAY="10.2.65.1"} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \item El DNS se configuró en \texttt{/etc/resolv.conf} (también con nano). En Slackware este archivo no es un enlace a resolvconf, por lo que la edición directa persiste: \texttt{nameserver 10.2.65.1}.
+  \item Aplicar y verificar:
+  \begin{verbatim}
+/etc/rc.d/rc.inet1 restart
+ip addr show
+ip route show
+  \end{verbatim}
+  Resultado verificado: \texttt{eth0} con \texttt{10.2.78.64/16} y ruta por defecto \texttt{default via 10.2.65.1}.
+  \item Para alternar entre la red de la universidad (estática) y la del hogar (DHCP/NAT), se dejaron dos scripts dentro del sistema: \texttt{/usr/local/bin/uni} (estática) y \texttt{/usr/local/bin/casa} (DHCP).
+\end{enumerate}
+
+\textbf{Configuración estática en Solaris 11.4 (comandos \texttt{ipadm})}
+
+Solaris 11 usa el modelo SMF/\texttt{ipadm} (no archivos de script como \texttt{rc.inet1.conf}); la IP estática se verificó con \texttt{ipadm show-addr}.
+
+\begin{enumerate}
+  \item Ver y eliminar la configuración DHCP existente:
+  \begin{verbatim}
+ipadm show-addr
+ipadm delete-addr net0/v4
+  \end{verbatim}
+  \item Crear la dirección estática y el alias de red NAT:
+  \begin{verbatim}
+ipadm create-addr -T static -a local=10.2.78.65/16 net0/v4
+ipadm create-addr -T static -a local=10.0.2.15/24 net0/v4nat
+  \end{verbatim}
+  \item Ruta por defecto persistente y DNS:
+  \begin{verbatim}
+route -p add default 10.2.65.1
+echo "nameserver 10.2.65.1" > /etc/resolv.conf
+  \end{verbatim}
+  \item Verificación: \texttt{ipadm show-addr} muestra \texttt{net0/v4} = \texttt{10.2.78.65/16} estática.
+  \item Scripts de alternancia uni/casa: \texttt{/root/uni.sh} y \texttt{/root/casa.sh}.
+\end{enumerate}
+
+\paragraph*{Pruebas de conectividad en la red de la universidad}
+
+Las pruebas se ejecutaron en la red del laboratorio con las direcciones estáticas de la sección anterior; los resultados se resumen a continuación:
+
+\begin{itemize}
+  \item \textbf{Host (portátil físico):} \texttt{10.2.78.69/16} con gateway y DNS \texttt{10.2.65.1}, configurado con \texttt{netsh} sobre el adaptador Ethernet.
+  \item \textbf{Slackware (10.2.78.64):} estática en \texttt{/etc/rc.d/rc.inet1.conf} y DNS en \texttt{/etc/resolv.conf}; la verificación de la interfaz y de las rutas confirmó eth0 con \texttt{10.2.78.64/16} y ruta por defecto \texttt{default via 10.2.65.1} (la interfaz conserva además el alias NAT \texttt{10.0.2.15/24} agregado en \texttt{rc.local} para el escenario del hogar).
+  \item \textbf{Windows Server Core (10.2.78.66):} estática aplicada con \texttt{netsh}. Como Windows bloquea el ping entrante por defecto, se habilitó el ICMP en el firewall (regla \texttt{netsh advfirewall} para \texttt{icmpv4:8}); la IP se verificó con \texttt{ipconfig} (hostname \texttt{WIN-O95R63RBHK9}).
+  \item \textbf{Windows Server GUI (10.2.78.67):} estática aplicada con \texttt{netsh} (hostname \texttt{WIN-3VMPCF0KCDN}).
+  \item \textbf{Android (10.2.78.68):} IP estática sobre la interfaz ethernet \texttt{wifi\_eth} de android-x86. Android no ofrece la configuración estática estándar desde la consola de emergencia, por lo que se usó el \emph{policy routing} de Linux con una tabla propia (tabla 97):
+\begin{verbatim}
+ip rule add from all lookup main pref 50
+ip route add default via 10.2.65.1 dev wifi_eth table 97
+ip route add 10.2.0.0/16 dev wifi_eth src 10.2.78.68 table 97
+\end{verbatim}
+  \textbf{Limitación documentada:} la resolución DNS por nombre no funciona desde la consola de emergencia (Android sin el servicio \texttt{netd} no consulta el DNS configurado): el ping por IP funciona, el ping por nombre no resuelve.
+  \item \textbf{Solaris (10.2.78.65):} instalado y probado; IP estática con \texttt{ipadm}, pings OK.
+\end{itemize}
+
+Tabla de resultados reales (0\,\% de pérdida de paquetes en todas las pruebas OK):
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{2.9cm}XXXXX@{}}
+    \toprule
+    \textbf{Prueba} & \textbf{Slackware .64} & \textbf{Core .66} & \textbf{GUI .67} & \textbf{Android .68} & \textbf{Solaris .65} \\
+    \midrule
+    IP propia & \texttt{10.2.78.64/16} & \texttt{10.2.78.66/16} & \texttt{10.2.78.67/16} & \texttt{10.2.78.68/16} (\texttt{wifi\_eth}) & \texttt{10.2.78.65/16} \\
+    Ping a la propia IP & OK --- 0\,\% pérdida & --- & --- & --- & OK --- 0\,\% pérdida \\
+    Ping al gateway (10.2.65.1) & OK --- 0\,\% pérdida & OK --- 0\,\% pérdida & OK --- 0\,\% pérdida & OK & OK --- 0\,\% pérdida \\
+    Ping externo (8.8.8.8) & OK --- 0\,\% pérdida & OK --- 0\,\% pérdida & OK --- 0\,\% pérdida & OK & OK --- 0\,\% pérdida \\
+    Ping inter-VM & OK a Core (.66) & OK a Slackware (.64) y GUI (.67) & OK a Slackware (.64) & OK a Slackware (.64) & OK --- 0\,\% pérdida \\
+    Resolución DNS (\texttt{ping www.google.com}) & OK --- 0\,\% pérdida & OK --- 0\,\% pérdida & OK --- 0\,\% pérdida & No resuelve por nombre (limitación) & OK \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Resultados reales de las pruebas de conectividad en la red de la universidad.}
+  \label{tab:ping}
+\end{table}
+
+Latencia media medida desde Slackware: 1,1\,ms al gateway, 5,2\,ms a 8.8.8.8 y 4,4\,ms a \texttt{www.google.com} (RTT máximo 6\,ms).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{red/android-pings-uni2.png}
+  \caption{Pruebas de ping desde Android-x86 (continuación): conectividad externa e inter-VM.}
+  \label{fig:and-ping-2}
+\end{figure}
+
+Pruebas OK (0\,\% de pérdida de paquetes): gateway, 8.8.8.8, \texttt{www.google.com} e inter-VM entre todos los sistemas.
+
+\subsubsection{Comparación de experiencias de instalación}
+
+Ambos sistemas se instalaron en modo texto, sin entorno gráfico, sobre VMware. La experiencia fue muy distinta:
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \begin{tabularx}{\linewidth}{@{}p{2.6cm}XX@{}}
+    \toprule
+    \textbf{Aspecto} & \textbf{Slackware 15.0} & \textbf{Solaris 11.4} \\
+    \midrule
+    Instalador & Script de consola con series de paquetes & Text Installer guiado (menús paso a paso) \\
+    Dificultad & Alta: cada decisión (particionado, series, arranque) es manual & Baja-media: el asistente guía todo el proceso \\
+    Paquetes & Series (\texttt{a}, \texttt{ap}, \texttt{d}, \texttt{l}, \texttt{n}, \texttt{x}, \texttt{xap}\ldots); sin resolución automática de dependencias (\texttt{installpkg}) & Selección por grupos; IPS (\texttt{pkg}) resuelve dependencias \\
+    Tiempo & Largo: varias pasadas y correcciones (parche de \texttt{INSTALL.SH}, reinstalación, problema de arranque por PAE) & Corto: una sola pasada guiada \\
+    Control & Total sobre cada etapa & El instalador automatiza (pool ZFS \texttt{rpool}, boot environments) \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Comparación de la experiencia de instalación: Slackware vs.\ Solaris.}
+  \label{tab:cmp-instalacion}
+\end{table}
+
+En Slackware la instalación fue un ejercicio de administración pura: hubo que diagnosticar el medio de instalación, parchear el script \texttt{INSTALL.SH} (los paquetes del ISO se reportaban corruptos), reinstalar el sistema y resolver un fallo de arranque por falta de soporte PAE (LILO no cargaba el kernel), para finalmente elegir las series de paquetes a instalar. El resultado es un sistema mínimo y totalmente conocido, sin gestor de dependencias: los paquetes se administran con \texttt{installpkg}/\texttt{upgradepkg}/\texttt{removepkg}.
+
+En Solaris la instalación fue mucho más rápida y guiada: el Text Installer conduce paso a paso (idioma, hostname, red, discos, zona horaria, teclado, credenciales y resumen final), crea automáticamente el pool ZFS \texttt{rpool} y deja un sistema con gestión de paquetes IPS y boot environments (instantáneas del sistema de archivos raíz que permiten volver atrás).
+
+Conclusión: Solaris privilegia la velocidad y la automatización; Slackware exige entender cada etapa, lo que lo hace más educativo, aunque más lento de instalar.
+
+\subsection{Comprensión y administración de los sistemas operativos}
+
+\subsubsection{Estructura de directorios}
+
+\begin{itemize}
+  \item Listar directorios, describir su contenido y comparar Slackware vs.\ Solaris (evidencias de la estructura raíz de Slackware: Figuras~\ref{fig:est-raiz},~\ref{fig:est-raiz-1} y~\ref{fig:slack-16}). En la raíz de Slackware se ven: \texttt{bin}, \texttt{boot}, \texttt{cdrom}, \texttt{dev}, \texttt{etc}, \texttt{home}, \texttt{lib}, \texttt{lost+found}, \texttt{media}, \texttt{mnt}, \texttt{opt}, \texttt{root}, \texttt{run}, \texttt{sbin}, \texttt{tmp}, \texttt{tmpmount}, \texttt{usr}, \texttt{var} y \texttt{usuarios}.
+    \begin{itemize}
+      \item \textbf{Archivos de configuración (\texttt{/etc}):} texto plano editable por el administrador: \texttt{/etc/passwd}, \texttt{/etc/shadow}, \texttt{/etc/resolv.conf} y \texttt{/etc/rc.d/rc.inet1.conf} en Slackware; en Solaris la red vive en \texttt{/etc/inet} y los servicios en \texttt{/etc/svc}. Es la ``memoria'' de la configuración del sistema.
+      \item \textbf{Ejecutables (\texttt{/bin}, \texttt{/sbin}, \texttt{/usr/bin}, \texttt{/usr/sbin}):} los programas del sistema están separados por función y por orden de montaje: \texttt{/bin} y \texttt{/sbin} contienen lo esencial para arrancar y reparar el sistema antes de montar \texttt{/usr} (en Slackware 15 son enlaces a \texttt{usr/bin} y \texttt{usr/sbin}, aunque la convención se conserva); \texttt{/usr/bin} tiene los programas de uso general y \texttt{/usr/sbin} las herramientas de administración (reservadas a root). Varias ubicaciones = jerarquía histórica: lo mínimo para el arranque vs.\ el resto del sistema.
+      \item \textbf{Logs (\texttt{/var/log}):} aquí se registran los eventos del sistema (ver sección 3.3.2): en Slackware \texttt{/var/log/syslog}, \texttt{/var/log/messages} y \texttt{/var/log/secure}; en Solaris \texttt{/var/adm/messages} y \texttt{/var/adm/utmpx}.
+      \item \textbf{Montaje de dispositivos externos (\texttt{/mnt}, \texttt{/media}):} \texttt{/mnt} para montajes manuales (el USB de la prueba: \texttt{mount /dev/sdb1 /mnt/usb}) y \texttt{/media} para medios removibles montados automáticamente.
+    \end{itemize}
+  \item Conectar una USB y hacerla visible en la VM: se emuló una USB en Slackware (disco virtual de 512\,MiB adjuntado a la VM, visible como \texttt{VBOX HARDDISK}); flujo completo en \texttt{lab-evidencias/usb/slackware-usb.txt}:
+    \begin{enumerate}
+      \item El dispositivo aparece como \texttt{/dev/sdb} (512\,MiB, 1048576 sectores) y se particiona con \texttt{fdisk /dev/sdb}.
+      \item Formateo ext4: \texttt{mkfs.ext4 /dev/sdb1} (crea el journal: \texttt{Creating journal (4096 blocks): done}).
+      \item Punto de montaje y montaje: \texttt{mkdir -p /mnt/usb}; \texttt{mount /dev/sdb1 /mnt/usb} $\rightarrow$ el dispositivo queda montado en \texttt{/mnt/usb} (488M de capacidad).
+      \item Copia de un archivo de prueba: \texttt{cp evidencia.txt /mnt/usb/} $\rightarrow$ aparece \texttt{evidencia.txt} (23 bytes) junto al directorio \texttt{lost+found}.
+      \item Desmontaje: \texttt{umount /mnt/usb} $\rightarrow$ ``sdb desmontado OK''.
+    \end{enumerate}
+    Los puntos de montaje estándar para dispositivos externos en Slackware son \texttt{/mnt} (montajes manuales) y \texttt{/media} (medios removibles).
+  \item Diferencias observadas entre ambos sistemas: Slackware presenta la estructura clásica de Linux (\texttt{/boot}, \texttt{/lib}, \texttt{/lost+found}, \texttt{/media}, \texttt{/mnt}, \texttt{/opt}, \texttt{/srv}, \texttt{/tmp}, \texttt{/home}); Solaris añade directorios propios de SunOS (\texttt{/kernel} y \texttt{/platform} con los módulos del kernel, \texttt{/devices} con los nodos de dispositivo gestionados por devfs, \texttt{/etc/inet} para la red y \texttt{/var/adm} para los logs del sistema). Ambos siguen el estándar común de \texttt{/etc}, \texttt{/bin}, \texttt{/usr}, \texttt{/var}, \texttt{/tmp} y \texttt{/root}.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{slackware-estructura-raiz.png}
+  \caption{Estructura raíz de Slackware (\texttt{ls -la /}): \texttt{bin}, \texttt{boot}, \texttt{cdrom}, \texttt{dev}, \texttt{etc}, \texttt{home}, \texttt{lib}, \texttt{lost+found}, \texttt{media}, \texttt{mnt}, \texttt{opt}, \texttt{root}, \texttt{run}, \texttt{sbin}, \texttt{tmp}, \texttt{tmpmount}, \texttt{usuarios} y \texttt{var}.}
+  \label{fig:est-raiz}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{slackware-estructura-raiz-1.png}
+  \caption{Estructura raíz de Slackware (2): detalle de la consola durante el listado (comando \texttt{ls -} con error de sintaxis).}
+  \label{fig:est-raiz-1}
+\end{figure}
+
+\subsubsection{Logs y syslog}
+
+\begin{itemize}
+  \item ¿Qué son los archivos de log? Archivos donde el sistema y los servicios registran eventos (arranque del kernel, inicios de sesión, errores de red, avisos de aplicaciones), cada entrada con fecha/hora, origen y mensaje.
+  \item ¿Qué es syslog? Protocolo y servicio de registro central de eventos. Archivos principales: en Slackware \texttt{/var/log/syslog}, \texttt{/var/log/messages} y \texttt{/var/log/secure} (inicios de sesión y \texttt{sudo}); en Solaris \texttt{/var/adm/messages} (syslog del sistema) y \texttt{/var/adm/utmpx}/\texttt{wtmpx} (sesiones). En Slackware el demonio es \texttt{syslogd}; en Solaris el servicio SMF \texttt{svc:/system/system-log}.
+  \item Tipos de información registrada y estructura de una entrada: fecha/hora, hostname, programa (o \texttt{kernel}) con su PID y el mensaje; en Solaris las entradas incluyen además un ID de evento (p.\,ej.\ \texttt{[ID 936769 kern.info]}).
+  \item Cinco ejemplos reales de eventos registrados:
+    \begin{enumerate}
+      \item \textbf{Kernel (Slackware)}: mensajes del kernel con VirtualBox Guest Additions --- \texttt{Aug 5 20:24:19 slackware kernel: \ldots main 7.2.12 r174389 started. Verbose level = 0} (\texttt{lab-evidencias/logs/slackware-syslog.txt}).
+      \item \textbf{sshd/sudo (Slackware)}: \texttt{Aug 6 03:00:14 slackware sudo: vagrant : PWD=/home/vagrant ; USER=root ; COMMAND=/usr/bin/tail -6 /var/log/secure}, seguido de \texttt{pam\_unix(sudo:session): session opened for user root} (\texttt{lab-evidencias/logs/slackware-ssh.txt}).
+      \item \textbf{Kernel (Solaris)}: detección de dispositivos en el arranque --- \texttt{Aug 5 22:05:09 solaris genunix: [ID 936769 kern.info] pm0 is /pseudo/pm@0} (\texttt{lab-evidencias/logs/solaris-messages.txt}).
+      \item \textbf{Red (Solaris)}: enlace de red activo --- \texttt{Aug 5 22:05:22 solaris mac: [ID 435574 kern.info] NOTICE: e1000g0 link up, 1000 Mbps, full duplex} (\texttt{lab-evidencias/logs/solaris-messages.txt}).
+      \item \textbf{sendmail (Solaris)}: \texttt{Aug 5 22:09:36 solaris sendmail[902]: [ID 702911 mail.crit] My unqualified host name (solaris) unknown; sleeping for retry} (\texttt{lab-evidencias/logs/solaris-messages.txt}).
+    \end{enumerate}
+  \item ¿Funciona syslog en los sistemas instalados? \textbf{Sí, en ambos}: en Slackware los eventos quedan en \texttt{/var/log/syslog}, \texttt{/var/log/messages} y \texttt{/var/log/secure} (evidencias \texttt{slackware-syslog.txt} y \texttt{slackware-ssh.txt}); en Solaris en \texttt{/var/adm/messages} (evidencia \texttt{solaris-messages.txt}).
+\end{itemize}
+
+\subsubsection{Permisos}
+
+\begin{itemize}
+  \item Cómo funcionan los permisos en cada sistema: tripleta r/w/x aplicada a propietario/grupo/otros, visible con \texttt{ls -l} (en Solaris los grupos aparecen como \texttt{Accounting}/\texttt{IT}); los valores rwx se traducen al modo octal (4/2/1). Solaris suma además el modelo ZFS/ACL.
+  \item Modificación con representación simbólica (\texttt{chmod g+w}, \texttt{chmod u+x,g-w}) y numérica (\texttt{chmod 750}, \texttt{chmod 640}, \texttt{chmod 770}).
+  \item Pruebas de impacto reales en \textbf{Slackware} (evidencia \texttt{lab-evidencias/logs/\allowbreak slackware-permisos.txt}):
+    \begin{itemize}
+      \item Directorio \texttt{/lab-permisos} propiedad de \texttt{root:it}: \texttt{chmod} numérico (750 sobre el directorio en el proceso y 640 sobre \texttt{archivo.txt}) y simbólico \texttt{g+w}; estado final verificado: \texttt{drwxrwx--- 2 root it} (770).
+      \item \textbf{fabian} (grupo \texttt{it}) puede crear archivos: \texttt{touch /lab-permisos/fabian.txt} $\rightarrow$ OK (\texttt{FABIAN\_OK}).
+      \item \textbf{claudia} (grupo \texttt{accounting}) no puede: \texttt{touch: cannot touch '/lab-permisos/claudia.txt': Permission denied}.
+      \item Archivo \texttt{archivo.txt} con 640 (\texttt{-rw-r----- root:root}): solo root lo lee. Tras \texttt{chgrp it} y permisos simbólicos de lectura/escritura al grupo, \textbf{fabian} logra leerlo y \textbf{claudia} sigue denegada (\texttt{Permission denied}).
+      \item Simbólico \texttt{chmod u+x,g-w} sobre el archivo $\rightarrow$ \texttt{-rwxr-----} (ejecución al propietario, escritura quitada al grupo).
+    \end{itemize}
+  \item Pruebas de impacto reales en \textbf{Solaris} (evidencia \texttt{lab-evidencias/logs/\allowbreak solaris-permisos.txt}):
+    \begin{itemize}
+      \item Directorio \texttt{/lab-permisos} con \texttt{chmod 770 root:IT} $\rightarrow$ \texttt{drwxrwx--- 2 root IT}.
+      \item \textbf{fabian} (grupo \texttt{IT}) crea (\texttt{FABIAN\_OK}) y lee \texttt{archivo.txt} sin errores.
+      \item \textbf{claudia} (grupo \texttt{Accounting}) denegada: \texttt{touch: cannot stat /lab-permisos/claudia.txt: Permission denied} y \texttt{cat: cannot open /lab-permisos/archivo.txt: Permission denied}.
+      \item Simbólico \texttt{chmod g-w} aplicado para quitar escritura al grupo.
+    \end{itemize}
+  \item Conclusión de la matriz de impacto: un usuario del grupo propietario del directorio (fabian/IT) puede crear y leer; uno ajeno (claudia/Accounting) recibe \texttt{Permission denied} en ambos sistemas, confirmando que los permisos funcionan igual en Slackware y Solaris.
+\end{itemize}
+
+\subsection{Windows Server --- Fase 1 (Server Core, sin interfaz gráfica)}
+
+Instalación de la edición \textbf{Server Core} (sin interfaz gráfica) en VMware. Evidencias:
+
+\subsubsection{Instalación}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{windows-01-instalando.png}
+  \caption{Instalación de Windows Server 2025 en curso: copia de archivos y preparación del sistema (edición Core).}
+  \label{fig:win-01}
+\end{figure}
+
+\subsubsection{Primer arranque (SConfig)}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{windows-02-sconfig-primer-arranque.png}
+  \caption{Primer arranque con SConfig: Windows Server 2025 Standard Evaluation, hostname \texttt{WIN-095R63R3HG}, dominio \texttt{WORKGROUP} y RDP habilitado.}
+  \label{fig:win-02}
+\end{figure}
+
+Datos verificados de la instalación:
+
+\begin{itemize}
+  \item Hostname temporal asignado por el instalador: \texttt{WIN-095R63R3HG}.
+  \item Cuenta local \texttt{Administrator} con contraseña \texttt{Server2025!}.
+  \item Dominio: \texttt{WORKGROUP} (la VM no se unió a ningún dominio).
+\end{itemize}
+
+Red y pruebas (detalle en el párrafo ``Pruebas de conectividad en la red de la universidad'' de la sección 3.2.4):
+
+\begin{itemize}
+  \item Red estática aplicada con \texttt{netsh}: 10.2.78.66/16, GW 10.2.65.1, DNS 10.2.65.1.
+  \item ICMP habilitado en el firewall (Windows bloquea el ping entrante por defecto): regla \texttt{netsh advfirewall} para \texttt{icmpv4:8}.
+  \item Pruebas OK (0\,\% de pérdida): gateway, 8.8.8.8, \texttt{www.google.com} e inter-VM con Slackware (.64) y GUI (.67).
+\end{itemize}
+
+Consigna pendiente:
+
+\begin{itemize}
+  \item Acceso remoto (RDP): [PENDIENTE: verificar el estado de RDP en la VM].
+\end{itemize}
+
+\subsection{Windows Server --- Fase 2 (Desktop Experience)}
+
+Instalación de la versión gráfica (Desktop Experience). Evidencias:
+
+\subsubsection{Instalación}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{windows-gui-01-instalando.png}
+  \caption{Instalación de Windows Server 2025 (edición Desktop Experience) en curso: copia de archivos.}
+  \label{fig:wingui-01}
+\end{figure}
+
+OOBE (Out-of-Box Experience) completado: cuenta \texttt{Administrator} con contraseña \texttt{Server2025!}.
+
+Red: estática aplicada con \texttt{netsh} (10.2.78.67/16, GW y DNS 10.2.65.1). Pruebas OK (0\,\% de pérdida): gateway, 8.8.8.8, \texttt{www.google.com} e inter-VM con Slackware (.64).
+
+\subsubsection{Primer arranque (escritorio y Server Manager)}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{windows-gui-02-escritorio-server-manager.png}
+  \caption{Escritorio de Windows Server 2025 con Server Manager abierto (resumen del servidor local y aviso de Azure Arc).}
+  \label{fig:wingui-02}
+\end{figure}
+
+\textbf{Usuarios y grupos (evidencia: \texttt{lab-evidencias/usuarios-windows/\allowbreak usuarios-creados.txt})}
+
+Se crearon los 4 usuarios con PowerShell (\texttt{New-LocalUser}), todos habilitados y con la descripción significativa pedida por el lab; los usuarios 1 y 2 se asignaron al grupo local \texttt{Accounting} y los usuarios 3 y 4 a \texttt{IT} (\texttt{New-LocalGroup} + \texttt{Add-LocalGroupMember}):
+
+\begin{lstlisting}[language={}]
+New-LocalUser -Name claudia -Description "Usuario con el nombre de la profesora"
+New-LocalUser -Name john    -Description "Usuario con el nombre del profesor"
+New-LocalUser -Name fabian  -Description "Usuario con el nombre del profesor"
+New-LocalUser -Name diego   -Description "Usuario con el nombre del profesor"
+
+New-LocalGroup -Name Accounting
+New-LocalGroup -Name IT
+
+Add-LocalGroupMember -Group Accounting -Member claudia, john
+Add-LocalGroupMember -Group IT -Member fabian, diego
+\end{lstlisting}
+
+Resultado verificado (05/08/2026): \texttt{claudia}, \texttt{john}, \texttt{fabian} y \texttt{diego} aparecen en la lista de usuarios locales con \texttt{Enabled = True}; el grupo \texttt{Accounting} contiene a \texttt{WIN-3VMPCF0KCDN\textbackslash{}claudia} y \texttt{WIN-3VMPCF0KCDN\textbackslash{}john}, y el grupo \texttt{IT} a \texttt{WIN-3VMPCF0KCDN\textbackslash{}fabian} y \texttt{WIN-3VMPCF0KCDN\textbackslash{}diego}.
+
+\textbf{Permisos con ACL e \texttt{icacls} (evidencia: \texttt{lab-evidencias/usuarios-windows/\allowbreak permisos-acl.txt})}
+
+Sobre la carpeta \texttt{C:\textbackslash{}LabPermisos} se asignaron niveles de permiso con \texttt{icacls} (con \texttt{/grant} y \texttt{/deny}) y se verificó la ACL final:
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{Usuario} & \textbf{Nivel} & \textbf{Significado} \\
+    \midrule
+    \texttt{claudia} & \texttt{(OI)(CI)(F)} & Control total (Full) \\
+    \texttt{john}    & \texttt{(OI)(CI)(R)} & Solo lectura (Read) \\
+    \texttt{fabian}  & \texttt{(OI)(CI)(M)} & Modificar (Modify) \\
+    \texttt{diego}   & \texttt{(OI)(CI)(N)} & Deny (denegar) \\
+    \bottomrule
+  \end{tabular}
+  \caption{Niveles de permiso asignados sobre \texttt{C:\textbackslash{}LabPermisos}.}
+  \label{tab:win-acl}
+\end{table}
+
+\texttt{(OI)} = heredado por objetos (archivos) y \texttt{(CI)} = heredado por contenedores (subcarpetas). El propietario de la carpeta es \texttt{BUILTIN\textbackslash{}Administrators}; el archivo de prueba \texttt{prueba.txt} hereda la misma matriz (marcas \texttt{(I)}): claudia F, fabian M, john R y diego N. En Windows la negación (Deny) tiene prioridad sobre los permisos concedidos, por lo que \texttt{diego} queda excluido del acceso.
+
+\textbf{Visor de eventos --- eventos 4624 y 4625 (evidencia: \texttt{lab-evidencias/usuarios-windows/\allowbreak eventos-seguridad.txt})}
+
+\begin{itemize}
+  \item \textbf{4625 (logon fallido):} un intento con contraseña incorrecta de \texttt{claudia} el 05/08/2026 19:58:49 y dos intentos sobre \texttt{Administrator} el 03/08/2026, con estado \texttt{\%\%2313} (credenciales inválidas).
+  \item \textbf{4624 (logon exitoso):} \texttt{claudia} el 05/08/2026 19:59:02, \texttt{Administrator} a las 19:58:25 y la cuenta \texttt{SYSTEM} a las 19:59:07.
+\end{itemize}
+
+\textbf{Windows Registry (evidencia: \texttt{lab-evidencias/usuarios-windows/registry.txt} y Figura~\ref{fig:win-registry})}
+
+\begin{itemize}
+  \item Qué es: base de datos jerárquica donde Windows y las aplicaciones guardan su configuración, organizada en colmenas (\emph{hives}). La colmena principal es HKLM (\texttt{HKEY\_LOCAL\_MACHINE}), con las claves \texttt{BCD00000000}, \texttt{HARDWARE}, \texttt{SAM}, \texttt{SECURITY}, \texttt{SOFTWARE} y \texttt{SYSTEM}.
+  \item Ejemplos verificados: el hostname está en \texttt{HKLM\allowbreak\textbackslash{}SYSTEM\allowbreak\textbackslash{}CurrentControlSet\allowbreak\textbackslash{}Control\allowbreak\textbackslash{}ComputerName\allowbreak\textbackslash{}ComputerName} $\rightarrow$ \texttt{WIN-3VMPCF0KCDN}; la ruta de instalación en \texttt{HKLM\allowbreak\textbackslash{}SOFTWARE\allowbreak\textbackslash{}Microsoft\allowbreak\textbackslash{}Windows\allowbreak\textbackslash{}CurrentVersion\allowbreak\textbackslash{}ProgramFilesDir} $\rightarrow$ \texttt{C:\textbackslash{}Program Files}.
+  \item Edición con \texttt{regedit} (captura: Figura~\ref{fig:win-registry}): la herramienta gráfica muestra el árbol de claves y valores; se editan con doble clic (también se puede en línea de comandos con \texttt{reg add} / \texttt{reg query}).
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{usuarios-windows/registry-editor.png}
+  \caption{Edición del registro con \texttt{regedit} en Windows Server 2025: árbol de claves de HKLM.}
+  \label{fig:win-registry}
+\end{figure}
+
+\subsection{Android}
+
+Creación de la VM e instalación de \textbf{android-x86 9.0-r2} (kernel 4.9). Evidencias:
+
+\subsubsection{Instalación}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-01-menu-instalacion.png}
+  \caption{Menú de arranque de Android-x86 9.0-r2: \texttt{Live CD}, instalación en disco y opciones avanzadas.}
+  \label{fig:and-01}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-02-instalador-elegir-particion.png}
+  \caption{Selección de la partición de destino para instalar Android-x86 (disco con 8 GB de espacio libre).}
+  \label{fig:and-02}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-03-confirm-gpt.png}
+  \caption{Confirmación del esquema de particionado: \texttt{Do you want to use GPT?}}
+  \label{fig:and-03}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-04-cfdisk.png}
+  \caption{Particionado del disco con \texttt{cfdisk}: disco \texttt{/dev/sdd} de 17,1 GB.}
+  \label{fig:and-04}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-05-particion-creada.png}
+  \caption{Partición creada y visible en la pantalla de selección para la instalación.}
+  \label{fig:and-05}
+\end{figure}
+
+Selección de la partición para la instalación (incluido el modo automático):
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-06-choose-partition-v2.png}
+  \caption{Selección de la partición de destino para la instalación (segunda vista de la misma pantalla de elección).}
+  \label{fig:and-06}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-07-choose-partition-auto.png}
+  \caption{Selección de la partición en modo automático (confirmación del destino de instalación).}
+  \label{fig:and-07}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-08-instalado-exitoso.png}
+  \caption{Instalación completada con éxito: Android-x86 9.0-r2 instalado en el disco.}
+  \label{fig:and-08}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-09-home-app-select.png}
+  \caption{Selección de la aplicación de inicio (Home): \texttt{Quickstep} o \texttt{Taskbar}.}
+  \label{fig:and-09}
+\end{figure}
+
+\subsubsection{Primer arranque y escritorio}
+
+Escritorio de Android funcionando:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-10-escritorio.png}
+  \caption{Escritorio de Android funcionando (1).}
+  \label{fig:and-10}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{android-11-escritorio-final.png}
+  \caption{Escritorio de Android funcionando (vista final).}
+  \label{fig:and-11}
+\end{figure}
+
+Datos de la VM: 2 CPU, 2 GB de RAM, disco VDI de 16 GB, adaptador de red NAT y GRUB instalado en el disco (arranque directo desde disco). El arranque presentó un problema de visualización que se resolvió habilitando 128 MB de VRAM y la aceleración 3D en la configuración de la VM.
+
+\textbf{Red (detalle en el párrafo ``Pruebas de conectividad en la red de la universidad'' de la sección 3.2.4)}
+
+IP estática \texttt{10.2.78.68/16} sobre la interfaz ethernet \texttt{wifi\_eth}, con \emph{policy routing} en la tabla 97 (reglas de \texttt{ip rule}/\texttt{ip route} para salir por el gateway 10.2.65.1 y alcanzar la red 10.2.0.0/16). Pings OK al gateway, a 8.8.8.8 e inter-VM con Slackware (.64). Limitación documentada: la resolución DNS por nombre no funciona desde la consola de emergencia (Android sin \texttt{netd}). Evidencia: \texttt{lab-evidencias/red/android-pings-uni2.png}.
+
+\subsection{Conocimiento de línea de comandos}
+
+\begin{itemize}
+  \item ¿Qué es el shell? Intérprete de comandos que ejecuta programas y da acceso a los servicios del sistema (login, tuberías, variables, scripts). En Unix es a la vez prompt interactivo y lenguaje de scripting; en Windows conviven \texttt{cmd} (interpretador heredado de MS-DOS) y PowerShell (orientado a objetos).
+  \item Shells soportados, verificados con la lista de shells válidos del sistema (evidencia \texttt{lab-evidencias/shell/}):
+    \begin{itemize}
+      \item \textbf{Slackware 15.0} (\texttt{slackware-comandos.txt}): bash, ksh, csh, tcsh, zsh, dash y ash (más \texttt{sh}); los ejecutables están en \texttt{/bin} y \texttt{/usr/bin}.
+      \item \textbf{Solaris 11.4} (\texttt{solaris-comandos.txt}): bash, ksh, csh, zsh y sh (\texttt{/usr/bin/bash}, \texttt{/usr/bin/ksh}, \texttt{/usr/bin/csh}, \texttt{/usr/bin/zsh}, \texttt{/usr/bin/sh}).
+      \item \textbf{Windows Server 2025} (\texttt{windows-core-comandos.txt}): \texttt{cmd.exe} (Windows 10.0.26100) y PowerShell 5.1 (5.1.26100.1591).
+    \end{itemize}
+  \item Diferencias: en Unix cada shell es un programa distinto con su propia sintaxis; Solaris usa históricamente sh/ksh/csh y Slackware incluye la familia completa. En Windows, \texttt{cmd} manipula texto plano y PowerShell trabaja con objetos; los homólogos de los comandos Unix (\texttt{dir}, \texttt{copy}, \texttt{findstr}, \texttt{where}) son menos potentes para procesar texto.
+\end{itemize}
+
+Comandos (tabla comparativa Linux/Unix vs.\ Windows):
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{Tarea} & \textbf{Linux/Unix} & \textbf{Windows} \\
+    \midrule
+    Cambiar de directorio & \texttt{cd} & \texttt{cd} \\
+    Listar archivos & \texttt{ls -la} & \texttt{dir} \\
+    Copiar/mover archivo & \texttt{cp}, \texttt{mv} & \texttt{copy}, \texttt{move} \\
+    Ver contenido sin editar & \texttt{cat} & \texttt{type} \\
+    Editar un archivo & \texttt{vi}/\texttt{nano} & \texttt{notepad} \\
+    Primeras/últimas líneas & \texttt{head}, \texttt{tail} & \texttt{Get-Content -First/-Last} (PowerShell) \\
+    Buscar palabra en archivo & \texttt{grep} & \texttt{findstr} / \texttt{Select-String} \\
+    Localizar un archivo & \texttt{find}, \texttt{locate} & \texttt{where} / \texttt{Get-ChildItem -Recurse} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Comparativa de comandos Linux/Unix vs.\ Windows.}
+  \label{tab:shells}
+\end{table}
+
+Ejemplos de uso de los 8 comandos con salidas reales abreviadas (evidencia \texttt{lab-evidencias/shell/}):
+
+\textbf{Slackware 15.0} (prompt \texttt{\$}):
+
+\begin{verbatim}
+$ cd /tmp
+/tmp
+
+$ ls -la /usuarios
+claudia (accounting), john, fabian, diego
+
+$ mv archivo.txt renombrado.txt
+-rwxr----- 1 root root /tmp/renombrado.txt
+
+$ cat archivo.txt
+slackware
+
+$ echo "linea-anadida" >> archivo.txt
+linea-anadida
+
+$ tail /etc/passwd
+root:x:0:0:...
+diego:x:1004:...
+
+$ grep claudia /etc/passwd
+claudia:x:1001:1002:...
+
+$ find /usuarios -name .screenrc
+4 archivos
+\end{verbatim}
+
+\textbf{Solaris 11.4} (prompt \texttt{\$}):
+
+\begin{verbatim}
+$ cd /tmp
+/tmp
+
+$ ls -la /usuarios
+claudia (Accounting), john, fabian, diego
+
+$ mv archivo.txt renombrado.txt
+-rwxr----- 1 root root /tmp/renombrado.txt
+
+$ cat archivo.txt
+solaris
+
+$ echo "linea-anadida" >> archivo.txt
+linea-anadida
+
+$ tail /etc/passwd
+root:x:0:0:Super-User
+diego:x:103:...
+
+$ grep claudia /etc/passwd
+claudia:x:100:100:...
+
+$ find /usuarios -name .profile
+.profile de cada usuario
+\end{verbatim}
+
+\textbf{Windows Server 2025} (prompt \texttt{C:\textbackslash{}>}):
+
+\begin{verbatim}
+C:\> cd \
+C:\
+
+C:\> dir C:\LabPermisos
+prueba.txt  20 bytes
+
+C:\> copy archivo.txt copia.txt
+1 file(s) copied.
+
+C:\> move archivo.txt renombrado.txt
+renombrado.txt
+
+C:\> type archivo.txt
+archivo-de-prueba
+
+C:\> echo linea-anadida >> archivo.txt
+linea-anadida
+
+C:\> Get-Content -Last hosts
+localhost
+
+C:\> findstr localhost hosts
+localhost
+
+C:\> where notepad
+C:\Windows\System32\notepad.exe
+\end{verbatim}
+
+Nota: los ejemplos se ejecutaron y verificaron en los tres sistemas.
+
+\clearpage
+\section{Uso y aplicaciones}
+
+\begin{itemize}
+  \item \textbf{Administración de servidores Unix y Windows:} lo aprendido permite administrar servidores sin interfaz gráfica: configuración de red estática, usuarios y grupos, servicios y línea de comandos. Slackware y Windows Server Core se administran por consola (SSH y SConfig), el modelo que se encuentra en servidores de archivos, DNS, correo y bases de datos reales.
+  \item \textbf{Monitoreo con logs:} syslog (Slackware y Solaris) y el Visor de eventos (Windows) permiten detectar fallos de hardware y red, errores de servicios (sendmail, sshd) e intentos de acceso no autorizados (eventos 4624/4625, log de sudo), base de la auditoría de seguridad.
+  \item \textbf{Gestión de usuarios y permisos:} la creación de usuarios y grupos con home en \texttt{/usuarios} y los permisos por grupo (\texttt{chmod}/ACL/\texttt{icacls}) aplican el principio de menor privilegio: en una empresa cada departamento (Accounting/IT) accede solo a sus recursos.
+  \item \textbf{Virtualización en infraestructura empresarial y cloud:} un solo servidor físico consolidado en varias VM (menos hardware, menos energía), entornos de prueba aislados, instantáneas y migración entre hipervisores (OVF/OVA), y la base del modelo IaaS de las nubes públicas: el hipervisor es el componente sobre el que se construye la elasticidad y la multitenencia; los contenedores lo complementan para los microservicios.
+\end{itemize}
+
+\section{Conclusiones}
+
+\textit{Borrador provisional; se ajustará al cerrar el laboratorio.}
+
+\begin{itemize}
+  \item Se instalaron y dejaron operativos cinco sistemas sobre un único equipo: Slackware 15.0, Solaris 11.4, Windows Server 2025 (Core y Desktop Experience) y Android-x86 9.0-r2, cada uno con su instalador, su sistema de archivos y su modelo de administración.
+  \item La virtualización demostró su valor práctico: consolidación de plataformas heterogéneas, recuperación ante errores (reinstalaciones y snapshots) y portabilidad entre hipervisores (formatos OVF).
+  \item La red estática del laboratorio (sin DHCP) obligó a planificar las direcciones y a configurar cada equipo a mano; la conectividad quedó verificada con 0\,\% de pérdida en todas las pruebas de Slackware, Windows Core, Windows GUI y Android.
+  \item Se documentaron particularidades reales de cada plataforma: Windows bloquea el ICMP entrante por firewall, Android requiere policy routing y no resuelve DNS por nombre desde la consola de emergencia, y Slackware impone limitaciones en los nombres de grupo.
+  \item Los conceptos de permisos, logs y shells funcionan de forma equivalente entre Slackware y Solaris, con diferencias de implementación (ACL/ZFS, SMF, IPS).
+  \item Pendiente: verificar RDP en Windows Server Core y ajustar estas conclusiones con los resultados finales.
+\end{itemize}
+
+\section{Bibliografía}
+
+\begin{itemize}
+  \item Oracle. \emph{Oracle Solaris 11.4 Documentation}. \url{https://docs.oracle.com/en/solaris/solaris/11.4/}
+  \item Slackware Linux Project. \emph{Slackware Linux 15.0 Documentation}. \url{https://www.slackware.com/documentation/}
+  \item Microsoft. \emph{Evaluation Center --- Windows Server 2025}. \url{https://www.microsoft.com/en-us/evalcenter/}
+  \item Android-x86 Project. \emph{Android-x86 --- Release 9.0-r2}. \url{https://www.android-x86.org/}
+  \item Oracle. \emph{Oracle VM VirtualBox Documentation}. \url{https://www.virtualbox.org/wiki/Docs}
+  \item VMware (Broadcom). \emph{VMware Docs --- máquinas virtuales y conversión OVF}. \url{https://docs.vmware.com/}
+  \item The Linux Foundation. \emph{Filesystem Hierarchy Standard 3.0}. \url{https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf}
+\end{itemize}
+
+\section*{Anexo A --- Asignación de IPs (10.2.78.n)}
+\addcontentsline{toc}{section}{Anexo A --- Asignación de IPs (10.2.78.n)}
+
+La red del laboratorio es 10.2.0.0/16, con gateway y DNS 10.2.65.1 y dominio \texttt{is.escuelaing.edu.co}. \textbf{NO tiene DHCP}: todas las direcciones se configuraron estáticamente en cada equipo.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\linewidth}{@{}lXp{5.5cm}@{}}
+    \toprule
+    \textbf{Máquina} & \textbf{IP} & \textbf{Notas} \\
+    \midrule
+    Host (portátil físico) & \texttt{10.2.78.69} & Estática (configurada con \texttt{netsh} sobre el adaptador Ethernet), GW y DNS 10.2.65.1 \\
+    Slackware & \texttt{10.2.78.64} & Estática (\texttt{rc.inet1.conf}), probada OK \\
+    Solaris & \texttt{10.2.78.65} & Estática (\texttt{ipadm}), GW y DNS 10.2.65.1 \\
+    Windows Server Core & \texttt{10.2.78.66} & Estática (\texttt{netsh}), probada OK; ICMP habilitado en el firewall \\
+    Windows Server GUI & \texttt{10.2.78.67} & Estática (\texttt{netsh}), probada OK \\
+    Android & \texttt{10.2.78.68} & Estática en \texttt{wifi\_eth} con policy routing (tabla 97); DNS por nombre no resuelve \\
+    PC del laboratorio (referencia) & \texttt{10.2.254.6} & Equipo físico del aula, gateway 10.2.65.1 \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Asignación de direcciones IP (10.2.78.n).}
+  \label{tab:ips}
+\end{table}
+
+\section*{Anexo B --- Guion del video (punto 1)}
+\addcontentsline{toc}{section}{Anexo B --- Guion del video (punto 1)}
+
+Video del grupo: \url{https://youtu.be/6HnwGg-_QV0}
+
+Guion para el video de hasta 5 minutos sobre virtualización. Estilo presentación hablada; cada bloque indica el tiempo aproximado.
+
+\textbf{(0:00--0:30) Apertura}
+
+Hola, y bienvenidos. En este video vamos a explicar qué es la virtualización, cómo funcionan los hipervisores, por qué son la base del cómputo en la nube y en qué se diferencian las máquinas virtuales de los contenedores. La idea central es sencilla: un solo computador físico puede ejecutar varios sistemas operativos a la vez, cada uno aislado de los demás, como si fueran computadores independientes.
+
+\textbf{(0:30--1:15) Hipervisores: qué son y cómo se clasifican}
+
+El software que hace posible esto es el hipervisor, también llamado monitor de máquina virtual. Es una capa que se ubica entre el hardware y los sistemas operativos invitados: reparte la CPU, la memoria, el disco y la red entre las máquinas, y garantiza que una máquina no interfiera con otra. Los hipervisores se clasifican en dos tipos. El Tipo 1, o bare-metal, se instala directamente sobre el hardware, sin un sistema operativo debajo: ejemplos son VMware ESXi, Microsoft Hyper-V, Xen y KVM, y es el modelo que usan los centros de datos. El Tipo 2, o hosted, corre como una aplicación sobre un sistema operativo anfitrión: VirtualBox y VMware Workstation, que es lo que usamos en el laboratorio para instalar Slackware, Solaris, Windows y Android.
+
+\textbf{(1:15--2:00) Características y arquitectura}
+
+Las características clave de un hipervisor son el aislamiento, la partición de recursos y la encapsulación. Aislamiento: si una máquina virtual falla o se infecta, las demás siguen funcionando. Partición: el hipervisor divide los recursos físicos entre todas las máquinas. Encapsulación: una máquina virtual completa es un conjunto de archivos, así que se puede copiar, respaldar o migrar como cualquier otro archivo. En cuanto a la arquitectura, cada máquina virtual cree tener su propio hardware: una CPU virtual, memoria virtual, un disco y una tarjeta de red virtuales. El hipervisor intercepta las instrucciones privilegiadas del sistema invitado y las ejecuta sobre el hardware real, apoyándose en las extensiones de virtualización de los procesadores actuales.
+
+\textbf{(2:00--2:45) Cloud computing y su relación con los hipervisores}
+
+Ahora, ¿qué es el cómputo en la nube? Es la entrega de recursos de cómputo, almacenamiento y software a través de internet, bajo demanda y con pago por uso. Hay tres modelos de servicio: IaaS, que ofrece máquinas virtuales y redes; PaaS, que ofrece la plataforma para desplegar aplicaciones; y SaaS, que ofrece el software completo. ¿Se usan hipervisores en la nube? Sí, definitivamente: cuando en AWS o Azure pides una máquina virtual, es un hipervisor el que la crea en segundos sobre un servidor físico compartido con otros clientes. La multitenencia y la elasticidad, las dos propiedades que definen a la nube, son posibles gracias a la virtualización.
+
+\textbf{(2:45--3:15) Costos: servidor físico vs.\ nube}
+
+En costos hay un tradeoff. Un servidor físico exige una inversión inicial alta en hardware y costos fijos de energía, enfriamiento y mantenimiento, y suele quedar sobredimensionado para los picos de carga. La nube elimina esa inversión: se paga por uso, sin mantenimiento y con elasticidad real. Pero el costo es continuo: si el servidor se usa al máximo todo el tiempo, a largo plazo la nube puede salir más cara que el hardware propio. La decisión depende del perfil de carga y del nivel de control que se necesite.
+
+\textbf{(3:15--4:15) Contenedores vs.\ máquinas virtuales}
+
+Finalmente, hablemos de los contenedores. Una máquina virtual virtualiza el hardware: cada VM carga su propio sistema operativo completo. Un contenedor, en cambio, virtualiza el sistema operativo: todos los contenedores comparten el kernel del anfitrión, y el aislamiento se logra con namespaces y cgroups, las herramientas del kernel de Linux. Por eso un contenedor pesa megabytes y arranca en segundos, mientras una máquina virtual pesa gigabytes y arranca en minutos; por eso en un servidor caben decenas de máquinas virtuales pero cientos o miles de contenedores. La contrapartida es el aislamiento: la frontera de una máquina virtual es mucho más fuerte que la de un contenedor. En la práctica no compiten: las máquinas virtuales aíslan plataformas completas y los contenedores despliegan microservicios sobre ellas.
+
+\textbf{(4:15--4:45) Cierre}
+
+En resumen: el hipervisor es el software que multiplica un servidor físico en varias máquinas virtuales; la nube pública se construye sobre hipervisores; los contenedores comparten el kernel y son la opción ligera para las aplicaciones. En el laboratorio aplicamos estos conceptos instalando y administrando varios sistemas sobre una sola computadora, y verificando su conectividad en una red real. Gracias por ver el video.
+
+\section*{Anexo C --- Conversión a LaTeX}
+\addcontentsline{toc}{section}{Anexo C --- Conversión a LaTeX}
+
+\begin{itemize}
+  \item Mapeo 1:1 de secciones a \texttt{\textbackslash section} / \texttt{\textbackslash subsection}.
+  \item Tablas $\rightarrow$ \texttt{tabular} / \texttt{booktabs}; capturas $\rightarrow$ \texttt{\textbackslash includegraphics} con \texttt{lab-evidencias/} como ruta.
+\end{itemize}
+
+\end{document}

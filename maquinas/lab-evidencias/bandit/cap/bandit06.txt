@@ -1,0 +1,3 @@
+bandit6@bandit:~$ F=$(find / -type f -user bandit7 -group bandit6 -size 33c 2>/dev/null); echo "RUTA: $F"; cat $F
+RUTA: /var/lib/dpkg/info/bandit7.password
+Bmnnvf82KzQlfxgAI2d1zYbr1u9pr3E3

@@ -1,0 +1,41 @@
+﻿==== IP DEL HOST ====
+    inet 10.2.78.64/16 brd 10.2.255.255 scope global eth0
+    inet 10.0.2.15/24 scope global eth0
+==== PING PROPIA VM ====
+PING 10.2.78.64 (10.2.78.64) 56(84) bytes of data.
+64 bytes from 10.2.78.64: icmp_seq=1 ttl=64 time=0.060 ms
+64 bytes from 10.2.78.64: icmp_seq=2 ttl=64 time=0.081 ms
+64 bytes from 10.2.78.64: icmp_seq=3 ttl=64 time=0.065 ms
+
+--- 10.2.78.64 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2060ms
+rtt min/avg/max/mdev = 0.060/0.068/0.081/0.009 ms
+==== PING GATEWAY 10.2.65.1 ====
+PING 10.2.65.1 (10.2.65.1) 56(84) bytes of data.
+64 bytes from 10.2.65.1: icmp_seq=1 ttl=64 time=1.94 ms
+64 bytes from 10.2.65.1: icmp_seq=2 ttl=64 time=0.820 ms
+64 bytes from 10.2.65.1: icmp_seq=3 ttl=64 time=0.677 ms
+
+--- 10.2.65.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 0.677/1.144/1.937/0.563 ms
+==== PING EXTERNO 8.8.8.8 ====
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=115 time=3.75 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=115 time=6.05 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=115 time=5.81 ms
+
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 3.753/5.203/6.050/1.030 ms
+==== PING DNS www.google.com ====
+PING www.google.com (142.251.151.119) 56(84) bytes of data.
+64 bytes from 142.251.151.119 (142.251.151.119): icmp_seq=1 ttl=115 time=5.18 ms
+64 bytes from 142.251.151.119 (142.251.151.119): icmp_seq=2 ttl=115 time=3.10 ms
+64 bytes from 142.251.151.119 (142.251.151.119): icmp_seq=3 ttl=115 time=4.80 ms
+
+--- www.google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2005ms
+rtt min/avg/max/mdev = 3.101/4.358/5.176/0.902 ms
+==== resolv.conf ====
+nameserver 10.2.65.1

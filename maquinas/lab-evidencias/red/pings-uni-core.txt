@@ -1,0 +1,47 @@
+﻿Warning: Permanently added '10.2.78.66' (ED25519) to the list of known hosts.
+WIN-O95R63RBHK9
+   IPv4 Address. . . . . . . . . . . : 10.2.78.66
+=== GATEWAY === 
+
+Pinging 10.2.65.1 with 32 bytes of data:
+Reply from 10.2.65.1: bytes=32 time=1ms TTL=64
+Reply from 10.2.65.1: bytes=32 time<1ms TTL=64
+Reply from 10.2.65.1: bytes=32 time=1ms TTL=64
+
+Ping statistics for 10.2.65.1:
+    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+=== EXTERNO === 
+
+Pinging 8.8.8.8 with 32 bytes of data:
+Reply from 8.8.8.8: bytes=32 time=4ms TTL=115
+Reply from 8.8.8.8: bytes=32 time=4ms TTL=115
+Reply from 8.8.8.8: bytes=32 time=4ms TTL=115
+
+Ping statistics for 8.8.8.8:
+    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 4ms, Maximum = 4ms, Average = 4ms
+=== DNS === 
+
+Pinging www.google.com [142.251.155.119] with 32 bytes of data:
+Reply from 142.251.155.119: bytes=32 time=4ms TTL=115
+Reply from 142.251.155.119: bytes=32 time=6ms TTL=115
+Reply from 142.251.155.119: bytes=32 time=3ms TTL=115
+
+Ping statistics for 142.251.155.119:
+    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 3ms, Maximum = 6ms, Average = 4ms
+=== INTER-VM slackware .64 === 
+
+Pinging 10.2.78.64 with 32 bytes of data:
+Reply from 10.2.78.64: bytes=32 time=1ms TTL=64
+Reply from 10.2.78.64: bytes=32 time=1ms TTL=64
+Reply from 10.2.78.64: bytes=32 time<1ms TTL=64
+
+Ping statistics for 10.2.78.64:
+    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms

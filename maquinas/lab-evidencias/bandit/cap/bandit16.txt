@@ -1,0 +1,31 @@
+bandit16@bandit:~$ sh /tmp/b16doc.sh
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-08-02 20:42 +0000
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00013s latency).
+Other addresses for localhost (not scanned): ::1
+Not shown: 996 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+31046/tcp open  unknown
+31518/tcp open  unknown
+31691/tcp open  unknown
+31790/tcp open  unknown
+31960/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds
+============================
+--- PORT 31046
+
+--- PORT 31518
+kS0Hf0u5HiXFwKMKFqXvPdOTNGGa0X8V
+
+--- PORT 31691
+
+--- PORT 31790
+Correct!
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
+NhAAAAAwEAAQAAAYEAvdSaw8j1FQ2DjtbQPGiEVtqEG5kt3g71uDlixg42vRN2MvWRVnGQ
+t4k9T9tDWaisnn+6I4RCkhEzw231WA6KVc0Sd0+6/6Cp1Egp4o4l+xf5gPNo7A2OqjqN67
+Hhy6I71GBjyUBnp6vEtkI3WZmZtuxpCMPyHSy7m56lipJFddKEOUCX21hNWWy2SAZQFBub
+
+--- PORT 31960

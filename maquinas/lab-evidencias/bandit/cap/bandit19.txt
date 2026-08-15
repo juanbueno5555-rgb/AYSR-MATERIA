@@ -1,0 +1,10 @@
+bandit19@bandit:~$ ls -la && file bandit20-do && ./bandit20-do cat /etc/bandit_pass/bandit20
+total 36
+drwxr-xr-x   2 root     root      4096 Jun 24 14:58 .
+drwxr-xr-x 150 root     root      4096 Jun 24 15:02 ..
+-rw-r--r--   1 root     root       220 Feb 13 12:16 .bash_logout
+-rw-r--r--   1 root     root      3851 Jun 24 14:50 .bashrc
+-rw-r--r--   1 root     root       807 Feb 13 12:16 .profile
+-rwsr-x---   1 bandit20 bandit19 14880 Jun 24 14:58 bandit20-do
+bandit20-do: setuid ELF 32-bit LSB executable, Intel i386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, BuildID[sha1]=263f71465a75a599f568ae40f1caca2a9e937892, for GNU/Linux 3.2.0, not stripped
+4pIjcunZ0fK2vmp3IwfG8Vf7VhxD6pOA

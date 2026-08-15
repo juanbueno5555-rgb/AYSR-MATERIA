@@ -1,0 +1,2 @@
+bandit10@bandit:~$ base64 -d data.txt
+The password is pYfOY6HwUsDj5rL9UvyhU7MCmv8vN5Ro

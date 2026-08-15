@@ -1,0 +1,47 @@
+﻿=== SHELLS === 
+
+Microsoft Windows [Version 10.0.26100.1742]
+5.1.26100.1591
+=== 1 cd === 
+C:\
+=== 2 dir === 
+ Volume in drive C has no label.
+ Volume Serial Number is 9E4B-0F00
+
+ Directory of C:\
+
+=== 3 copy y move === 
+The system cannot find the path specified.
+=== 4 type === 
+=== 5 editar === 
+=== 6 primeras y ultimas === 
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+#	127.0.0.1       localhost
+#	::1             localhost
+=== 7 findstr === 
+# localhost name resolution is handled within DNS itself.
+#	127.0.0.1       localhost
+#	::1             localhost
+=== 8 where === 
+C:\Windows\System32\notepad.exe
+C:\Windows\notepad.exe
+=== 2 dir === 
+ Volume in drive C has no label.
+ Volume Serial Number is 9E4B-0F00
+
+ Directory of C:\LabPermisos
+
+08/05/2026  08:46 PM    <DIR>          .
+08/05/2026  08:46 PM                20 prueba.txt
+               1 File(s)             20 bytes
+               1 Dir(s)  49,860,366,336 bytes free
+=== 3 copy y move === 
+        1 file(s) copied.
+        1 file(s) moved.
+prueba.txt
+renombrado.txt
+=== 4 type === 
+archivo-de-prueba 
+=== 5 editar === 
+linea-anadida 
