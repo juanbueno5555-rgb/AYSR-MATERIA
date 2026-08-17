@@ -55,7 +55,7 @@
 | 2. Rastreo mensajes PT | ❌ Pendiente |
 | 3. Wireshark | 🔶 Captura real hecha (1691 paq, 4 GETs a scielo.org.co, paquete #211 analizado capa por capa) + análisis en `WIRESHARK-LAB02.md` + pcapng en lab-evidencias — **faltan los 2 videos (5 y 7 min)** |
 | 4. Tarjetas de red | 🔶 Casi listo (datos VMs Lab 01) |
-| 5. Shell scripts 1.1-1.4 | ❌ Pendiente (Slackware) |
+| 5. Shell scripts 1.1-1.4 | 🔶 Scripts creados y probados en Slackware (`/root/scripts/` + copia en `scripts-lab02/`) — **falta documentar/demostrar en informe** |
 | 6. Editor VI | ❌ Pendiente |
 | 7. Clonar VMs (2 por SO) | ❌ Pendiente |
 | 8. SAMBA en Solaris | ❌ Pendiente |
