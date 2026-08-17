@@ -57,7 +57,7 @@
 | 4. Tarjetas de red | 🔶 Casi listo (datos VMs Lab 01) |
 | 5. Shell scripts 1.1-1.4 | 🔶 Scripts creados y probados en Slackware (`/root/scripts/` + copia en `scripts-lab02/`) — **falta documentar/demostrar en informe** |
 | 6. Editor VI | ❌ Pendiente |
-| 7. Clonar VMs (2 por SO) | 🔶 Clones creados (slackware-15.0-b, solaris-11.4-b, windows-server-gui-b) + slackware-b ✅ internet + solaris-b ✅ internet — **falta verificar windows-b y pings entre VMs** |
+| 7. Clonar VMs (2 por SO) | ✅ Máquinas reemplazadas: los 3 clones (slackware-15.0, solaris-11.4, windows-server-gui) pasaron a ser las VMs principales el 17/8 (originales desregistradas, archivos en `__originales-backup/`). IPs uni .74/.75/.76 con **auto-detección de red al boot** (sin scripts a mano). Internet OK en las 3. Snapshot de respaldo `estado-final-2026-08-17` en cada una. **Falta verificar pings entre VMs en la uni** |
 | 8. SAMBA en Solaris | ❌ Pendiente |
 
 ---

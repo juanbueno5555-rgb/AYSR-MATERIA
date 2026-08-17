@@ -26,6 +26,18 @@ Ejemplo: `ssh -i .ssh/gentle-ai -p 2223 admin@127.0.0.1 "pfexec whoami"`
 
 > OJO: Windows Core y GUI todavía usan DHCP (NAT) — las estáticas .66/.67 se aplican en la uni (comandos en cada sección).
 
+## Clones (Lab 02 — reemplazaron a las originales, IPs estáticas para la uni, se aplican SOLAS)
+
+> El 17/8/2026 los 3 clones `-b` reemplazaron a las VMs originales: se desregistraron los originales (archivos en `C:\Users\RANGE\VirtualBox VMs\__originales-backup\`) y los clones quedaron con los nombres definitivos `slackware-15.0`, `solaris-11.4` y `windows-server-gui`.
+
+| VM | IP (uni) | Máscara | Gateway | DNS | Auto-detect | SSH (casa) |
+|---|---|---|---|---|---|---|
+| slackware-15.0 | 10.2.78.74 | 255.255.0.0 | 10.2.65.1 | 10.2.65.1 | `/usr/local/bin/auto-red.sh` (hook en rc.local) | 2224 |
+| solaris-11.4 | 10.2.78.75 | 255.255.0.0 | 10.2.65.1 | 10.2.65.1 | `/root/auto-red.sh` (SMF svc:/site/auto-red) | 2226 |
+| windows-server-gui | 10.2.78.76 | 255.255.0.0 | 10.2.65.1 | 10.2.65.1 | `C:\auto-red-wrapper.cmd` (Registro Run + tarea ONSTART) | 2225 |
+
+> **Auto-detección de red:** al boot cada VM levanta DHCP, mira el gateway (`10.2.65.1` = uni, `10.0.2.2` = casa) y aplica la IP estática SOLO si está en la uni. No hay que correr scripts a mano. Snapshot de respaldo en cada VM: `estado-final-2026-08-17`. MACs regeneradas (no chocan con Android/Core).
+
 ## Configuración por SO
 
 ### Slackware 15.0 (APLICADA)
