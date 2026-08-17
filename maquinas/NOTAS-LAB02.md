@@ -59,3 +59,12 @@
 | 6. Editor VI | ❌ Pendiente |
 | 7. Clonar VMs (2 por SO) | ❌ Pendiente |
 | 8. SAMBA en Solaris | ❌ Pendiente |
+
+---
+
+## 5.3 Respuestas conceptuales — Logs (para el informe)
+
+1. **¿Qué son los archivos de log?** → Registros donde el SO y los servicios guardan eventos (fecha, origen, mensaje). Sirven para diagnóstico, auditoría y seguridad.
+2. **¿Qué tipos de logs hay en los SO instalados?** → Slackware: `syslog`, `messages`, `secure` (+ dmesg/kernel). Solaris: `/var/adm/messages`. Windows: Visor de eventos (System, Security, Application — eventos 4624/4625 del Lab 01).
+3. **¿Qué es syslog y qué define el estándar?** → Protocolo/estándar de logging (RFC 5424): define formato (facilidad + severidad), transporte (UDP 514) y el servicio; centraliza logs de distintos dispositivos.
+4. **¿Los logs encontrados siguen el estándar?** → Sí: Slackware/Solaris usan formato syslog (`facilidad.severidad`, timestamp, host, proceso[pid]: mensaje). Windows usa Event Log propio — no es syslog nativo (requiere agente para enviarlo).
