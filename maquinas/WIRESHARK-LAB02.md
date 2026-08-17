@@ -63,3 +63,32 @@ paquete GET analizado.
 - Explicar qué es Wireshark y el modo promiscuo
 - Explicar los paneles: packet list, packet details, packet bytes
 - Ejemplos de filtros: `ip.addr == 168.176.28.57`, `tcp.port == 80`, `http.request.method == "GET"`, `icmp`
+
+## 7. Figuras para el informe LaTeX
+
+### Figura 1 — Captura en Wireshark del tráfico a scielo.org.co
+
+- **Archivo:** `lab-evidencias/wireshark-captura-scielo.png`
+- **Qué muestra:** ventana de Wireshark (interfaz Wi-Fi) con la lista de paquetes HTTP
+  entre `192.168.1.10` (PC) y `168.176.28.57` (scielo.org.co), puerto 80.
+  Se ven los tres paneles: lista de paquetes (arriba), detalle del paquete TCP (medio) y
+  bytes hex/ASCII (abajo). Entre los paquetes: `GET / HTTP/1.1`, `GET /css/scielo.css`,
+  `GET /img/en/scielobre.gif`, respuestas `200 OK`, `301 Moved Permanently`, etc.
+- **Sugerencia LaTeX:**
+```latex
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{../lab-evidencias/wireshark-captura-scielo.png}
+  \caption{Captura en Wireshark del tráfico HTTP hacia scielo.org.co.}
+  \label{fig:wireshark-scielo}
+\end{figure}
+```
+- **Pie de figura propuesto:** "Captura de Wireshark mostrando las peticiones GET hacia
+  www.scielo.org.co (168.176.28.57) desde el host 192.168.1.10. Se observa la encapsulación
+  en los tres paneles de la interfaz."
+
+### Figura 2 (opcional) — Paquete GET expandido capa por capa
+
+- Captura desde Wireshark: clic en un paquete `GET / HTTP/1.1` → expandir las secciones
+  Frame, Ethernet II, Internet Protocol, Transmission Control Protocol, Hypertext Transfer Protocol.
+- Guardar como `lab-evidencias/wireshark-paquete-get.png` cuando se genere.
