@@ -57,7 +57,7 @@
 | 4. Tarjetas de red | 🔶 Casi listo (datos VMs Lab 01) |
 | 5. Shell scripts 1.1-1.4 | 🔶 Scripts creados y probados en Slackware (`/root/scripts/` + copia en `scripts-lab02/`) — **falta documentar/demostrar en informe** |
 | 6. Editor VI | ❌ Pendiente |
-| 7. Clonar VMs (2 por SO) | ❌ Pendiente |
+| 7. Clonar VMs (2 por SO) | 🔶 Clones creados (slackware-15.0-b, solaris-11.4-b, windows-server-gui-b) + slackware-b ✅ internet + solaris-b ✅ internet — **falta verificar windows-b y pings entre VMs** |
 | 8. SAMBA en Solaris | ❌ Pendiente |
 
 ---
