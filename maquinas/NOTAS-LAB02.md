@@ -58,7 +58,7 @@
 | 5. Shell scripts 1.1-1.4 | 🔶 Scripts creados y probados en Slackware (`/root/scripts/` + copia en `scripts-lab02/`) — **falta documentar/demostrar en informe** |
 | 6. Editor VI | ❌ Pendiente |
 | 7. Clonar VMs (2 por SO) | ✅ Máquinas reemplazadas: los 3 clones (slackware-15.0, solaris-11.4, windows-server-gui) pasaron a ser las VMs principales el 17/8 (originales desregistradas, archivos en `__originales-backup/`). IPs uni .74/.75/.76 con **auto-detección de red al boot** (sin scripts a mano). Internet OK en las 3. Snapshot de respaldo `estado-final-2026-08-17` en cada una. **Falta verificar pings entre VMs en la uni** |
-| 8. SAMBA en Solaris | ❌ Pendiente |
+| 8. SAMBA en Solaris | ✅ Funcionando (17/08): servidor Samba clásico en Solaris 10.2.78.75 compartiendo `compartido` (puerto 445). Probado desde Slackware (put/get con smbclient) y Windows GUI (net use + crear archivo), con interoperabilidad cruzada verificada. Usuarios SMB: claudia/admin. Evidencia en `lab-evidencias/red/samba-lab02-evidencias.txt` + captures. |
 
 ---
 

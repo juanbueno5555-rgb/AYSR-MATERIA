@@ -1,0 +1,88 @@
+# SAMBA Lab 02 - Evidencia de comandos y verificacion
+# Fecha: 2026-08-17. Red simulada de la uni: lab-uni (10.2.78.x)
+
+## Servidor: Solaris 11.4 (10.2.78.75)
+
+### Paquete (ya instalado)
+pkg list samba
+# service/network/samba 4.7.6-11.4.0.0.1.14.0
+
+### Servidor SMB nativo de Solaris (SMF) - habilitado y escucha 445
+svcadm enable svc:/network/smb/server
+svcadm enable svc:/system/idmap          # dependencia requerida por smbd
+netstat -an | grep .445                  # *.445 LISTEN
+
+### Carpeta compartida y dataset ZFS
+mkdir -p /export/compartido
+groupadd shared
+usermod -G shared claudia admin
+chown -R claudia:shared /export/compartido
+chmod 770 /export/compartido
+zfs create -o mountpoint=/export/compartido rpool/export/compartido
+zfs set sharesmb=on rpool/export/compartido
+
+### NOTA IMPORTANTE: el servidor nativo (svc:/network/smb/server) tuvo
+### problemas de sincronizacion de passwords SMB con usuarios locales
+### (LOGON_FAILURE). Solucion final: usar Samba clasico del mismo paquete.
+
+## Servidor Samba clasico (solucion que funciono)
+
+### Configuracion /etc/samba/smb.conf
+[global]
+   workgroup = WORKGROUP
+   server string = Servidor SAMBA Solaris (Lab 02)
+   security = user
+   passdb backend = tdbsam
+   map to guest = Bad User
+   server min protocol = SMB2
+[compartido]
+   path = /export/compartido
+   writable = yes
+   valid users = claudia admin
+   create mask = 0660
+   directory mask = 0770
+
+### Usuarios SMB (backend tdbsam)
+smbpasswd -a claudia    # Added user claudia
+smbpasswd -a admin      # Added user admin
+pdbedit -L              # claudia:100, admin:104
+
+### Levantar Samba clasico
+svcadm disable svc:/network/smb/server   # apagar nativo
+/usr/sbin/smbd -D                        # Samba clasico, escucha 445
+
+## Prueba desde Slackware 15.0 (10.2.78.74) - cliente
+
+# Con smbclient
+smbclient -L //10.2.78.75 -U claudia%claudia123
+#   Sharename     Type     Comment
+#   compartido    Disk     Carpeta compartida Lab 02 (AYSR)
+
+smbclient //10.2.78.75/compartido -U claudia%claudia123 -m SMB2 -c 'put /tmp/mensaje.txt desde-slackware.txt; get desde-slackware.txt /tmp/vuelta.txt'
+# putting file ... desde-slackware.txt  OK
+# getting file ... de vuelta  OK (contenido identico)
+
+# mount -t cifs NO disponible: kernel Slackware sin modulo cifs
+# (documentar: /lib/modules/5.15.19-smp no incluye cifs.ko)
+
+## Prueba desde Windows Server GUI (10.2.78.76) - cliente
+
+# IP en la NIC interna lab-uni
+netsh interface ipv4 set address name="Ethernet 2" static 10.2.78.76 255.255.0.0
+
+net use \\10.2.78.75\compartido /user:claudia claudia123
+# The command completed successfully.
+
+dir \\10.2.78.75\compartido
+#   local-test.txt, desde-slackware.txt, prueba-claudia.txt
+
+echo test > \\10.2.78.75\compartido\desde-windows.txt
+# Creado OK
+
+## Interoperabilidad cruzada
+# - Slackware crea desde-slackware.txt  ->  Windows lo ve
+# - Windows crea desde-windows.txt      ->  Slackware lo ve (ls)
+
+## Capturas
+# lab-evidencias/red/samba-solaris-servidor.png
+# lab-evidencias/red/samba-windows-cliente.png
