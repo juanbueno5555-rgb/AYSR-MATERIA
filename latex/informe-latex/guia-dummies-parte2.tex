@@ -1,0 +1,133 @@
+\section{Comandos de Packet Tracer (CLI de routers y switches)}
+
+En PT se abre un router/switch y se va a la pestaña \textbf{CLI}. Todo arranca así:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+  \toprule
+  \textbf{Comando} & \textbf{Qué hace} \\
+  \midrule
+  \texttt{enable} & Entra al modo privilegiado (modo admin); el prompt cambia a \texttt{Router\#} \\
+  \texttt{configure terminal} & Entra al modo de configuración; prompt: \texttt{Router(config)\#} \\
+  \texttt{hostname X} & Le pone nombre al dispositivo (ej. \texttt{hostname Router0}) \\
+  \texttt{interface g0/0} & Entra a la configuración de un puerto; prompt: \texttt{Router(config-if)\#} \\
+  \texttt{ip address 10.0.10.1 255.255.255.0} & Asigna IP y máscara a la interfaz \\
+  \texttt{no shutdown} & PRENDE la interfaz (por defecto está apagada) \\
+  \texttt{clock rate 64000} & En el cable serial: el extremo DCE marca la velocidad \\
+  \texttt{exit} & Sale un nivel (de la interfaz a config global) \\
+  \texttt{end} & Sale de todo el modo config de una vez \\
+  \texttt{ping 10.0.20.10} & Prueba de conectividad hacia otra IP \\
+  \texttt{show ip interface brief} & Muestra las interfaces con IP y estado (Up/Down) \\
+  \texttt{show running-config} & Muestra la configuración actual del dispositivo \\
+  \texttt{write} & GUARDA la config (equivale a \texttt{copy running-config startup-config}) \\
+  \texttt{show version} & Versión de IOS, hardware y tiempo encendido \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Modo simulación (para ver los paquetes):}
+\begin{enumerate}
+  \item Clic en el botón \textbf{Simulation} (abajo a la derecha).
+  \item Clic en \textbf{Edit Filters} $\rightarrow$ marcar solo \textbf{ICMP} (y ARP para ver la resolución de MAC).
+  \item Ir a un server $\rightarrow$ \textbf{Desktop} $\rightarrow$ \textbf{Command Prompt} $\rightarrow$ \texttt{ping <IP destino>}.
+  \item Los eventos aparecen en la lista; clic en \textbf{Auto Capture / Play}.
+  \item Clic en un paquete $\rightarrow$ \textbf{PDU Information}: encapsulación capa por capa (Ethernet $\rightarrow$ IP $\rightarrow$ ICMP).
+\end{enumerate}
+
+\section{Comandos de VIM (el editor)}
+
+VIM tiene 3 modos: \textbf{Normal} (navegar, borrar, copiar --- es el inicial), \textbf{Inserción} (escribir; se entra con \texttt{i} o \texttt{a}, se sale con \texttt{Esc}) y \textbf{Comando} (guardar/salir/buscar; se entra con \texttt{:}).
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+  \toprule
+  \textbf{Comando} & \textbf{Qué hace} \\
+  \midrule
+  \texttt{vi archivo.txt} & Abre el editor con ese archivo \\
+  \texttt{i} & Modo inserción: se escribe ANTES del cursor \\
+  \texttt{a} & Modo inserción: se escribe DESPUÉS del cursor (append) \\
+  \texttt{Esc} & Vuelve al modo Normal \\
+  \texttt{x} & Borra el carácter bajo el cursor \\
+  \texttt{dw} & Borra una palabra (\texttt{d}=delete, \texttt{w}=word) \\
+  \texttt{dd} / \texttt{5dd} & Borra la línea / 5 líneas \\
+  \texttt{u} / \texttt{Ctrl+r} & Deshace / rehace \\
+  \texttt{yy} / \texttt{p} & Copia la línea (yank) / pega después (P mayúscula antes) \\
+  \texttt{G} / \texttt{5G} & Va a la última línea / a la línea 5 \\
+  \texttt{gUU} & La línea actual a MAYÚSCULAS \\
+  \texttt{/palabra} & Busca hacia adelante; \texttt{n} = siguiente coincidencia \\
+  \texttt{:w} & Guarda sin salir (\texttt{w}=write) \\
+  \texttt{:q} / \texttt{:wq} / \texttt{:q!} & Sale / guarda y sale / sale SIN guardar (el \texttt{!} fuerza) \\
+  \texttt{:1,4s/a/-/g} & Reemplaza en las líneas 1--4: \texttt{s}=substitute, \texttt{g}=todas las de cada línea \\
+  \texttt{:\%s/al/\#\#/g} & Reemplaza en TODO el archivo (\texttt{\%} = todo el archivo) \\
+  \texttt{:13,16d} & Borra las líneas 13 a 16 \\
+  \texttt{:set number} & Muestra los números de línea \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Comandos de SAMBA / SMB}
+
+\textbf{Conceptos:} \textbf{SMB} es el protocolo de Windows para compartir archivos en la red. \textbf{SAMBA} es la implementación libre para que un sistema Unix ``hable Windows''. Un \textbf{share} es la carpeta publicada. El protocolo escucha en el \textbf{puerto 445}. Los usuarios SMB (\texttt{smbpasswd}/\texttt{tdbsam}) tienen contraseña APARTE de la del sistema.
+
+\textbf{Servidor (en Solaris):}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+  \toprule
+  \textbf{Comando} & \textbf{Qué hace} \\
+  \midrule
+  \texttt{pkg list samba} & Confirma el paquete instalado \\
+  \texttt{svcadm enable svc:/network/smb/server} & Enciende el servidor SMB nativo (SMF) \\
+  \texttt{netstat -an | grep .445} & Verifica que el puerto 445 esté en LISTEN \\
+  \texttt{smbpasswd -a claudia} & Agrega usuario a la base SMB (\texttt{-a}=add); la contraseña SMB es INDEPENDIENTE de la del sistema \\
+  \texttt{pdbedit -L} & Lista los usuarios SMB registrados \\
+  \texttt{/usr/sbin/smbd -D} & Levanta el daemon Samba en segundo plano (\texttt{-D}=daemon) \\
+  \texttt{testparm} & Valida la sintaxis de \texttt{/etc/samba/smb.conf} \\
+  \texttt{smbstatus} & Muestra quién está conectado (sesiones activas) \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Cliente (Slackware y Windows):}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+  \toprule
+  \textbf{Comando} & \textbf{Qué hace} \\
+  \midrule
+  \texttt{smbclient -L //IP -U claudia} & \texttt{-L} lista los shares del servidor (el ``menú'') \\
+  \texttt{smbclient //IP/compartido -U usuario -c 'put x; get y'} & \texttt{-c} ejecuta sin entrar a la consola: \texttt{put} sube, \texttt{get} baja \\
+  \texttt{net use \textbackslash\textbackslash IP\textbackslash compartido /user:claudia clave} & En Windows: mapea el recurso (ruta UNC) \\
+  \texttt{dir \textbackslash\textbackslash IP\textbackslash compartido} & En Windows: ver el contenido del share \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Configuración clave de \texttt{/etc/samba/smb.conf}:}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+  \toprule
+  \textbf{Parámetro} & \textbf{Qué hace} \\
+  \midrule
+  \texttt{workgroup = WORKGROUP} & Grupo de trabajo estilo Windows al que se anuncia \\
+  \texttt{security = user} & Cada conexión exige usuario y contraseña (nada anónimo) \\
+  \texttt{passdb backend = tdbsam} & Las contraseñas SMB se guardan en base local \\
+  \texttt{valid users = claudia admin} & Lista blanca: SOLO estos usuarios entran \\
+  \texttt{writable = yes} & Se puede escribir en el share \\
+  \texttt{path = /export/compartido} & La carpeta REAL del disco que se comparte \\
+  \texttt{create mask = 0660} & Permisos de archivos nuevos (dueño y grupo rw, otros nada) \\
+  \texttt{directory mask = 0770} & Permisos de carpetas nuevas (dueño y grupo rwx, otros nada) \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\section*{Dónde está todo}
+\addcontentsline{toc}{section}{Dónde está todo}
+
+\begin{itemize}
+  \item \textbf{VM Slackware} (la del lab): scripts en \texttt{/root/scripts/} (los originales del 17/08 quedaron en \texttt{/root/scripts/originales-17-08/}).
+  \item \textbf{Repo GitHub:} \texttt{scripts-lab02/simples/} (scripts) y esta guía.
+\end{itemize}
+
+\end{document}

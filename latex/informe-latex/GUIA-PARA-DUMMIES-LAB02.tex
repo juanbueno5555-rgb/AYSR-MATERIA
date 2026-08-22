@@ -1,0 +1,58 @@
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\usepackage{etoolbox}
+\apptocmd{\ttfamily}{\hyphenchar\font=`\-}{}{}
+
+\geometry{margin=2.5cm}
+
+\lstset{
+  language=bash,
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  framerule=0.3pt
+}
+
+\begin{document}
+
+\sloppy
+
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+
+  {\large Guía para Dummies --- Lab 02 \par}
+  {\large Scripts de Shell, Packet Tracer, VIM y SAMBA \par}
+  \vspace{1.5cm}
+
+  {\large Camilo Aguirre y Juan David Rangel \par}
+  \vspace{0.8cm}
+
+  {\large Arquitectura y Servicios de Red (AYSR) \par}
+  {\large Escuela Colombiana de Ingeniería Julio Garavito \par}
+  \vspace{1cm}
+
+  {\large Bogotá, D.C., 21 de agosto de 2026 \par}
+
+  \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\input{guia-dummies-parte1}
+\input{guia-dummies-parte2}
+
+\end{document}

@@ -1,0 +1,142 @@
+\section*{Antes de empezar}
+\addcontentsline{toc}{section}{Antes de empezar}
+
+Un \textbf{script} es un archivo de texto con comandos que la terminal ejecuta uno detrás de otro, como una receta.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{llX}
+  \toprule
+  \textbf{Comando} & \textbf{Qué es} & \textbf{Ejemplo} \\
+  \midrule
+  \texttt{\#!/bin/bash} & Primera línea SIEMPRE: dice ``ejecutame con bash'' & \texttt{\#!/bin/bash} \\
+  \texttt{\# texto} & Comentario: la máquina lo ignora, es para vos & \texttt{\# nota} \\
+  \texttt{echo "..."} & Escribe texto en pantalla & \texttt{echo "hola"} \\
+  \texttt{read -p "..." x} & Pregunta y espera que escribas; guarda en \texttt{x} & \texttt{read -p "Opcion: " op} \\
+  \texttt{\$x} & ``El valor que guardaste en x'' & \texttt{\$nombre} \\
+  \texttt{if/then/else/fi} & ``Si pasa esto... hacé esto... si no... fin'' & \\
+  \texttt{[ "\$x" = "1" ]} & Compara si x es igual a ``1'' (los espacios importan) & \\
+  \texttt{case/;;/esac} & Menú: según el número, hace algo distinto & \\
+  \texttt{2>/dev/null} & Esconde los mensajes de error & \\
+  \texttt{||} & ``Si lo anterior falló, entonces...'' & \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Scripts de shell (versión simple)}
+
+\subsection{1.1 mi\_ls.sh --- listar con menú}
+
+\begin{lstlisting}
+#!/bin/bash
+# Muestra un directorio de 3 formas distintas
+
+read -p "Que directorio? " dir
+
+echo "1) Normal   2) Con detalle   3) Con ocultos"
+read -p "Opcion: " op
+
+case $op in
+  1) ls "$dir" ;;
+  2) ls -l "$dir" ;;
+  3) ls -a "$dir" ;;
+esac
+\end{lstlisting}
+
+\begin{itemize}
+  \item \texttt{read -p "..." dir}: pregunta y guarda la respuesta en la variable \texttt{dir}.
+  \item \texttt{case \$op in}: menú según lo que eligió; cada caso termina en \texttt{;;} y el menú cierra con \texttt{esac}.
+  \item \texttt{ls -l}: listado con detalle (permisos, dueño, tamaño, fecha). \texttt{ls -a}: incluye archivos ocultos.
+\end{itemize}
+
+\subsection{1.2 buscar.sh --- buscar archivos o palabras}
+
+\begin{lstlisting}
+#!/bin/bash
+# Busca un archivo por nombre o una palabra dentro de un archivo
+
+echo "1) Buscar archivo por nombre   2) Buscar palabra en archivo"
+read -p "Opcion: " op
+
+if [ "$op" = "1" ]; then
+  read -p "Nombre (o parte): " nombre
+  find . -name "*$nombre*" 2>/dev/null
+
+elif [ "$op" = "2" ]; then
+  read -p "En que archivo? " archivo
+  read -p "Que palabra? " palabra
+  grep -n "$palabra" "$archivo"
+
+else
+  echo "Opcion no valida"
+fi
+\end{lstlisting}
+
+\begin{itemize}
+  \item \texttt{if [ "\$op" = "1" ]}: compara la elección (los espacios dentro de \texttt{[ ]} son obligatorios).
+  \item \texttt{find . -name "*\$nombre*"}: busca archivos cuyo nombre CONTENGA lo escrito (los \texttt{*} son comodín); \texttt{2>/dev/null} esconde errores de permisos.
+  \item \texttt{grep -n "\$palabra" "\$archivo"}: busca la palabra DENTRO del archivo y \texttt{-n} muestra el número de línea.
+  \item \texttt{elif}: ``si no fue 1 pero sí 2''; \texttt{else}: cualquier otra cosa; \texttt{fi}: cierra.
+\end{itemize}
+
+\subsection{1.3 revisar\_logs.sh --- ver los logs}
+
+\begin{lstlisting}
+#!/bin/bash
+# Muestra las ultimas 15 lineas de los 3 logs del sistema
+
+tail -15 /var/log/syslog
+echo "-----"
+tail -15 /var/log/messages
+echo "-----"
+tail -15 /var/log/secure 2>/dev/null || echo "(no hay log secure)"
+\end{lstlisting}
+
+\begin{itemize}
+  \item \texttt{tail -15}: muestra el FINAL del archivo (lo más reciente), las últimas 15 líneas.
+  \item \texttt{2>/dev/null || echo "(no hay log secure)"}: si el log no existe, esconde el error y avisa (no rompe).
+\end{itemize}
+
+\subsection{1.4 newgroup.sh --- crear grupo}
+
+\begin{lstlisting}
+#!/bin/bash
+# Crea un grupo si todavia no existe
+
+read -p "Nombre del grupo: " nombre
+
+if getent group "$nombre" > /dev/null; then
+  echo "Ese grupo ya existe"
+else
+  groupadd "$nombre"
+  echo "Grupo $nombre creado"
+fi
+\end{lstlisting}
+
+\begin{itemize}
+  \item \texttt{getent group "\$nombre" > /dev/null}: le pregunta al sistema si el grupo ya existe (la respuesta se esconde; solo importa si acertó).
+  \item \texttt{groupadd}: creación real del grupo.
+\end{itemize}
+
+\subsection{1.5 newuser.sh --- crear usuario}
+
+\begin{lstlisting}
+#!/bin/bash
+# Crea un usuario con su grupo y su carpeta home
+
+read -p "Usuario: " usuario
+read -p "Grupo: " grupo
+
+groupadd "$grupo" 2>/dev/null
+
+useradd -m -g "$grupo" "$usuario"
+
+passwd "$usuario"
+
+echo "Listo: $usuario en el grupo $grupo"
+\end{lstlisting}
+
+\begin{itemize}
+  \item \texttt{groupadd "\$grupo" 2>/dev/null}: asegura que el grupo exista (error de duplicado escondido, sigue sin romper).
+  \item \texttt{useradd -m -g "\$grupo" "\$usuario"}: \texttt{-m} crea la carpeta home automáticamente; \texttt{-g} lo mete en el grupo indicado.
+  \item \texttt{passwd "\$usuario"}: pide la contraseña de forma interactiva.
+\end{itemize}

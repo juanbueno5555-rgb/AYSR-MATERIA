@@ -1,0 +1,12 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{Antes de empezar}{2}{section*.2}%
+\contentsline {section}{\numberline {0.1}Scripts de shell (versión simple)}{2}{section.0.1}%
+\contentsline {subsection}{\numberline {0.1.1}1.1 mi\_ls.sh --- listar con menú}{2}{subsection.0.1.1}%
+\contentsline {subsection}{\numberline {0.1.2}1.2 buscar.sh --- buscar archivos o palabras}{2}{subsection.0.1.2}%
+\contentsline {subsection}{\numberline {0.1.3}1.3 revisar\_logs.sh --- ver los logs}{3}{subsection.0.1.3}%
+\contentsline {subsection}{\numberline {0.1.4}1.4 newgroup.sh --- crear grupo}{3}{subsection.0.1.4}%
+\contentsline {subsection}{\numberline {0.1.5}1.5 newuser.sh --- crear usuario}{4}{subsection.0.1.5}%
+\contentsline {section}{\numberline {0.2}Comandos de Packet Tracer (CLI de routers y switches)}{4}{section.0.2}%
+\contentsline {section}{\numberline {0.3}Comandos de VIM (el editor)}{5}{section.0.3}%
+\contentsline {section}{\numberline {0.4}Comandos de SAMBA / SMB}{5}{section.0.4}%
+\contentsline {section}{Dónde está todo}{6}{section*.3}%
