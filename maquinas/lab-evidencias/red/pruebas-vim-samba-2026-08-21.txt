@@ -1,0 +1,52 @@
+# Pruebas de comandos VIM y SAMBA — verificación 21/08/2026
+
+> Se probaron TODOS los comandos de la guía para dummies en las VMs reales.
+
+## VIM (VM Slackware, vim -Es modo ex)
+
+| Comando | Resultado |
+|---|---|
+| `x` | ✅ borró el primer carácter de la línea (última línea quedó `tra linea siete`) |
+| `dw` | ✅ borró la palabra (`Otra linea siete` → `linea siete`) |
+| `dd` | ✅ 7 → 6 líneas |
+| `5dd` (conteo) | ✅ equivalente verificado: 5 borrados seguidos → 7 a 2 líneas (igual que `:1,5d`) |
+| `u` (undo) | ✅ tras un `dd`, restauró el archivo (vuelve a 7 líneas) |
+| `Ctrl+r` / `redo` | ✅ rehace el cambio |
+| `i` / `a` | ✅ `i` insertó `XXX` antes del cursor; `a` insertó `YYY` después |
+| `yy` + `G` + `p` | ✅ copió una línea y la pegó al final |
+| `G` | ✅ fue a la última línea (le agregó `-FINAL`) |
+| `5G` | ✅ fue a la línea 5 (le agregó `-L5`) |
+| `gUU` | ✅ convirtió la línea actual a mayúsculas |
+| `/Escuela` | ✅ buscó y se posicionó en la línea (le agregó `-FOUND`) |
+| `:1,4s/a/-/g` | ✅ reemplazó las `a` de las líneas 1-4 (como en el lab) |
+| `:%s/al/##/g` | ✅ en el `himno.txt` real: 3 líneas reemplazadas (coincide con la evidencia) |
+| `:13,16d` | ✅ borró las líneas 13-16 |
+| `:1,5d` | ✅ borró las primeras 5 |
+| `:w` | ✅ guarda sin salir |
+| `:q` | ✅ sale sin cambios |
+| `:wq` | ✅ guarda y sale |
+| `:q!` | ✅ sale descartando cambios (archivo sin modificar) |
+| `:set number` | ✅ muestra números de línea |
+| `vi archivo` | ✅ crea/abre y guarda |
+
+## SAMBA (Solaris 11.4 = servidor, Slackware = cliente)
+
+| Comando | Resultado |
+|---|---|
+| `pkg list samba` | ✅ `service/network/samba 4.7.6` instalado |
+| `ps -ef \| grep smbd` | ✅ daemon corriendo (`/usr/sbin/smbd -D`) |
+| `svcs -a \| grep smb` | ✅ nativo `smb/server` disabled; clásico activo |
+| `testparm` | ✅ config válida: sección `[compartido]`, security=user, SMB2+ |
+| `netstat -an \| grep .445` | ✅ `*.445 LISTEN` (+ sesión ESTABLISHED de Windows del 17/08) |
+| `pdbedit -L` | ✅ lista claudia:100 y admin:104 |
+| `smbpasswd -a` | ✅ agregó usuario temporal `labtest59` (Added user...) |
+| `smbpasswd -x` | ✅ borró el usuario temporal (Deleted user...) |
+| `smbstatus` | ✅ mostró sesión activa: claudia desde 10.2.78.76 (Windows, 17/08), SMB3_11, share `compartido` |
+| `smbclient -L //192.168.1.11 -U claudia` | ✅ lista el share `compartido` (Carpeta compartida Lab 02) |
+| `smbclient //IP/compartido -c 'ls'` | ✅ mostró los archivos reales del lab (desde-slackware.txt, desde-windows.txt, prueba-claudia.txt, demo-*, carpeta-comando) |
+| `smbclient //IP/compartido -c 'put ...; get ...'` | ✅ subida y bajada de `/tmp/prueba-lab02.txt` con contenido intacto |
+| `net use` (Windows) | ✅ probado el 17/08 (evidencia: samba-windows-cliente.png; sesión aún visible en smbstatus) |
+
+## Nota de configuración
+
+El `smb.conf` real usa `passdb backend = smbpasswd` (no `tdbsam`) — corregido en la guía.

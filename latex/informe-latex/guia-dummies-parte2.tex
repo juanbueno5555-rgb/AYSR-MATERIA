@@ -112,7 +112,7 @@ VIM tiene 3 modos: \textbf{Normal} (navegar, borrar, copiar --- es el inicial), 
   \midrule
   \texttt{workgroup = WORKGROUP} & Grupo de trabajo estilo Windows al que se anuncia \\
   \texttt{security = user} & Cada conexión exige usuario y contraseña (nada anónimo) \\
-  \texttt{passdb backend = tdbsam} & Las contraseñas SMB se guardan en base local \\
+  \texttt{passdb backend = smbpasswd} & Las contraseñas SMB se guardan en la base de usuarios SMB propia (la de nuestro Solaris) \\
   \texttt{valid users = claudia admin} & Lista blanca: SOLO estos usuarios entran \\
   \texttt{writable = yes} & Se puede escribir en el share \\
   \texttt{path = /export/compartido} & La carpeta REAL del disco que se comparte \\
@@ -121,6 +121,42 @@ VIM tiene 3 modos: \textbf{Normal} (navegar, borrar, copiar --- es el inicial), 
   \bottomrule
 \end{tabularx}
 \end{center}
+
+\section*{Verificado en el lab (21/08/2026)}
+\addcontentsline{toc}{section}{Verificado en el lab (21/08/2026)}
+
+\textbf{VIM:} se probaron todos los comandos de la tabla con un archivo de prueba y con el \texttt{himno.txt} real del lab: \texttt{x}, \texttt{dw}, \texttt{dd}, \texttt{u}, \texttt{redo} (\texttt{Ctrl+r}), \texttt{yy}+\texttt{p}, \texttt{G}, \texttt{5G}, \texttt{gUU}, \texttt{/Escuela}, \texttt{:1,4s/a/-/g}, \texttt{:\%s/al/\#\#/g} (reemplazó en 3 líneas, igual que la evidencia), \texttt{:13,16d}, \texttt{:1,5d}, \texttt{:w}, \texttt{:q}, \texttt{:wq}, \texttt{:q!} y \texttt{:set number}. El borrado con conteo (\texttt{5dd}) se confirmó por equivalencia: 5 borrados seguidos reducen el archivo de 7 a 2 líneas, igual que \texttt{:1,5d}.
+
+\textbf{SAMBA:} en Solaris se verificaron \texttt{pkg list samba} (4.7.6), \texttt{testparm} (config válida), \texttt{netstat -an | grep .445} (LISTEN), \texttt{smbstatus} (sesión activa de Windows del 17/08), \texttt{pdbedit -L} (claudia, admin) y \texttt{smbpasswd -a}/\texttt{-x} con un usuario temporal (creado y eliminado). Desde Slackware: \texttt{smbclient -L //192.168.1.11} lista el share \texttt{compartido} con los archivos reales del lab, y \texttt{put}/\texttt{get} funcionaron ida y vuelta.
+
+\section{Carpetas de Linux (qué son y qué traen)}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lXl}
+  \toprule
+  \textbf{Carpeta} & \textbf{Qué es y qué trae} & \textbf{Ejemplo de nuestro lab} \\
+  \midrule
+  \texttt{/bin} & Binarios esenciales: \texttt{ls}, \texttt{cat}, \texttt{grep}, \texttt{find}, \texttt{bash} & los usamos en los scripts \\
+  \texttt{/sbin} & Binarios de administración: \texttt{ifconfig}, \texttt{mount} & \texttt{sudo} para ejecutar como root \\
+  \texttt{/etc} & Configuración del sistema y servicios & \texttt{smb.conf} de SAMBA y \texttt{fstab} (buscado con \texttt{buscar.sh}) \\
+  \texttt{/var/log} & Logs del sistema: \texttt{syslog}, \texttt{messages}, \texttt{secure} & revisados con \texttt{revisar\_logs.sh} (filtro \texttt{sshd}) \\
+  \texttt{/home} & Carpeta de cada usuario normal & el \texttt{newuser.sh} crea homes ahí \\
+  \texttt{/root} & Carpeta del administrador & nuestros scripts en \texttt{/root/scripts/} \\
+  \texttt{/tmp} & Archivos temporales (se borran al reiniciar) & el \texttt{put} de prueba: \texttt{/tmp/prueba-lab02.txt} \\
+  \texttt{/usr} & Software instalado y librerías & \texttt{/usr/sbin/smbd} (daemon de Samba) \\
+  \texttt{/dev} & Hardware representado como archivos (discos, terminales) & \texttt{/dev/sda3} en el \texttt{fstab} que grepeamos \\
+  \texttt{/proc} & Información del kernel y procesos en vivo & --- \\
+  \texttt{/boot} & Kernel e imágenes de arranque & --- \\
+  \texttt{/mnt} / \texttt{/media} & Puntos de montaje de discos extraíbles/red & (en Slackware el kernel no tiene cifs) \\
+  \texttt{/opt} & Software de terceros & --- \\
+  \texttt{/run} & PID y sockets de procesos activos & --- \\
+  \texttt{/srv} & Datos de servicios & el share está en \texttt{/export} (Solaris) \\
+  \texttt{/var} & Datos variables: logs, colas, cachés & los logs de arriba \\
+  \bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Regla rápida:} el nombre en inglés dice lo que guarda: \texttt{etc} = configuración, \texttt{var/log} = lo que varía (logs), \texttt{home} = casas de usuarios, \texttt{bin} = binarios (ejecutables), \texttt{dev} = devices (dispositivos).
 
 \section*{Dónde está todo}
 \addcontentsline{toc}{section}{Dónde está todo}

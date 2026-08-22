@@ -294,9 +294,43 @@ VIM tiene 3 modos: **Normal** (navegar, borrar, copiar — es el inicial), **Ins
 |---|---|
 | `workgroup = WORKGROUP` | Grupo de trabajo estilo Windows al que se anuncia |
 | `security = user` | Cada conexión exige usuario y contraseña (nada anónimo) |
-| `passdb backend = tdbsam` | Las contraseñas SMB se guardan en base local |
+| `passdb backend = smbpasswd` | Las contraseñas SMB se guardan en una base de usuarios SMB propia (la que usa nuestro Solaris) |
 | `valid users = claudia admin` | Lista blanca: SOLO estos usuarios entran |
 | `writable = yes` | Se puede escribir en el share |
 | `path = /export/compartido` | La carpeta REAL del disco que se comparte |
 | `create mask = 0660` | Permisos de archivos nuevos (dueño y grupo rw, otros nada) |
 | `directory mask = 0770` | Permisos de carpetas nuevas (dueño y grupo rwx, otros nada) |
+
+### Lo que verificamos en el lab (21/08)
+
+**VIM:** corrimos cada comando de la tabla contra un archivo de prueba (y contra el `himno.txt` real del lab): `x`, `dw`, `dd`, `u`, `Ctrl+r`(redo), `yy`+`p`, `G`, `5G`, `gUU`, `/Escuela`, `:1,4s/a/-/g` (reemplazó como en el lab), `:%s/al/##/g` (3 líneas, igual que la evidencia), `:13,16d`, `:1,5d`, `:w`, `:q`, `:wq`, `:q!`, `:set number`. Todo OK. El borrado con conteo (`5dd`) se confirmó por equivalencia: 5 borrados seguidos redujeron el archivo de 7 a 2 líneas, igual que `:1,5d`.
+
+**SAMBA:** en Solaris verificamos `pkg list samba` (4.7.6 instalado), `testparm` (config válida), `netstat -an | grep .445` (LISTEN), `smbstatus` (mostró la sesión activa de Windows desde el 17/08), `pdbedit -L` (claudia y admin), y probamos `smbpasswd -a` con un usuario temporal (se agregó y se borró con `smbpasswd -x`). Desde Slackware: `smbclient -L //192.168.1.11` lista el share `compartido` (con los archivos reales del lab: desde-slackware.txt, desde-windows.txt, prueba-claudia.txt...) y `put`/`get` funcionaron de ida y vuelta. El `net use` de Windows quedó probado el 17/08 (la sesión sigue visible en `smbstatus`).
+
+---
+
+## 9. Carpetas de Linux (qué son y qué traen)
+
+| Carpeta | Qué es | Qué trae | Ejemplo de NUESTRO lab |
+|---|---|---|---|
+| `/` | La raíz: el punto de partida de TODO | Todas las demás carpetas | — |
+| `/bin` | Binarios esenciales | Comandos base (`ls`, `cat`, `cp`, `grep`, `find`, `bash`) | usamos `ls`, `grep`, `find`, `tail` en los scripts |
+| `/sbin` | Binarios de sistema | Comandos de administración (`ifconfig`, `mount`, `shutdown`) | `sudo` para ejecutar como root |
+| `/etc` | Configuración | Archivos de configuración del sistema y servicios | `smb.conf` de SAMBA, `fstab` (lo buscamos con `buscar.sh`) |
+| `/var` | Datos variables | Logs, colas (spool), cachés que cambian todo el tiempo | los logs de abajo |
+| `/var/log` | Logs del sistema | `syslog`, `messages`, `secure` (eventos de auth), `samba/` | los revisamos con `revisar_logs.sh` y filtramos `sshd` |
+| `/home` | Hogar de usuarios | Una carpeta por usuario normal (`/home/alice`) | el script `newuser.sh` crea homes ahí |
+| `/root` | Hogar del root | La carpeta del administrador | nuestros scripts viven en `/root/scripts/` |
+| `/tmp` | Temporal | Archivos temporales (se borran al reiniciar) | los tests y el `put` de prueba (`/tmp/prueba-lab02.txt`) |
+| `/usr` | Programas de usuario | Software instalado, librerías, docs | `/usr/sbin/smbd` (daemon de Samba) |
+| `/lib` / `/lib64` | Librerías | Bibliotecas compartidas que usan los binarios | — |
+| `/dev` | Dispositivos | Representa hardware como archivos (`sda` discos, `tty`) | `/dev/sda3` aparece en el `fstab` que grepeamos |
+| `/proc` | Procesos (virtual) | Info del kernel y procesos en vivo (memoria, CPU) | — |
+| `/boot` | Arranque | Kernel e imágenes de arranque | — |
+| `/mnt` / `/media` | Montajes | Puntos de montaje de discos extraíbles/red | (en Slackware no usamos cifs: kernel sin módulo) |
+| `/opt` | Opcional | Software de terceros instalado aparte | — |
+| `/run` | Runtime | Info temporal de procesos activos (PIDs, sockets) | — |
+| `/srv` | Servicios | Datos de servicios del sistema | el share `compartido` está en `/export` (Solaris) |
+| `/sys` | Kernel (virtual) | Información de hardware vía sysfs | — |
+
+> **Regla rápida:** nombres en inglés = "lo que guarda": `etc` = configuración, `var/log` = lo que varía (logs), `home` = casas de usuarios, `bin` = binarios (ejecutables), `dev` = devices (dispositivos).
