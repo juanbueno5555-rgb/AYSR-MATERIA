@@ -11,6 +11,8 @@
 \usepackage{listings}
 \usepackage[hidelinks]{hyperref}
 \usepackage{url}
+\usepackage{etoolbox}
+\apptocmd{\ttfamily}{\hyphenchar\font=`\-}{}{}
 
 \geometry{margin=2.5cm}
 \graphicspath{{../../maquinas/lab-evidencias/}}

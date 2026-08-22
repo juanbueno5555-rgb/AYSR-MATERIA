@@ -62,13 +62,20 @@ El shell de Unix permite automatizar tareas de administración mediante scripts.
   \item Enlace: \href{https://youtu.be/RGuyiOb2aH4}{\url{https://youtu.be/RGuyiOb2aH4}}
 \end{itemize}
 
-\textbf{Quiz ``Introduction to Packet Tracer - PT Basics Quiz'' (individual):} cada integrante rindió el quiz y guardó captura del resultado (figura \ref{fig:quiz}).
+\textbf{Quiz ``Introduction to Packet Tracer - PT Basics Quiz'' (individual):} cada integrante rindió el quiz y guardó captura del resultado (figuras \ref{fig:quiz} y \ref{fig:quizc}).
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{JuanDavidRangel-ExamGettingStarted.png}
-  \caption{Resultado del quiz PT Basics.}
+  \caption{Resultado del quiz PT Basics (Juan David).}
   \label{fig:quiz}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{quiz-camilo-getting-started.jpg}
+  \caption{Resultado del quiz Getting Started (Camilo).}
+  \label{fig:quizc}
 \end{figure}
 
 \textbf{Diagrama de red en Packet Tracer (individual):} topología con 3 routers (Router0 1941, Router1 1841, Router2 1841), switches y servidores, con enlaces Ethernet y un enlace serial entre routers (figura \ref{fig:diagrama}).
@@ -120,6 +127,13 @@ Si RADIUS y DHCP están en subredes distintas, entre el ARP y el ICMP aparecen l
 El echo reply es el camino inverso: MACs e IPs intercambiadas y Type \texttt{0} (Echo Reply). El ARP request usa MAC destino \texttt{FF:FF:FF:FF:FF:FF} (broadcast) con EtherType \texttt{0x0806}.
 
 \textbf{Conclusión:} se observa la encapsulación/desencapsulación capa por capa: los datos del ping se encapsulan en un paquete IP y este en una trama Ethernet; en el destino se desencapsula en orden inverso. La IP es la dirección lógica de extremo a extremo (no cambia); la MAC es la dirección física salto a salto (cambia en cada enlace).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{pt-trabajo-simulador.png}
+  \caption{Trabajo de simulación en Packet Tracer.}
+  \label{fig:ptsim}
+\end{figure}
 
 \subsection{3. Using Wireshark}
 
