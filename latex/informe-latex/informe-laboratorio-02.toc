@@ -1,0 +1,18 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {0.1}Introducción}{2}{section.0.1}%
+\contentsline {section}{\numberline {0.2}Marco teórico}{2}{section.0.2}%
+\contentsline {subsection}{\numberline {0.2.1}Packet Tracer}{2}{subsection.0.2.1}%
+\contentsline {subsection}{\numberline {0.2.2}Encapsulación}{2}{subsection.0.2.2}%
+\contentsline {subsection}{\numberline {0.2.3}Wireshark}{2}{subsection.0.2.3}%
+\contentsline {subsection}{\numberline {0.2.4}SMB / SAMBA}{2}{subsection.0.2.4}%
+\contentsline {subsection}{\numberline {0.2.5}Scripts de shell y editor VI}{2}{subsection.0.2.5}%
+\contentsline {section}{\numberline {0.3}Desarrollo}{2}{section.0.3}%
+\contentsline {subsection}{\numberline {0.3.1}1. Getting to Know Packet Tracer}{2}{subsection.0.3.1}%
+\contentsline {subsection}{\numberline {0.3.2}2. Tracking Messages with Packet Tracer}{4}{subsection.0.3.2}%
+\contentsline {subsection}{\numberline {0.3.3}3. Using Wireshark}{4}{subsection.0.3.3}%
+\contentsline {subsection}{\numberline {0.3.4}4. Network Cards}{5}{subsection.0.3.4}%
+\contentsline {subsection}{\numberline {0.3.5}5. Shell Programming --- Unix (Slackware 15.0)}{6}{subsection.0.3.5}%
+\contentsline {subsection}{\numberline {0.3.6}6. Editor VI --- Ejercicio del Himno}{6}{subsection.0.3.6}%
+\contentsline {subsection}{\numberline {0.3.7}7. Virtual Machine Deployment}{7}{subsection.0.3.7}%
+\contentsline {subsection}{\numberline {0.3.8}8. File Sharing --- Servidor SMB/SAMBA en Solaris}{7}{subsection.0.3.8}%
+\contentsline {section}{\numberline {0.4}Resultados y conclusiones}{8}{section.0.4}%
