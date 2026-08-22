@@ -1,0 +1,243 @@
+\subsection{7. Virtual Machine Deployment}
+
+Se clonaron las 3 máquinas del laboratorio (Slackware 15.0, Solaris 11.4 y Windows Server GUI) y los clones pasaron a ser las VMs principales del grupo, con \textbf{auto-detección de red al arranque}: si detectan el gateway de la universidad (10.2.65.1) aplican IPs estáticas \texttt{10.2.78.74/.75/.76}; si detectan la red de la casa, usan DHCP. Cada VM conserva un snapshot de respaldo \texttt{estado-final-2026-08-17}.
+
+\textbf{Verificación de conectividad (21/08/2026, red de la casa):}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    Origen → Destino & Resultado & Detalle \\
+    \midrule
+    Slackware (.13) → Solaris (.11) & Éxito & 2/2, 0\% loss, rtt ~1.6 ms \\
+    Slackware (.13) → Windows (.14) & Éxito & 2/2, 0\% loss, rtt ~2.0 ms \\
+    Slackware (.13) → Internet & Éxito & 2/2, 0\% loss \\
+    Solaris (.11) → Slackware (.13) & Éxito & alive \\
+    Solaris (.11) → Windows (.14) & Éxito & alive \\
+    Solaris (.11) → Internet & Éxito & alive \\
+    Windows (.14) → Slackware (.13) & Éxito & 2/2, 0\% loss \\
+    Windows (.14) → Solaris (.11) & Éxito & 2/2, 0\% loss \\
+    Windows (.14) → Internet & Éxito & 2/2, 0\% loss \\
+    \bottomrule
+  \end{tabular}
+  \caption{Matriz de pings entre las 3 VMs (todas las pruebas con 0\% de pérdida).}
+\end{table}
+
+Salidas reales representativas:
+
+\begin{lstlisting}
+# Slackware -> Solaris (ping -c 2 192.168.1.11)
+PING 192.168.1.11 (192.168.1.11) 56(84) bytes of data.
+64 bytes from 192.168.1.11: icmp_seq=1 ttl=255 time=1.88 ms
+64 bytes from 192.168.1.11: icmp_seq=2 ttl=255 time=1.30 ms
+--- 192.168.1.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1004ms
+
+# Solaris -> Windows e Internet (ping <ip> 2)
+192.168.1.14 is alive
+8.8.8.8 is alive
+
+# Windows -> Slackware (ping -n 2 192.168.1.13)
+Reply from 192.168.1.13: bytes=32 time=2ms TTL=64
+Reply from 192.168.1.13: bytes=32 time=1ms TTL=64
+Packets: Sent = 2, Received = 2, Lost = 0 (0% loss)
+
+# Windows -> Internet (ping -n 2 8.8.8.8)
+Reply from 8.8.8.8: bytes=32 time=12ms TTL=119
+Reply from 8.8.8.8: bytes=32 time=6ms TTL=119
+Packets: Sent = 2, Received = 2, Lost = 0 (0% loss)
+\end{lstlisting}
+
+\subsection{8. File Sharing --- Servidor SMB/SAMBA en Solaris}
+
+\textbf{Servidor (Solaris 11.4):} SAMBA clásico (paquete \texttt{service/network/samba} 4.7.6), compartiendo el recurso \texttt{compartido} en el puerto 445.
+
+Configuración \texttt{/etc/samba/smb.conf}:
+
+\begin{lstlisting}
+[global]
+   workgroup = WORKGROUP
+   server string = Servidor SAMBA Solaris (Lab 02)
+   security = user
+   passdb backend = tdbsam
+   map to guest = Bad User
+   server min protocol = SMB2
+[compartido]
+   path = /export/compartido
+   writable = yes
+   valid users = claudia admin
+   create mask = 0660
+   directory mask = 0770
+\end{lstlisting}
+
+Comandos del servidor (con salidas):
+
+\begin{lstlisting}
+# pkg list samba
+# service/network/samba 4.7.6-11.4.0.0.1.14.0
+
+# svcadm enable svc:/network/smb/server
+# netstat -an | grep .445          # *.445 LISTEN
+
+# smbpasswd -a claudia             # Added user claudia
+# smbpasswd -a admin               # Added user admin
+# pdbedit -L                       # claudia:100, admin:104
+
+# svcadm disable svc:/network/smb/server   # apagar nativo (fallaba passwords)
+# /usr/sbin/smbd -D                        # Samba clasico, escucha 445
+\end{lstlisting}
+
+Nota: el servidor SMB nativo de Solaris (\texttt{svc:/network/smb/server}) presentó problemas de sincronización de contraseñas SMB con usuarios locales (LOGON\_FAILURE); la solución fue usar el Samba clásico del mismo paquete.
+
+\textbf{Cliente Slackware 15.0:}
+
+\begin{lstlisting}
+# smbclient -L //10.2.78.75 -U claudia%claudia123
+#   Sharename     Type     Comment
+#   compartido    Disk     Carpeta compartida Lab 02 (AYSR)
+
+# smbclient //10.2.78.75/compartido -U claudia%claudia123 -m SMB2 \
+#   -c 'put /tmp/mensaje.txt desde-slackware.txt; get desde-slackware.txt /tmp/vuelta.txt'
+# putting file ... desde-slackware.txt  OK
+# getting file ... de vuelta  OK (contenido identico)
+\end{lstlisting}
+
+\textbf{Cliente Windows Server GUI:}
+
+\begin{lstlisting}
+# net use \\10.2.78.75\compartido /user:claudia claudia123
+# The command completed successfully.
+
+# dir \\10.2.78.75\compartido
+#   local-test.txt, desde-slackware.txt, prueba-claudia.txt
+
+# echo test > \\10.2.78.75\compartido\desde-windows.txt
+# Creado OK
+\end{lstlisting}
+
+\textbf{Interoperabilidad cruzada:} Slackware crea \texttt{desde-slackware.txt} y Windows lo ve; Windows crea \texttt{desde-windows.txt} y Slackware lo ve con \texttt{ls}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{solaris-smb-server.png}
+  \caption{Servidor SMB/SAMBA en Solaris.}
+  \label{fig:samba1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{red/samba-windows-cliente.png}
+  \caption{Cliente Windows accediendo al recurso SMB de Solaris.}
+  \label{fig:samba2}
+\end{figure}
+
+\section{Resultados y conclusiones}
+
+\begin{itemize}
+  \item Se completó el curso introductorio de Packet Tracer (versión 9.0.1) con video resumen y quiz individual.
+  \item Se armó el diagrama de red en Packet Tracer con enlaces Ethernet y serial, y se analizó la simulación de mensajes (ping RADIUS--DHCP) con el desglose de PDUs capa por capa, confirmando el concepto de encapsulación.
+  \item Con Wireshark se capturó y analizó tráfico real (scielo.org.co), contrastando la encapsulación observada en el simulador con la red real.
+  \item Se documentaron las tarjetas de red del host y de las VMs, evidenciando la diferencia entre NICs físicas y virtuales.
+  \item Se desarrollaron y probaron los 4 scripts de shell y el ejercicio completo del editor VI, con salidas reales verificadas.
+  \item Las 3 VMs clonadas se comunican entre sí y tienen salida a Internet, con auto-detección de red entre la casa y la universidad.
+  \item Se implementó compartición de archivos SMB/SAMBA entre Solaris (servidor), Slackware y Windows (clientes) con interoperabilidad cruzada verificada.
+\end{itemize}
+
+\appendix
+\chapter{Anexo A --- Enlaces a los videos}
+
+\begin{itemize}
+  \item Video 1 --- Curso Packet Tracer (3:42): \href{https://youtu.be/RGuyiOb2aH4}{\url{https://youtu.be/RGuyiOb2aH4}}
+  \item Video 2 --- Wireshark interfaz y filtros (3:37): \href{https://youtu.be/n4p8lmUTW8w}{\url{https://youtu.be/n4p8lmUTW8w}}
+  \item Video 3 --- Wireshark hallazgos (4:29): \href{https://youtu.be/ozmRhLV4BQs}{\url{https://youtu.be/ozmRhLV4BQs}}
+\end{itemize}
+
+\chapter{Anexo B --- Guía de sustentación (resumen)}
+
+\section{VI --- conceptos clave}
+
+VI tiene 3 modos: \textbf{Normal} (navegar, borrar, copiar --- es el inicial), \textbf{Inserción} (escribir; se entra con \texttt{i} o \texttt{a} y se sale con \texttt{Esc}) y \textbf{Comando} (guardar, salir, buscar, reemplazar; se entra con \texttt{:}). Las teclas significan \emph{verbos}, no letras que se escriben.
+
+Desglose de los comandos más preguntados:
+\begin{itemize}
+  \item \texttt{:1,4s/a/-/g}: \texttt{1,4} = rango de líneas · \texttt{s} = substitute · \texttt{/a/} = patrón · \texttt{-} = reemplazo · \texttt{g} = global (todas las de cada línea).
+  \item \texttt{:\%s/al/\#\#/g}: \texttt{\%} = todo el archivo (equivalente a \texttt{1,\$}); el resto igual.
+  \item \texttt{dw}: \texttt{d} = delete (verbo) + \texttt{w} = word (objeto). VI combina verbos+objetos: \texttt{dd} borra línea, \texttt{5dd} borra 5 líneas.
+  \item \texttt{u} / \texttt{Ctrl+r}: deshacer / rehacer (historial de cambios en memoria).
+  \item \texttt{G} / \texttt{5G} / \texttt{7G}: ir a la última línea / línea 5 / línea 7.
+  \item \texttt{gUU}: línea completa a mayúsculas (\texttt{guu} = minúsculas, \texttt{gUw} = palabra).
+  \item \texttt{yy} + \texttt{p}: yank (copiar línea) + paste (pegar después; \texttt{P} pega antes).
+  \item \texttt{/palabra}: buscar hacia adelante; \texttt{n} siguiente, \texttt{N} anterior.
+  \item \texttt{:w} guardar sin salir · \texttt{:wq} guardar y salir · \texttt{:q!} salir descartando.
+  \item \texttt{:set number}: mostrar números de línea.
+\end{itemize}
+
+Preguntas típicas de sustentación (VI):
+\begin{enumerate}
+  \item \textbf{¿Por qué no puedo escribir al abrir VI?} Porque se está en modo Normal; hay que pulsar \texttt{i} para entrar a modo Inserción.
+  \item \textbf{¿Diferencia entre \texttt{i} y \texttt{a}?} \texttt{i} inserta antes del cursor, \texttt{a} después (append).
+  \item \textbf{¿Qué significa la \texttt{g} en \texttt{:1,4s/a/-/g}?} Global: reemplaza todas las coincidencias de cada línea; sin \texttt{g} solo la primera.
+  \item \textbf{¿Qué es \texttt{\%} en \texttt{:\%s/al/\#\#/g}?} Todo el archivo.
+  \item \textbf{¿Cómo deshacer?} \texttt{u} en modo normal.
+  \item \textbf{¿Cómo guardar sin salir / guardar y salir?} \texttt{:w} y \texttt{:wq}.
+  \item \textbf{¿Cómo salir sin guardar?} \texttt{:q!} (el \texttt{!} fuerza y descarta).
+  \item \textbf{¿Qué hace \texttt{5G}?} Ir a la línea 5.
+  \item \textbf{¿Cómo copiar y pegar una línea?} \texttt{yy} copia, \texttt{p} pega.
+  \item \textbf{¿Cómo buscar una palabra?} \texttt{/palabra}, \texttt{n} para la siguiente.
+\end{enumerate}
+
+\section{SAMBA / SMB --- conceptos clave}
+
+\begin{itemize}
+  \item \textbf{SMB}: protocolo de Windows para compartir archivos en red (Server Message Block).
+  \item \textbf{SAMBA}: implementación libre de SMB para Unix/Linux/Solaris: hace que un sistema Unix ``hable Windows''.
+  \item \textbf{Share}: recurso compartido: la carpeta publicada para la red.
+  \item \textbf{Puerto 445/TCP}: donde escucha SMB.
+  \item \textbf{smbpasswd / tdbsam}: base de usuarios SMB, separada de los usuarios del sistema.
+  \item \textbf{security = user}: cada acceso exige usuario+contraseña.
+\end{itemize}
+
+Desglose de comandos clave (servidor):
+\begin{itemize}
+  \item \texttt{ps -ef | grep smbd}: \texttt{ps} = process status · \texttt{-e} = todos los procesos · \texttt{-f} = formato completo · \texttt{grep smbd} = filtra el daemon de Samba.
+  \item \texttt{netstat -an | grep .445}: \texttt{-a} todas las conexiones · \texttt{-n} numérico · puerto 445 = SMB; \texttt{LISTEN} = esperando clientes.
+  \item \texttt{testparm}: valida la sintaxis de \texttt{/etc/samba/smb.conf} y muestra la configuración efectiva.
+  \item \texttt{smbpasswd -a claudia}: agrega el usuario a la base SMB; la contraseña SMB es INDEPENDIENTE de la del sistema (\texttt{-x} elimina, sin opción cambia la contraseña).
+  \item \texttt{pdbedit -L}: lista los usuarios SMB con su uid Unix.
+  \item \texttt{/usr/sbin/smbd -D}: el daemon de Samba corriendo en segundo plano (\texttt{-D} = daemon).
+\end{itemize}
+
+Desglose de comandos clave (cliente):
+\begin{itemize}
+  \item \texttt{smbclient -L //IP -U usuario}: \texttt{-L} enumera los shares del servidor.
+  \item \texttt{smbclient //IP/compartido -U usuario -c 'put x; get y'}: \texttt{-c} ejecuta comandos sin entrar a la sesión interactiva (\texttt{put} sube, \texttt{get} baja).
+  \item \texttt{net use \\\\IP\textbackslash compartido /user:usuario contraseña}: mapeo de unidad de red en Windows (ruta UNC).
+  \item \texttt{smbstatus}: muestra las sesiones activas (quién está conectado, desde qué IP, con qué versión de SMB).
+\end{itemize}
+
+Parámetros de \texttt{smb.conf}:
+\begin{itemize}
+  \item \texttt{workgroup = WORKGROUP}: grupo de trabajo estilo Windows al que se anuncia el servidor.
+  \item \texttt{server string}: descripción que ven los clientes al enumerar.
+  \item \texttt{passdb backend = tdbsam}: dónde se guardan las contraseñas SMB (base de datos local).
+  \item \texttt{map to guest = Bad User}: un usuario inexistente NO se convierte en invitado (más seguro).
+  \item \texttt{path = /export/compartido}: la carpeta REAL del disco que se comparte.
+  \item \texttt{writable = yes}: se puede escribir (si \texttt{no} = solo lectura).
+  \item \texttt{valid users = claudia admin}: lista blanca: SOLO estos usuarios pueden entrar.
+  \item \texttt{create mask = 0660} / \texttt{directory mask = 0770}: permisos de archivos/carpetas nuevas (octal: dueño, grupo, otros).
+\end{itemize}
+
+Preguntas típicas de sustentación (SAMBA):
+\begin{enumerate}
+  \item \textbf{¿Qué es Samba?} Implementación libre del protocolo SMB para que sistemas Unix compartan archivos con Windows.
+  \item \textbf{¿Qué es un share?} Una carpeta publicada en la red (path + permisos + usuarios).
+  \item \textbf{¿En qué puerto escucha SMB?} 445/TCP.
+  \item \textbf{¿Por qué \texttt{smbpasswd -a}?} Porque los usuarios SMB tienen su propia contraseña, separada de la del sistema.
+  \item \textbf{¿Qué significa \texttt{security = user}?} Autenticación obligatoria por usuario; sin credenciales no se accede.
+  \item \textbf{¿Qué hace \texttt{valid users}?} Restringe el share solo a esos usuarios.
+  \item \textbf{¿Para qué sirve \texttt{testparm}?} Validar la configuración antes de reiniciar el servicio.
+  \item \textbf{¿Cómo verifico quién está conectado?} \texttt{smbstatus}.
+  \item \textbf{¿Cómo conecto desde Windows?} \texttt{net use \\\\IP\textbackslash share /user:usuario contraseña}.
+  \item \textbf{¿Qué es un mask 0770?} El dueño y el grupo tienen permisos completos; los demás, ninguno.
+\end{enumerate}

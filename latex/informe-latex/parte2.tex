@@ -1,0 +1,243 @@
+\subsection{4. Network Cards}
+
+\textbf{Dispositivos físicos --- host principal (Windows):}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+    Campo & Valor \\
+    \midrule
+    Adaptador Wi-Fi & Realtek 8852CE WiFi 6E PCI-E NIC \\
+    MAC Wi-Fi & 08-F9-7E-9E-25-03 \\
+    IPv4 & 192.168.1.10/24 (DHCP) \\
+    Gateway / DNS & 192.168.1.1 \\
+    SSID / enlace & EVANGELIO\_5G (5 GHz) --- 866.7 Mbps \\
+    Bytes RX / TX & 3.250.114.444 / 3.535.449.942 \\
+    Adaptador Ethernet & Realtek PCIe GbE Family Controller (sin cable) \\
+    \bottomrule
+  \end{tabular}
+  \caption{Ficha de la tarjeta de red del host.}
+\end{table}
+
+Otros adaptadores virtuales del host: Tailscale Tunnel, VirtualBox Host-Only (192.168.56.1) y 2 adaptadores Wi-Fi Direct.
+
+\textbf{Máquinas virtuales (2 comparadas con el host):}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    Campo & Slackware 15.0 & Solaris 11.4 \\
+    \midrule
+    NIC & VirtualBox e1000 & e1000g0 (Intel PRO/1000) \\
+    MAC & 08:00:27:0a:46:19 & virtual (dladm show-phys) \\
+    IPv4 (casa) & 192.168.1.13 (DHCP) & 192.168.1.11 (DHCP) \\
+    Velocidad & virtual & 1000 Mb/s full-duplex \\
+    \bottomrule
+  \end{tabular}
+  \caption{Datos de red de las VMs comparadas.}
+\end{table}
+
+\textbf{Comparación host vs VMs:} el host usa NICs físicas Realtek (Wi-Fi 6E + GbE); las VMs usan NICs virtuales emuladas. Las MAC de las VMs inician con \texttt{08:00:27} (OUI de VirtualBox), lo que demuestra que son virtuales. La velocidad del enlace Solaris es 1000 Mbps full-duplex (virtual), equivalente a la GbE física del host.
+
+\subsection{5. Shell Programming --- Unix (Slackware 15.0)}
+
+Se escribieron y ejecutaron los 4 scripts pedidos en Slackware 15.0 (guardados en \texttt{/root/scripts/}). Todos fueron probados con salidas reales el 17/08/2026.
+
+\subsubsection{Script 1.1 --- mi\_ls.sh (menú de listado)}
+
+Lista los archivos de un directorio con menú interactivo: orden por fecha/tamaño, conteo por grupos, filtros por nombre y recursión.
+
+Ejecución real --- opción 5 (contar por tipo) sobre \texttt{/etc}:
+
+\begin{lstlisting}
+======================================
+  MENU - Listar archivos de: /etc
+======================================
+1) Mas recientes (conteo por fecha)
+2) Mas antiguos (conteo por fecha)
+3) Mayor tamano (conteo por tamano)
+4) Menor tamano (conteo por tamano)
+5) Por tipo (archivo/directorio)
+6) Filtro: empieza con...
+7) Filtro: termina con...
+8) Filtro: contiene...
+9) Incluir subdirectorios (recursivo)
+0) Salir
+======================================
+Directorio: /etc
+--- Directorios (con ocultos):
+112
+--- Archivos (con ocultos):
+172
+\end{lstlisting}
+
+Resultado: \texttt{/etc} tiene 112 directorios y 172 archivos (incluyendo ocultos).
+
+Ejecución real --- opción 6 (filtro: empieza con ``rc''):
+
+\begin{lstlisting}
+/etc/rc_keymaps
+/etc/rc3.d
+/etc/rc5.d
+/etc/rc0.d
+/etc/rc1.d
+/etc/rc4.d
+/etc/rc6.d
+/etc/rc_maps.cfg
+/etc/rc2.d
+/etc/rc.d
+\end{lstlisting}
+
+Comandos clave: \texttt{ls -lat / -latr} (por fecha), \texttt{ls -laS / -laSr} (por tamaño), \texttt{awk} (extraer columnas de fecha), \texttt{sort | uniq -c} (agrupar y contar), \texttt{grep "\^{}d"} (detectar directorios), \texttt{find -name} con \texttt{-maxdepth 1}, \texttt{wc -l}.
+
+\subsubsection{Script 1.2 --- buscar.sh (búsqueda)}
+
+Menú de búsqueda: por nombre de archivo, por palabra dentro de archivo, combinado, conteo de líneas, head/tail.
+
+Ejecución real --- buscar la palabra ``dev'' dentro de \texttt{/etc/fstab}:
+
+\begin{lstlisting}
+--- Coincidencias (linea: contenido):
+1:/dev/sda3   /         ext4   defaults   1  1
+2:/dev/sda1   /boot     ext4   defaults   1  2
+3:/dev/sda2   swap      swap   defaults   0  0
+--- Total de ocurrencias:
+\end{lstlisting}
+
+Resultado: encontró las 3 líneas de fstab que mencionan \texttt{/dev/}, con número de línea (gracias a \texttt{grep -n}).
+
+Comandos clave: \texttt{find dir -name "*patrón*"}, \texttt{grep -n}, \texttt{grep -c}, \texttt{wc -l}, \texttt{head/tail -n N}, \texttt{2>/dev/null} (silenciar errores de permiso).
+
+\subsubsection{Script 1.3 --- revisar\_logs.sh (logs)}
+
+Muestra las últimas 15 líneas de \texttt{/var/log/syslog}, \texttt{/var/log/messages} y \texttt{/var/log/secure}, con filtro opcional.
+
+Verificación de los tres logs:
+
+\begin{lstlisting}
+-rw-r----- 1 root root 1255029 Aug 17 21:13 /var/log/messages
+-rw-r----- 1 root root  290449 Aug 17 21:13 /var/log/secure
+-rw-r----- 1 root root  402441 Aug 17 21:13 /var/log/syslog
+\end{lstlisting}
+
+Ejecución real --- filtro por ``sshd'':
+
+\begin{lstlisting}
+===== /var/log/messages (filtro: sshd) =====
+Aug 17 21:13:02 slackware sshd[2007]: Received disconnect from 10.0.2.2 port 55807:11: disconnected by user
+Aug 17 21:13:02 slackware sshd[2007]: Disconnected from user vagrant 10.0.2.2 port 55807
+Aug 17 21:13:12 slackware sshd[2025]: Accepted publickey for vagrant from 10.0.2.2 port 62151 ssh2: RSA SHA256:...
+\end{lstlisting}
+
+\textbf{Respuestas sobre logs:}
+\begin{enumerate}
+  \item \textbf{¿Qué son los archivos de log?} Registros donde el SO y los servicios guardan eventos (fecha, origen, mensaje). Sirven para diagnóstico, auditoría y seguridad.
+  \item \textbf{¿Qué tipos de logs hay en los SO instalados?} Slackware: \texttt{syslog}, \texttt{messages}, \texttt{secure} (+ dmesg/kernel). Solaris: \texttt{/var/adm/messages}. Windows: Visor de eventos (System, Security, Application).
+  \item \textbf{¿Qué es syslog y qué define el estándar?} Protocolo/estándar de logging (RFC 5424): define formato (facilidad + severidad), transporte (UDP 514) y el servicio; centraliza logs de distintos dispositivos.
+  \item \textbf{¿Los logs encontrados siguen el estándar?} Sí: Slackware/Solaris usan formato syslog (facilidad.severidad, timestamp, host, proceso[pid]: mensaje). Windows usa Event Log propio (no syslog nativo).
+\end{enumerate}
+
+\subsubsection{Script 1.4 --- newgroup.sh y newuser.sh}
+
+\texttt{newgroup.sh}: crea un grupo con GID explícito validando que no exista.
+
+\begin{lstlisting}
+$ sudo bash newgroup.sh ventas 1099
+Grupo ventas creado (GID 1099)
+$ getent group ventas
+ventas:x:1099:
+$ sudo bash newgroup.sh ventas 1099
+ERROR: el GID 1099 ya existe en el sistema.    <- evita duplicados
+\end{lstlisting}
+
+\texttt{newuser.sh}: automatiza usuario + grupo + home + subdirectorios + permisos.
+
+\begin{lstlisting}
+$ sudo bash newuser.sh alice developers "Alice Developer" /home/alice /bin/bash 700 770 755
+Creando grupo developers...
+Usuario alice creado (home: /home/alice, grupo: developers, shell: /bin/bash)
+Permisos aplicados: /home/alice=700, documentos=770, scripts=755
+Listo.
+
+$ getent passwd alice
+alice:x:1005:1004:Alice Developer:/home/alice:/bin/bash
+
+$ sudo ls -la /home/alice/
+drwx------ 4 alice developers ...  .          <- 700: solo alice entra
+drwxrwx--- 2 root  root      ...  documentos <- 770: grupo puede leer/escribir
+drwxr-xr-x 2 root  root      ...  scripts    <- 755: todos pueden leer/ejecutar
+
+$ sudo bash newuser.sh alice developers "Alice" /home/alice /bin/bash 700 770 755
+ERROR: el usuario alice ya existe.     <- evita duplicados
+\end{lstlisting}
+
+Parámetros del script: \texttt{\$1} usuario, \texttt{\$2} grupo, \texttt{\$3} nombre completo (GECOS), \texttt{\$4} home, \texttt{\$5} shell, \texttt{\$6} permisos home (700), \texttt{\$7} permisos documentos/ (770), \texttt{\$8} permisos scripts/ (755).
+
+\subsection{6. Editor VI --- Ejercicio del Himno}
+
+Archivo de trabajo: \texttt{himno.txt} (16 líneas, 4 estrofas):
+
+\begin{lstlisting}
+ 1  Estudiante, maestro la conquista
+ 2  Sera hacer con amor nuestra labor
+ 3  Cultores de espiritu humanista
+ 4  Unidad de intelecto y corazon.
+ 5  Escuela de ingenio es nuestra casa
+ 6  Libro abierto a nuestra universidad
+ 7  Aqui perdura mientras todo pasa
+ 8  Cimiento de la fe y la integridad.
+ 9  Ofrecemos la mano al que tropieza
+10  La hidalguia del dialogo al rival
+11  Ofrecemos la duda y la certeza
+12  Mediamos entre hierro y el cristal.
+13  Escuela de ingenio es nuestra casa
+14  Libro abierto a nuestra universidad
+15  Aqui perdura mientras todo pasa
+16  Cimiento de la fe y la integridad.
+\end{lstlisting}
+
+\textbf{Operaciones aplicadas con sus resultados reales:}
+
+\begin{itemize}
+  \item \texttt{:1,4s/a/-/g} --- todas las ``a'' de las líneas 1--4 reemplazadas por ``-'': \texttt{1,4} = rango · \texttt{s} = substitute · \texttt{g} = global (todas las de cada línea).
+  \item \texttt{:\%s/al/\#\#/g} --- ``al'' por ``\#\#'' en TODO el archivo (reemplazó en 3 líneas); \texttt{\%} = todo el archivo.
+  \item \texttt{dw} --- borrar palabra bajo el cursor (borró ``Estudiante'' de la línea 1). \texttt{d}=delete, \texttt{w}=word.
+  \item \texttt{:13,16d} --- borrar las líneas 13--16 de una (rango + delete).
+  \item \texttt{u} --- deshacer: el archivo volvió a su estado anterior (historial de cambios).
+  \item \texttt{G} + \texttt{gUU} --- ir a la última línea y convertirla a MAYÚSCULAS: línea 16 quedó ``CIMIENTO DE LA FE Y LA INTEGRIDAD.''.
+  \item \texttt{7G yy yy G p} --- a la línea 7, copiar 2 líneas y pegarlas al final (líneas 16--17 nuevas).
+  \item \texttt{/Escuela} --- búsqueda: ``Escuela'' aparece en las líneas 5 y 13; \texttt{n} va a la siguiente coincidencia.
+  \item \texttt{5G} --- ir a la línea 5.
+  \item \texttt{:wq} --- guardar y salir.
+  \item \texttt{:1,5d} --- al reabrir: borrar las primeras 5 líneas.
+\end{itemize}
+
+\textbf{Tabla resumen de comandos VI:}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    Modo & Comando & Qué hace \\
+    \midrule
+    Normal & \texttt{i} / \texttt{a} & Insertar antes / después del cursor \\
+    Normal & \texttt{Esc} & Volver al modo normal \\
+    Normal & \texttt{x} / \texttt{dw} & Borrar carácter / palabra \\
+    Normal & \texttt{dd} / \texttt{5dd} & Borrar línea / 5 líneas \\
+    Normal & \texttt{u} / \texttt{Ctrl+r} & Deshacer / rehacer \\
+    Normal & \texttt{yy} / \texttt{p} & Copiar línea / pegar \\
+    Normal & \texttt{G} / \texttt{5G} & Ir al final / a la línea 5 \\
+    Normal & \texttt{gUU} & Línea actual a MAYÚSCULAS \\
+    Normal & \texttt{/palabra} & Buscar (\texttt{n} siguiente) \\
+    Comando & \texttt{:w} & Guardar sin salir \\
+    Comando & \texttt{:q} / \texttt{:wq} / \texttt{:q!} & Salir / guardar y salir / salir sin guardar \\
+    Comando & \texttt{:\%s/old/new/g} & Reemplazar en todo el archivo \\
+    Comando & \texttt{:1,4s/a/-/g} & Reemplazar en rango de líneas \\
+    Comando & \texttt{:13,16d} & Borrar rango de líneas \\
+    Comando & \texttt{:set number} & Mostrar números de línea \\
+    \bottomrule
+  \end{tabular}
+  \caption{Comandos VI aplicados y verificados en el ejercicio.}
+\end{table}
