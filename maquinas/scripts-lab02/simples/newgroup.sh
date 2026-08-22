@@ -1,11 +1,8 @@
 #!/bin/bash
-# newgroup.sh - Crea un grupo nuevo (version simple)
+# Crea un grupo si todavia no existe
 
-# 1. Preguntamos el nombre del grupo
-echo "Que nombre le pones al grupo?"
-read nombre
+read -p "Nombre del grupo: " nombre
 
-# 2. Si ya existe, avisamos; si no, lo creamos
 if getent group "$nombre" > /dev/null; then
   echo "Ese grupo ya existe"
 else

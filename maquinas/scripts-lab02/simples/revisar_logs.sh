@@ -1,17 +1,8 @@
 #!/bin/bash
-# revisar_logs.sh - Muestra las ultimas lineas de los logs del sistema (version simple)
+# Muestra las ultimas 15 lineas de los 3 logs del sistema
 
-# 1. Preguntamos cuantas lineas quiere ver
-echo "Cuantas lineas de cada log queres ver?"
-read lineas
-
-# 2. Mostramos las ultimas lineas de cada log
-echo "===== syslog ====="
-tail -n "$lineas" /var/log/syslog
-
-echo "===== messages ====="
-tail -n "$lineas" /var/log/messages
-
-# secure no siempre existe: si no esta, avisamos y seguimos
-echo "===== secure ====="
-tail -n "$lineas" /var/log/secure 2>/dev/null || echo "(el log secure no existe)"
+tail -15 /var/log/syslog
+echo "-----"
+tail -15 /var/log/messages
+echo "-----"
+tail -15 /var/log/secure 2>/dev/null || echo "(no hay log secure)"
