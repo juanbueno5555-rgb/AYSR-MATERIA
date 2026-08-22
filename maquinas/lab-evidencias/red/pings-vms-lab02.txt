@@ -1,0 +1,126 @@
+# Pings entre VMs — Lab 02, Sección 7 (evidencia)
+
+> Fecha: 21/08/2026 — red de la casa (192.168.1.0/24, router 192.168.1.1)
+> Las 3 VMs clonadas con bridge al Wi-Fi del host, DHCP del router de casa.
+
+## Topología de red del momento
+
+| VM | SO | IP (DHCP casa) | Rol |
+|---|---|---|---|
+| slackware-15.0 | Slackware 15.0 | `192.168.1.13` | VM 1 |
+| solaris-11.4 | Oracle Solaris 11.4 | `192.168.1.11` | VM 2 |
+| windows-server-gui | Windows Server 2025 GUI | `192.168.1.14` | VM 3 |
+
+> Nota: en la universidad las VMs usan IPs estáticas 10.2.78.74/.75/.76 vía auto-detección al boot (script auto-red). En casa toman DHCP automáticamente.
+
+## Matriz de resultados (21/08/2026, red de la casa)
+
+| Origen → Destino | Resultado |
+|---|---|
+| Slackware (.13) → Solaris (.11) | ✅ 2/2, 0% loss (rtt ~1.6 ms) |
+| Slackware (.13) → Windows (.14) | ✅ 2/2, 0% loss (rtt ~2.0 ms) |
+| Slackware (.13) → Internet (8.8.8.8) | ✅ 2/2, 0% loss (rtt ~11.8 ms) |
+| Solaris (.11) → Slackware (.13) | ✅ alive |
+| Solaris (.11) → Windows (.14) | ✅ alive |
+| Solaris (.11) → Internet (8.8.8.8) | ✅ alive |
+| Windows (.14) → Slackware (.13) | ✅ 2/2, 0% loss (rtt ~1.5 ms) |
+| Windows (.14) → Solaris (.11) | ✅ 2/2, 0% loss (rtt ~2.5 ms) |
+| Windows (.14) → Internet (8.8.8.8) | ✅ 2/2, 0% loss (rtt ~9 ms) |
+
+## Salidas en bruto
+
+### Slackware → Solaris
+
+```
+# ping -c 2 192.168.1.11
+PING 192.168.1.11 (192.168.1.11) 56(84) bytes of data.
+64 bytes from 192.168.1.11: icmp_seq=1 ttl=255 time=1.88 ms
+64 bytes from 192.168.1.11: icmp_seq=2 ttl=255 time=1.30 ms
+
+--- 192.168.1.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1004ms
+rtt min/avg/max/mdev = 1.303/1.591/1.880/0.288 ms
+```
+
+### Slackware → Windows
+
+```
+# ping -c 2 192.168.1.14
+PING 192.168.1.14 (192.168.1.14) 56(84) bytes of data.
+64 bytes from 192.168.1.14: icmp_seq=1 ttl=128 time=1.87 ms
+64 bytes from 192.168.1.14: icmp_seq=2 ttl=128 time=2.12 ms
+
+--- 192.168.1.14 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 1.866/1.994/2.122/0.128 ms
+```
+
+### Slackware → Internet
+
+```
+# ping -c 2 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=119 time=17.2 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=119 time=6.32 ms
+
+--- 8.8.8.8 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 6.321/11.774/17.228/5.453 ms
+```
+
+### Solaris → Slackware / Windows / Internet
+
+```
+$ ping 192.168.1.13 2
+192.168.1.13 is alive
+$ ping 192.168.1.14 2
+192.168.1.14 is alive
+$ ping 8.8.8.8 2
+8.8.8.8 is alive
+```
+
+### Windows → Slackware
+
+```
+> ping -n 2 192.168.1.13
+Pinging 192.168.1.13 with 32 bytes of data:
+Reply from 192.168.1.13: bytes=32 time=2ms TTL=64
+Reply from 192.168.1.13: bytes=32 time=1ms TTL=64
+
+Ping statistics for 192.168.1.13:
+    Packets: Sent = 2, Received = 2, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 1ms, Maximum = 2ms, Average = 1ms
+```
+
+### Windows → Solaris
+
+```
+> ping -n 2 192.168.1.11
+Pinging 192.168.1.11 with 32 bytes of data:
+Reply from 192.168.1.11: bytes=32 time=4ms TTL=255
+Reply from 192.168.1.11: bytes=32 time=1ms TTL=255
+
+Ping statistics for 192.168.1.11:
+    Packets: Sent = 2, Received = 2, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 1ms, Maximum = 4ms, Average = 2ms
+```
+
+### Windows → Internet
+
+```
+> ping -n 2 8.8.8.8
+Pinging 8.8.8.8 with 32 bytes of data:
+Reply from 8.8.8.8: bytes=32 time=12ms TTL=119
+Reply from 8.8.8.8: bytes=32 time=6ms TTL=119
+
+Ping statistics for 8.8.8.8:
+    Packets: Sent = 2, Received = 2, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 6ms, Maximum = 12ms, Average = 9ms
+```
+
+## Conclusión
+
+Las 3 VMs clonadas (Slackware, Solaris y Windows Server GUI) se comunican entre sí por la red local y todas tienen salida a Internet. Requisito de la sección 7 cumplido. En la universidad el mismo esquema funciona con IPs estáticas 10.2.78.74/.75/.76 (auto-detección al boot).

@@ -16,7 +16,7 @@
 | IPv6 | `fe80::7a67:ecca:4ea2:4cd0%13` (link-local) |
 | Gateway | `192.168.1.1` |
 | DNS | `192.168.1.1` |
-| Velocidad Wi-Fi + SSID | *(pendiente — netsh wlan requiere admin/permiso de ubicación)* |
+| Velocidad Wi-Fi + SSID | SSID `EVANGELIO_5G` (5 GHz) — enlace 866.7 Mbps |
 | Bytes RX | `3.250.114.444` |
 | Bytes TX | `3.535.449.942` |
 

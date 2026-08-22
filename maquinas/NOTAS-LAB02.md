@@ -29,18 +29,11 @@
 
 ### 1.4 Diagrama de red en Packet Tracer (individual, archivo .pkt)
 
-- **Estado:** En progreso — topología armada (Router0 1941, Router1 1841, Router2 1841, Switch1 2950-24, Server0/1/2, laptops) + IPs configuradas.
-- **Esquema de IPs aplicado:**
-  - WAN R0-R1: `7.0.0.0/30` (R0=.1, R1=.2)
-  - WAN R1-R2: `8.0.0.0/30` (R1=.1, R2=.2)
-  - LAN Router0 VLAN10: `10.0.10.0/24` (gw 10.0.10.1) — Server0 `.10`, Server1 `.11`, Switch1 `.2`
-  - LAN Router0 VLAN30: `10.0.30.0/24` (gw 10.0.30.1)
-  - LAN Router2: `10.0.20.0/24` (gw 10.0.20.1) — Server2 `.10`
-- **⚠️ Pendiente:** links de Router2 en `Down` — revisar cables físicos (borrar/reconectar Router1↔Router2) y verificar pings.
-- **Evidencia:** `lab-evidencias/simulacion-de-red.png` (subida a rama juan, commit 138d100).
-- **Respuesta links negros sólidos:** [PENDIENTE]
-- **Respuesta links negros punteados:** [PENDIENTE]
-- **Cable serial Router0-Router2:** [PENDIENTE]
+- **Estado:** Camilo entregó su paquete completo (`FINAL CAMILO.pkt`) el 21/08. Copiado al repo como `lab-evidencias/pt/diagrama-camilo-final.pkt`; el de Juan David también está (`lab-evidencias/pt/diagrama-juan-primer-paso.pkt`).
+- **⚠️ Pendiente:** abrir en PT y verificar que todos los links estén Up (en la versión de Juan, los de Router2 estaban `Down`) + correr la simulación de la sección 2 con capturas.
+- **Respuesta links negros sólidos:** enlaces físicos Ethernet directos (cable cobre) entre dispositivos — la conexión de capa física real que transporta tramas (L1/L2).
+- **Respuesta links negros punteados:** conexiones lógicas o virtuales — no hay cable físico directo; representan una relación lógica (ruta a través de la red, enlace inalámbrico o un enlace aún no activo).
+- **Cable serial Router0-Router2:** cable Serial DCE/DTE (rojo) entre los puertos seriales de los routers; el extremo DCE define el clock rate.
 
 ---
 
@@ -49,16 +42,22 @@
 | Sección | Estado |
 |---|---|
 | 1.1 Versión PT | ✅ 9.0.1 |
-| 1.2 Curso + video | 🔶 Guion listo — falta GRABAR video |
+| 1.2 Curso + video | ✅ Video grabado y editado (video1-packet-tracer.mp4, 3:42) |
 | 1.3 Quiz PT Basics | 🔶 Juan David ✅ — falta Camilo |
-| 1.4 Diagrama .pkt | 🔶 En progreso (IPs ok, cables/serial pendiente) |
-| 2. Rastreo mensajes PT | ❌ Pendiente |
-| 3. Wireshark | 🔶 Captura real hecha (1691 paq, 4 GETs a scielo.org.co, paquete #211 analizado capa por capa) + análisis en `WIRESHARK-LAB02.md` + pcapng en lab-evidencias — **faltan los 2 videos (5 y 7 min)** |
-| 4. Tarjetas de red | 🔶 Casi listo (datos VMs Lab 01) |
-| 5. Shell scripts 1.1-1.4 | ✅ Documentados con salidas reales (17/08): `mi_ls.sh` (menú listado, probado en /etc: 112 dirs + 172 archivos), `buscar.sh` (búsqueda, probado con /etc/fstab), `revisar_logs.sh` (logs syslog/messages/secure + filtro sshd), `newgroup.sh`/`newuser.sh` (usuario alice + permisos 700/770/755 verificados, errores por duplicado probados). Documentación: `lab-evidencias/shell-scripts-lab02-documentacion.md` |
-| 6. Editor VI | ✅ Ejercicio completo ejecutado y documentado (17/08): himno.txt 16 líneas, las 13 operaciones de la guía aplicadas y verificadas con salidas reales (reemplazos `:1,4s/a/-/g`, `:%s/al/##/g`, `dw`, `u`, `G gUU`, `yy/p`, `/Escuela`, `5G`, `:wq`, `:1,5d`). Evidencia: `lab-evidencias/vi-lab02-evidencias.md` + tabla resumen de comandos |
-| 7. Clonar VMs (2 por SO) | ✅ Máquinas reemplazadas: los 3 clones (slackware-15.0, solaris-11.4, windows-server-gui) pasaron a ser las VMs principales el 17/8 (originales desregistradas, archivos en `__originales-backup/`). IPs uni .74/.75/.76 con **auto-detección de red al boot** (sin scripts a mano). Internet OK en las 3. Snapshot de respaldo `estado-final-2026-08-17` en cada una. **Falta verificar pings entre VMs en la uni** |
-| 8. SAMBA en Solaris | ✅ Funcionando (17/08): servidor Samba clásico en Solaris 10.2.78.75 compartiendo `compartido` (puerto 445). Probado desde Slackware (put/get con smbclient) y Windows GUI (net use + crear archivo), con interoperabilidad cruzada verificada. Usuarios SMB: claudia/admin. Evidencia en `lab-evidencias/red/samba-lab02-evidencias.txt` + captures. |
+| 1.4 Diagrama .pkt | 🔶 Paquete completo de Camilo recibido y en repo (21/08) — falta verificar links Up en PT + capturas |
+| 2. Rastreo mensajes PT | 🔶 Documento listo (`PT-LAB02-SECCION2.md`) — falta correr la simulación y pegar capturas |
+| 3. Wireshark | ✅ Captura real (scielo.org.co) + análisis + videos 2 y 3 editados (3:37 y 4:29) |
+| 4. Tarjetas de red | 🔶 Host completo (SSID EVANGELIO_5G, 866.7 Mbps) — falta: 3 dispositivos por integrante + PCs de la escuela |
+| 5. Shell scripts 1.1-1.4 | ✅ Documentados con salidas reales (17/08) |
+| 6. Editor VI | ✅ Ejercicio completo y documentado (17/08) |
+| 7. Clonar VMs (2 por SO) | ✅ Pings entre las 3 VMs verificados en la red de casa (21/08): Slackware .13 ↔ Solaris .11 ↔ Windows GUI .14, todos 0% loss + internet. Evidencia: `lab-evidencias/red/pings-vms-lab02.txt`. En la uni usan IPs estáticas .74/.75/.76 |
+| 8. SAMBA en Solaris | ✅ Funcionando con evidencia (17/08) |
+
+**Evidencias clave (rutas):**
+- Shell scripts: `lab-evidencias/shell-scripts-lab02-documentacion.md` (mi_ls.sh probado en /etc, buscar.sh con /etc/fstab, revisar_logs.sh con filtro sshd, newgroup/newuser con alice + permisos 700/770/755 y errores por duplicado probados).
+- VI: `lab-evidencias/vi-lab02-evidencias.md` (himno.txt 16 líneas, 13 operaciones, tabla resumen de comandos).
+- SAMBA: `lab-evidencias/red/samba-lab02-evidencias.txt` + captures (Samba clásico en Solaris compartiendo `compartido` en 445, usuarios claudia/admin, probado desde Slackware con smbclient put/get y Windows con net use).
+- VMs: snapshots `estado-final-2026-08-17` en cada clon; auto-detección de red al boot (uni .74/.75/.76 estáticas, casa DHCP).
 
 ---
 
