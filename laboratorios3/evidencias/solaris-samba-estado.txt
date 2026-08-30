@@ -1,0 +1,35 @@
+﻿library/samba/libsmbclient                        4.7.6-11.4.0.0.1.14.0      i--
+service/network/samba                             4.7.6-11.4.0.0.1.14.0      i--
+===SVC===
+online          9:50:58 svc:/network/smb:default
+online          9:51:19 svc:/network/smb/client2:default
+===SMBD===
+/usr/sbin/smbd
+===CONF===
+total 52
+drwxr-xr-x   3 root     bin            6 Aug 17 14:11 .
+drwxr-xr-x  82 root     sys          178 Aug 29 09:51 ..
+dr-x------   3 root     bin            6 Aug 17 14:52 private
+-r--r--r--   1 root     root         516 Aug 17 14:52 smb.conf
+-r--r--r--   1 root     bin            0 Aug  7 15:46 smb.conf-example
+-r--r--r--   1 root     bin         7933 Aug  7 15:46 smb.conf.default
+[global]
+   workgroup = WORKGROUP
+   server string = Servidor SAMBA Solaris (Lab 02)
+   security = user
+   passdb backend = smbpasswd
+   map to guest = Bad User
+   server min protocol = SMB2
+   server max protocol = SMB3
+   socket options = TCP_NODELAY
+   log file = /var/log/samba/log.%m
+   max log size = 1000
+
+[compartido]
+   comment = Carpeta compartida Lab 02 (AYSR)
+   path = /export/compartido
+   browseable = yes
+   writable = yes
+   valid users = claudia admin
+   create mask = 0660
+   directory mask = 0770

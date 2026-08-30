@@ -1,0 +1,22 @@
+﻿ssh : putting file /tmp/demo-slack-lab03.txt as \demo-slack-lab03.txt (2.3 kb/s) (average 2.3 kb/s)
+At line:3 char:5
++ " | ssh -i .ssh/vagrant.key -o ConnectTimeout=8 -o StrictHostKeyCheck ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (putting file /t...erage 2.3 kb/s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  .                                   D        0  Sat Aug 29 15:03:54 2026
+  ..                                  D        0  Mon Aug 17 18:54:32 2026
+  local-test.txt                      N        5  Mon Aug 17 18:56:59 2026
+  .$EXTEND                           DH        0  Sat Aug 29 03:21:22 2026
+  archivo-comando.txt                 N     2175  Mon Aug 17 20:33:20 2026
+  demo-windows.txt                    N       46  Mon Aug 17 20:29:15 2026
+  desde-slackware.txt                 N       43  Mon Aug 17 19:59:08 2026
+  prueba-claudia.txt                  N        0  Mon Aug 17 19:04:58 2026
+  demo-slack-lab03.txt                N       37  Sat Aug 29 15:03:54 2026
+  desde-windows.txt                   N       43  Mon Aug 17 20:02:39 2026
+  carpeta-comando                     D        0  Mon Aug 17 20:33:20 2026
+  demo-slackware.txt                  N       52  Mon Aug 17 20:28:55 2026
+
+		19853395 blocks of size 1024. 19853353 blocks available
+sh: line 3: $'\r': command not found

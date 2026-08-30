@@ -1,0 +1,17 @@
+﻿total 29
+drwxrwxrwx   4 claudia  shared        11 Aug 28 22:26 .
+drwxr-x---   2 root     sys            3 Aug 28 22:21 .$EXTEND
+drwxr-xr-x   4 root     sys            4 Aug 17 13:54 ..
+-rw-rw----   1 claudia  Accounting    2175 Aug 17 15:33 archivo-comando.txt
+drwxrwx---   2 claudia  Accounting       2 Aug 17 15:33 carpeta-comando
+-rw-rw----   1 claudia  Accounting      52 Aug 17 15:28 demo-slackware.txt
+-rw-rw----   1 claudia  Accounting      46 Aug 17 15:29 demo-windows.txt
+-rw-rw----   1 claudia  Accounting      43 Aug 17 14:59 desde-slackware.txt
+-rw-rw----   1 claudia  Accounting      43 Aug 17 15:02 desde-windows.txt
+-rw-r--r--   1 claudia  Accounting       5 Aug 17 13:56 local-test.txt
+-rw-r--r--   1 claudia  Accounting       0 Aug 17 14:04 prueba-claudia.txt
+===USERS===
+claudia:100:Claudia - usuario con el nombre de la profesora
+admin:104:
+===SERVICE===
+session setup failed: NT_STATUS_LOGON_FAILURE

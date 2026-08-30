@@ -1,0 +1,63 @@
+﻿==1==
+Server:		192.168.82.10
+Address:	192.168.82.10#53
+
+Name:	srv1.juan.com.it
+Address: 10.2.78.74
+
+==2==
+Server:		192.168.82.10
+Address:	192.168.82.10#53
+
+mail.camilo.org.uk	canonical name = dns1.camilo.org.uk.
+Name:	dns1.camilo.org.uk
+Address: 10.2.78.74
+Name:	dns1.camilo.org.uk
+Address: 2001:db8:2::74
+
+==3==
+Server:		192.168.82.10
+Address:	192.168.82.10#53
+
+Non-authoritative answer:
+Name:	www.google.com
+Address: 142.251.152.119
+Name:	www.google.com
+Address: 142.251.156.119
+Name:	www.google.com
+Address: 142.251.150.119
+Name:	www.google.com
+Address: 142.251.154.119
+Name:	www.google.com
+Address: 142.251.151.119
+Name:	www.google.com
+Address: 142.251.155.119
+Name:	www.google.com
+Address: 142.251.153.119
+Name:	www.google.com
+Address: 142.251.157.119
+Name:	www.google.com
+Address: 2001:4860:482a:7700::
+Name:	www.google.com
+Address: 2001:4860:4829:7700::
+Name:	www.google.com
+Address: 2001:4860:4828:7700::
+Name:	www.google.com
+Address: 2001:4860:482b:7700::
+Name:	www.google.com
+Address: 2001:4860:4826:7700::
+Name:	www.google.com
+Address: 2001:4860:4827:7700::
+Name:	www.google.com
+Address: 2001:4860:482c:7700::
+Name:	www.google.com
+Address: 2001:4860:482d:7700::
+
+==4==
+Server:		192.168.82.10
+Address:	192.168.82.10#53
+
+www.juan.com.it	canonical name = srv1.juan.com.it.
+Name:	srv1.juan.com.it
+Address: 10.2.78.74
+

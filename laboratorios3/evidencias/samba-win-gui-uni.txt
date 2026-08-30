@@ -1,0 +1,37 @@
+﻿ssh : Warning: Permanently added '10.2.78.76' (ED25519) to the list of known hosts.
+At line:1 char:400
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -o ConnectTimeout=8 -o StrictHostKe ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Warning: Perman...of known hosts.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+The command completed successfully.
+
+#< CLIXML
+===DIR===
+
+
+    Directory: Z:\
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+d-----         8/17/2026   1:33 PM                carpeta-comando                                                      
+------         8/17/2026  11:56 AM              5 local-test.txt                                                       
+------         8/17/2026   1:33 PM           2175 archivo-comando.txt                                                  
+------         8/17/2026   1:29 PM             46 demo-windows.txt                                                     
+------         8/17/2026  12:59 PM             43 desde-slackware.txt                                                  
+------         8/17/2026  12:04 PM              0 prueba-claudia.txt                                                   
+------         8/29/2026   8:03 AM             37 demo-slack-lab03.txt                                                 
+------         8/17/2026   1:02 PM             43 desde-windows.txt                                                    
+------         8/17/2026   1:28 PM             52 demo-slackware.txt                                                   
+===WRITE===
+------         8/29/2026   8:35 AM             26 demo-gui-uni.txt                                                     
+
+
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN 
+RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR 
+N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil 
+/><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj><Obj S="progress" RefId="1"><TNRef 
+RefId="0" /><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil 
+/><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>

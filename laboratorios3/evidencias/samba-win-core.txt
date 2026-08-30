@@ -1,0 +1,7 @@
+﻿ssh : ssh: connect to host 10.2.78.77 port 22: Connection timed out
+At line:1 char:159
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -o ConnectTimeout=8 -o StrictHostKe ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ssh: connect to...ction timed out:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

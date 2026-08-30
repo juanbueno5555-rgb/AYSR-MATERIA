@@ -1,0 +1,47 @@
+﻿
+IPAddress
+---------
+10.2.65.1
+
+
+===EXT===
+Server:  localhost
+Address:  127.0.0.1
+
+Name:    www.google.com
+Addresses:  64:ff9b::8efb:9777
+	  64:ff9b::8efb:9c77
+	  64:ff9b::8efb:9877
+	  64:ff9b::8efb:9d77
+	  64:ff9b::8efb:9a77
+	  64:ff9b::8efb:9b77
+	  64:ff9b::8efb:9977
+	  64:ff9b::8efb:9677
+	  142.251.154.119
+	  142.251.151.119
+	  142.251.153.119
+	  142.251.157.119
+	  142.251.155.119
+	  142.251.150.119
+	  142.251.152.119
+	  142.251.156.119
+
+===ESCUELA===
+ssh : Cannot process the XML from the 'Error' stream of 'C:\WINDOWS\System32\OpenSSH\ssh.exe': Data at the root level 
+is invalid. Line 1, position 1.
+At line:1 char:329
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -o ConnectTimeout=8 -o StrictHostKe ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SyntaxError: (C:\WINDOWS\System32\OpenSSH\ssh.exe:String) [], XmlException
+    + FullyQualifiedErrorId : ProcessStreamReader_CliXmlError
+ 
+Server:  localhost
+Address:  127.0.0.1
+
+Name:    mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Addresses:  13.248.244.96
+	  75.2.60.68
+	  35.71.179.82
+	  99.83.220.108
+Aliases:  www.escuelaing.edu.co
+

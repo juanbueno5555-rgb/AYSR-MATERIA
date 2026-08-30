@@ -1,0 +1,38 @@
+﻿
+Pinging 192.168.82.10 with 32 bytes of data:
+PING: transmit failed. General failure. 
+PING: transmit failed. General failure. 
+PING: transmit failed. General failure. 
+
+Ping statistics for 192.168.82.10:
+    Packets: Sent = 3, Received = 0, Lost = 3 (100% loss),
+===ROUTE===
+
+DestinationPrefix             NextHop RouteMetric InterfaceMetric
+-----------------             ------- ----------- ---------------
+255.255.255.255/32            0.0.0.0         256              25
+224.0.0.0/4                   0.0.0.0         256              25
+169.254.255.255/32            0.0.0.0         256              25
+169.254.202.72/32             0.0.0.0         256              25
+169.254.0.0/16                0.0.0.0         256              25
+ff00::/8                      ::              256              25
+fe80::f76f:1a40:3d53:9be7/128 ::              256              25
+fe80::/64                     ::              256              25
+
+
+===ARP===
+===IF===
+
+
+AddressFamily   : IPv6
+InterfaceMetric : 25
+ConnectionState : Connected
+Forwarding      : Disabled
+
+AddressFamily   : IPv4
+InterfaceMetric : 25
+ConnectionState : Connected
+Forwarding      : Disabled
+
+
+

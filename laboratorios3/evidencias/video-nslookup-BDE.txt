@@ -1,0 +1,53 @@
+﻿=== PUNTO B: nslookup contra el DNS propio (10.2.78.74) ===
+Server:		10.2.78.74
+Address:	10.2.78.74#53
+
+Name:	srv1.juan.com.it
+Address: 10.2.78.74
+
+=== PUNTO D: set type=NS ===
+Server:		10.2.78.74
+Address:	10.2.78.74#53
+
+juan.com.it	nameserver = dns1.juan.com.it.
+
+=== PUNTO E: set debug ===
+Server:		10.2.78.74
+Address:	10.2.78.74#53
+
+------------
+    QUESTIONS:
+	srv1.juan.com.it, type = A, class = IN
+    ANSWERS:
+    ->  srv1.juan.com.it
+	internet address = 10.2.78.74
+	ttl = 86400
+    AUTHORITY RECORDS:
+    ADDITIONAL RECORDS:
+------------
+Name:	srv1.juan.com.it
+Address: 10.2.78.74
+------------
+    QUESTIONS:
+	srv1.juan.com.it, type = AAAA, class = IN
+    ANSWERS:
+    AUTHORITY RECORDS:
+    ->  juan.com.it
+	origin = dns1.juan.com.it
+	mail addr = root.juan.com.it
+	serial = 2026082801
+	refresh = 10800
+	retry = 3600
+	expire = 604800
+	minimum = 86400
+	ttl = 86400
+    ADDITIONAL RECORDS:
+------------
+
+ssh : sh: line 7: $'\r': command not found
+At line:7 char:5
++ " | ssh -i .ssh/vagrant.key -o ConnectTimeout=8 -o StrictHostKeyCheck ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (sh: line 7: $'\r': command not found:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

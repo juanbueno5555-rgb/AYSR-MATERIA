@@ -1,0 +1,74 @@
+﻿
+
+Name                          : {f328b424-c50b-4496-8659-379cb6a27f57}
+DisplayName                   : DNS UDP 53
+Description                   : 
+DisplayGroup                  : 
+Group                         : 
+Enabled                       : True
+Profile                       : Any
+Platform                      : {}
+Direction                     : Inbound
+Action                        : Allow
+EdgeTraversalPolicy           : Block
+LooseSourceMapping            : False
+LocalOnlyMapping              : False
+Owner                         : 
+PrimaryStatus                 : OK
+Status                        : The rule was parsed successfully from the store. (65536)
+EnforcementStatus             : NotApplicable
+PolicyStoreSource             : PersistentStore
+PolicyStoreSourceType         : Local
+RemoteDynamicKeywordAddresses : {}
+PolicyAppId                   : 
+PackageFamilyName             : 
+
+Name                          : {a8f14cec-b514-4e81-bd8c-334e90e5aa66}
+DisplayName                   : DNS TCP 53
+Description                   : 
+DisplayGroup                  : 
+Group                         : 
+Enabled                       : True
+Profile                       : Any
+Platform                      : {}
+Direction                     : Inbound
+Action                        : Allow
+EdgeTraversalPolicy           : Block
+LooseSourceMapping            : False
+LocalOnlyMapping              : False
+Owner                         : 
+PrimaryStatus                 : OK
+Status                        : The rule was parsed successfully from the store. (65536)
+EnforcementStatus             : NotApplicable
+PolicyStoreSource             : PersistentStore
+PolicyStoreSourceType         : Local
+RemoteDynamicKeywordAddresses : {}
+PolicyAppId                   : 
+PackageFamilyName             : 
+
+
+IPAddress      : 127.0.0.1
+Result         : Success
+RoundTripTime  : 00:00:00
+TcpTried       : False
+UdpTried       : True
+PSComputerName : 
+
+
+
+
+HostName  RecordType
+--------  ----------
+@         NS        
+@         SOA       
+dns1      A         
+dns1      AAAA      
+localhost A         
+mail      CNAME     
+srv1      A         
+srv2      A         
+srv2      AAAA      
+v6        CNAME     
+www       CNAME     
+
+

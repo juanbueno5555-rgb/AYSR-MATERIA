@@ -1,0 +1,58 @@
+﻿
+
+Name                          : {1c5db51a-9ed4-46b1-8bf2-b43e90357977}
+DisplayName                   : DNS UDP 53
+Description                   : 
+DisplayGroup                  : 
+Group                         : 
+Enabled                       : True
+Profile                       : Any
+Platform                      : {}
+Direction                     : Inbound
+Action                        : Allow
+EdgeTraversalPolicy           : Block
+LooseSourceMapping            : False
+LocalOnlyMapping              : False
+Owner                         : 
+PrimaryStatus                 : OK
+Status                        : The rule was parsed successfully from the store. (65536)
+EnforcementStatus             : NotApplicable
+PolicyStoreSource             : PersistentStore
+PolicyStoreSourceType         : Local
+RemoteDynamicKeywordAddresses : {}
+PolicyAppId                   : 
+PackageFamilyName             : 
+
+Name                          : {8f7d5e10-a46c-4c02-b9c5-e653e83659e3}
+DisplayName                   : DNS TCP 53
+Description                   : 
+DisplayGroup                  : 
+Group                         : 
+Enabled                       : True
+Profile                       : Any
+Platform                      : {}
+Direction                     : Inbound
+Action                        : Allow
+EdgeTraversalPolicy           : Block
+LooseSourceMapping            : False
+LocalOnlyMapping              : False
+Owner                         : 
+PrimaryStatus                 : OK
+Status                        : The rule was parsed successfully from the store. (65536)
+EnforcementStatus             : NotApplicable
+PolicyStoreSource             : PersistentStore
+PolicyStoreSourceType         : Local
+RemoteDynamicKeywordAddresses : {}
+PolicyAppId                   : 
+PackageFamilyName             : 
+
+
+IPAddress      : 127.0.0.1
+Result         : NotAuthoritativeForZone
+RoundTripTime  : 00:00:00
+TcpTried       : False
+UdpTried       : True
+PSComputerName : 
+
+
+

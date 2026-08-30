@@ -1,0 +1,7 @@
+﻿ssh : ssh: connect to host 44.204.11.182 port 22: Connection timed out
+At line:1 char:211
++ ... cript.sh" | ssh -i "C:\Users\RANGE\Downloads\maquinas\lab03-key.pem"  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ssh: connect to...ction timed out:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

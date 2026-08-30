@@ -1,0 +1,16 @@
+﻿
+HostName  RecordType
+--------  ----------
+@         NS        
+@         SOA       
+dns1      A         
+dns1      AAAA      
+localhost A         
+mail      CNAME     
+srv1      A         
+srv2      A         
+srv2      AAAA      
+v6        CNAME     
+www       CNAME     
+
+

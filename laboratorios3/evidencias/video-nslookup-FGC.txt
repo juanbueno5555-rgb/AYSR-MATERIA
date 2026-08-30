@@ -1,0 +1,26 @@
+﻿=== PUNTO F: set type=A ===
+Server:		10.2.78.74
+Address:	10.2.78.74#53
+
+Name:	srv2.juan.com.it
+Address: 10.2.78.76
+
+=== PUNTO G: set q=MX ===
+Server:		10.2.78.74
+Address:	10.2.78.74#53
+
+*** Can't find juan.com.it: No answer
+
+=== PUNTO C alt: mismo query, DNS escuela ===
+Server:		10.2.65.1
+Address:	10.2.65.1#53
+
+** server can't find srv1.juan.com.it: NXDOMAIN
+
+ssh : sh: line 7: $'\r': command not found
+At line:7 char:5
++ " | ssh -i .ssh/vagrant.key -o ConnectTimeout=8 -o StrictHostKeyCheck ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (sh: line 7: $'\r': command not found:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

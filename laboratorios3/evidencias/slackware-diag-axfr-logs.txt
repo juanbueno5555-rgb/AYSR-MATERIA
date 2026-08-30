@@ -1,0 +1,4 @@
+﻿/usr/bin/dig
+==AXFR==
+; Transfer failed.
+==LOGS==

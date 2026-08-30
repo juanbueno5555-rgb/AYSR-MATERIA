@@ -1,0 +1,31 @@
+﻿
+Name           Type IPAddress            
+----           ---- ---------            
+www.google.com AAAA 2001:4860:482a:7700::
+www.google.com AAAA 2001:4860:4826:7700::
+www.google.com AAAA 2001:4860:482d:7700::
+
+
+===RECURSION===
+
+
+EnableRecursion  : 
+IsSlave          : 
+RoundRobin       : 
+LocalNetPriority : 
+
+
+
+===PORTS===
+
+LocalAddress                        LocalPort
+------------                        ---------
+fe80::f76f:1a40:3d53:9be7%3                53
+fe80::6c67:f22f:dce5:aac7%5                53
+fd17:625c:f037:2:ec51:ffb:fe7a:8e92        53
+::1                                        53
+192.168.82.12                              53
+127.0.0.1                                  53
+10.0.2.15                                  53
+
+
