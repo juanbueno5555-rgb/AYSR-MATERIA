@@ -1,57 +1,53 @@
-#!/bin/sh
-# menu-procesos.sh
-# Menu de administracion de procesos: listar, buscar, matar, reiniciar y salir.
-while true; do
-    echo ""
-    echo "===== ADMINISTRACION DE PROCESOS ====="
-    echo "1) Listar procesos (nombre, PID, %mem, %cpu)"
-    echo "2) Buscar proceso por nombre"
-    echo "3) Matar proceso"
-    echo "4) Reiniciar proceso"
-    echo "5) Salir"
-    echo -n "Opcion: "
-    read OPC
-    case "$OPC" in
-        1)
-            ps -eo comm,pid,%mem,%cpu --sort=-%mem | head -n 20
-            ;;
-        2)
-            echo -n "Nombre del proceso: "
-            read NOMBRE
-            ps -eo pid,comm,%mem,%cpu,args | grep -i "$NOMBRE" | grep -v grep
-            ;;
-        3)
-            echo -n "PID a matar: "
-            read PID
-            kill "$PID" && echo "Proceso $PID terminado." || echo "No se pudo terminar $PID."
-            ;;
-        4)
-            echo -n "Nombre del proceso a reiniciar: "
-            read NOMBRE
-            PID=$(pgrep -x "$NOMBRE" | head -n 1)
-            if [ -z "$PID" ]; then
-                echo "Proceso '$NOMBRE' no esta en ejecucion."
-            else
-                CMD=$(ps -p "$PID" -o args=)
-                kill "$PID" && echo "Proceso $PID terminado."
-                sleep 1
-                # Las tareas corriendo como root no se relanzan igual desde el menu
-                if [ "$(whoami)" = "root" ]; then
-                    case "$CMD" in
-                        *" "* | *"/"*) sh -c "$CMD" >/dev/null 2>&1 & echo "Reiniciado: $CMD" ;;
-                        *) "$CMD" >/dev/null 2>&1 & echo "Reiniciado: $CMD" ;;
-                    esac
-                else
-                    echo "Reinicio manual (requiere privilegios): service $NOMBRE restart"
-                fi
-            fi
-            ;;
-        5)
-            echo "Saliendo..."
-            exit 0
-            ;;
-        *)
-            echo "Opcion invalida."
-            ;;
+#!/bin/bash
+
+mostrar_procesos() {
+    echo "PID | %MEM | %CPU | COMANDO"
+    ps -eo pid,%mem,%cpu,comm --sort=-%mem
+}
+
+buscar_proceso() {
+    read -p "Ingrese el nombre del proceso a buscar: " proc_name
+    ps -ef | grep "$proc_name" | grep -v grep
+}
+
+matar_proceso() {
+    read -p "Ingrese el PID del proceso a matar: " pid_kill
+    kill -9 "$pid_kill" && echo "Proceso $pid_kill terminado."
+}
+
+reiniciar_proceso() {
+    read -p "Ingrese el PID del proceso a reiniciar: " pid_restart
+    kill -15 "$pid_restart" && echo "Se envió señal de terminación a $pid_restart."
+}
+
+mostrar_menu() {
+    echo "=============================="
+    echo "      MENÚ DE GESTIÓN         "
+    echo "=============================="
+    echo "1. Mostrar procesos en ejecución"
+    echo "2. Buscar proceso por nombre"
+    echo "3. Matar un proceso"
+    echo "4. Reiniciar un proceso"
+    echo "5. Salir"
+}
+
+opcion=0
+
+while [ "$opcion" -ne 5 ]; do
+    mostrar_menu
+    read -p "Seleccione una opción: " opcion
+
+    case $opcion in
+        1) mostrar_procesos ;;
+        2) buscar_proceso ;;
+        3) matar_proceso ;;
+        4) reiniciar_proceso ;;
+        5) echo "Saliendo del sistema..." ;;
+        *) echo "Opción inválida. Intente de nuevo." ;;
     esac
+    
+    if [ "$opcion" -ne 5 ]; then
+        echo ""
+        read -p "Presione [Enter] para continuar..."
+    fi
 done
