@@ -1,27 +1,25 @@
-#!/bin/sh
-# schedult-task-script.sh [frecuencia] [tarea]
-# Programa una tarea para ejecucion periodica en cron.
-# Todo via linea de comandos, SIN prompts interactivos.
-#
-# Ejemplos:
-#   ./schedult-task-script.sh "*/1 * * * *" "/usr/bin/date >> /tmp/fecha.log"
-#   ./schedult-task-script.sh "* * * * *"
+#!/bin/bash
+# Uso: ./schedult-task-script.sh * * * * * echo "Hola"
+# O con intervalos: ./schedult-task-script.sh 0 5 * * * /ruta/script.sh
 
-FREC="${1:-* * * * *}"
-TAREA="${2:-/bin/date >> /tmp/schedult-task.log}"
-
-# Validacion basica: la frecuencia debe tener exactamente 5 campos
-CAMPOS=$(echo "$FREC" | awk '{print NF}')
-if [ "$CAMPOS" -ne 5 ]; then
-    echo "Frecuencia invalida: '$FREC' (se esperan 5 campos: min hora dia mes semana)"
+# Validar que al menos existan 5 campos de tiempo + 1 comando (mínimo 6 argumentos)
+if [ "$#" -lt 6 ]; then
+    echo "Error: Faltan argumentos."
+    echo "Uso: $0 min hora dia mes dia_sem comando [argumentos_comando...]"
     exit 1
 fi
 
-# Agrega la tarea al crontab del usuario (sin duplicados) y conserva lo existente
-( crontab -l 2>/dev/null | grep -v -F "$TAREA"; echo "$FREC $TAREA" ) | crontab -
+# Los primeros 5 argumentos forman la frecuencia de cron
+FREQUENCY="$1 $2 $3 $4 $5"
 
-echo "Tarea programada:"
-echo "  $FREC $TAREA"
-echo ""
-echo "Crontab actual:"
-crontab -l
+# Shift desplaza los argumentos 5 posiciones a la izquierda, 
+# dejando en $@ todo lo que sobre, que es estrictamente el comando y sus flags
+shift 5
+TASK="$*"
+
+# Agregar la tarea al crontab del usuario actual
+(crontab -l 2>/dev/null; echo "$FREQUENCY $TASK") | crontab -
+
+echo "Tarea programada con éxito:"
+echo "Frecuencia: $FREQUENCY"
+echo "Comando:    $TASK"
