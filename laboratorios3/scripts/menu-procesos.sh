@@ -17,7 +17,17 @@ matar_proceso() {
 
 reiniciar_proceso() {
     read -p "Ingrese el PID del proceso a reiniciar: " pid_restart
-    kill -15 "$pid_restart" && echo "Se envió señal de terminación a $pid_restart."
+    
+    if kill -15 "$pid_restart"; then
+        echo "Proceso detenido. Reiniciando..."
+        
+        # Volver a lanzarlo en segundo plano (&) para que no congele el menú
+        nohup $pid_restart >/dev/null 2>&1 &
+        
+        echo "¡Proceso reiniciado con éxito!"
+    else
+        echo "Error: No se pudo detener el proceso."
+    fi
 }
 
 mostrar_menu() {
