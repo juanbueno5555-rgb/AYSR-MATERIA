@@ -17,8 +17,12 @@ FREQUENCY="$1 $2 $3 $4 $5"
 shift 5
 TASK="$*"
 
-# Agregar la tarea al crontab del usuario actual
-(crontab -l 2>/dev/null; echo "$FREQUENCY $TASK") | crontab -
+# Agregar la tarea al crontab del usuario actual.
+# Se usa un archivo temporal y NO el pipe "crontab -" porque el cron de
+# Solaris no lee el crontab desde stdin (portabilidad Solaris + Linux).
+(crontab -l 2>/dev/null; echo "$FREQUENCY $TASK") > /tmp/crontab.$$~ 2>/dev/null
+crontab /tmp/crontab.$$~ 2>/dev/null
+rm -f /tmp/crontab.$$~
 
 echo "Tarea programada con éxito:"
 echo "Frecuencia: $FREQUENCY"

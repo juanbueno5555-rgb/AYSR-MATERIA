@@ -1,0 +1,9 @@
+﻿=== ACTIVACION DNS AL BOOT ===
+SLACKWARE-15.0: rc.bind present, rwxr-xr-x root (3990 bytes, Sep 24 2021) => arranque por /etc/rc.d/rc.bind
+  named corriendo: /usr/sbin/named -u named (PID 517)
+SOLARIS-11.4: SMF svc:/network/dns/server:default enabled=true online
+  manifest /lib/svc/manifest/network/dns/server.xml, restarter svc:/system/svc/restarter:default
+WINDOWS-SERVER-CORE: servicio DNS Running / StartType Automatic
+  zona camilo.org.uk Secondary -> master 192.168.82.10
+WINDOWS-SERVER-GUI: servicio DNS Running / StartType Automatic
+  zona juan.com.it Secondary -> master 192.168.82.11

@@ -1,0 +1,10 @@
+﻿=== PRUEBA EN EL PROPIO SERVIDOR: SOLARIS-11.4 (master juan.com.it) ===
+resolv.conf: nameserver 10.2.65.1 (DNS escuela)
+nslookup -type=SOA juan.com.it 127.0.0.1
+  origin = dns1.juan.com.it / serial = 2026082801
+nslookup srv1.juan.com.it 127.0.0.1 -> 10.2.78.74
+nslookup www.juan.com.it 127.0.0.1
+  www.juan.com.it canonical name = srv1.juan.com.it -> 10.2.78.74
+nslookup srv1.camilo.org.uk 127.0.0.1 (SLAVE) -> 10.2.78.75
+IP FINAL: net0 10.0.2.15/24 (DHCP casa) + net1 192.168.82.11/24 (intnet lab)
+ARQUITECTURA: SMF svc:/network/dns/server:default enabled=true online

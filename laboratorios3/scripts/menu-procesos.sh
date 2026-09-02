@@ -2,7 +2,9 @@
 
 mostrar_procesos() {
     echo "PID | %MEM | %CPU | COMANDO"
-    ps -eo pid,%mem,%cpu,comm --sort=-%mem
+    # Formato portable Solaris + Linux: pmem/pcpu funcionan en ambos ps;
+    # el --sort de GNU no existe en Solaris, se ordena con sort.
+    ps -eo pid,pmem,pcpu,comm | sort -k2 -nr
 }
 
 buscar_proceso() {

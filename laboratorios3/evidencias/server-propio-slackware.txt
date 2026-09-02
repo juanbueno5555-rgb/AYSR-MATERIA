@@ -1,0 +1,10 @@
+﻿=== PRUEBA EN EL PROPIO SERVIDOR: SLACKWARE-15.0 (master camilo.org.uk) ===
+resolv.conf: nameserver 192.168.1.1 (DHCP casa)
+nslookup -type=SOA camilo.org.uk 127.0.0.1
+  origin = dns1.camilo.org.uk / serial = 2026082801
+nslookup www.camilo.org.uk 127.0.0.1
+  www.camilo.org.uk canonical name = srv1.camilo.org.uk -> 10.2.78.75
+nslookup srv1.camilo.org.uk 127.0.0.1 -> 10.2.78.75
+nslookup srv1.juan.com.it 127.0.0.1 (SLAVE) -> 10.2.78.74
+IP FINAL: eth0 10.0.2.15/24 (NAT casa) + eth1 192.168.82.10/24 (intnet lab)
+ARQUITECTURA: /usr/sbin/named -u named, rc.bind ejecutable

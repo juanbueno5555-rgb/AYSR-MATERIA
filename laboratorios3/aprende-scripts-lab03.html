@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprende los Scripts del Lab 03</title>
+<style>
+  :root {
+    --bg: #0f1420; --panel: #171e2e; --panel2: #1e2740;
+    --border: #2a3550; --text: #e8ecf4; --muted: #93a0b8;
+    --accent: #4fd1c5; --accent2: #63b3ed; --warn: #f6ad55; --err: #fc8181; --ok: #68d391;
+    --mono: "Consolas", "Cascadia Code", "JetBrains Mono", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.55; }
+  header { position: sticky; top: 0; z-index: 50; background: #0b0f18; border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  header h1 { font-size: 18px; color: var(--accent); letter-spacing: .3px; }
+  header nav { display: flex; gap: 6px; flex-wrap: wrap; }
+  header nav a { color: var(--muted); text-decoration: none; font-size: 13px; padding: 4px 10px; border-radius: 20px; border: 1px solid transparent; }
+  header nav a:hover, header nav a.active { color: var(--text); border-color: var(--border); background: var(--panel2); }
+  #progresoWrap { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  #barra { width: 120px; height: 8px; background: var(--panel2); border-radius: 4px; overflow: hidden; }
+  #barraFill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .4s; }
+  main { max-width: 960px; margin: 0 auto; padding: 28px 24px 80px; }
+  section { margin-bottom: 48px; }
+  h2 { font-size: 24px; color: var(--accent); margin-bottom: 6px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+  h3 { font-size: 18px; color: var(--accent2); margin: 22px 0 8px; }
+  p { margin: 8px 0; }
+  .muted { color: var(--muted); }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin: 14px 0; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+  code, pre { font-family: var(--mono); }
+  code { background: var(--panel2); color: var(--accent2); padding: 1px 6px; border-radius: 5px; font-size: .92em; }
+  pre { background: #0b0f18; border: 1px solid var(--border); border-radius: 10px; padding: 14px; overflow-x: auto; font-size: 13px; line-height: 1.5; }
+  pre .ln { user-select: none; color: #44506b; display: inline-block; width: 30px; text-align: right; margin-right: 12px; }
+  pre .hl { background: rgba(79,209,197,.12); outline: 1px solid rgba(79,209,197,.35); border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--panel2); color: var(--accent2); }
+  .badge { display: inline-block; background: var(--panel2); border: 1px solid var(--border); color: var(--accent2); border-radius: 20px; padding: 2px 10px; font-size: 12px; margin: 2px 4px 2px 0; }
+  .quiz { margin: 10px 0; }
+  .q { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 10px 0; }
+  .q .qtxt { font-weight: 600; margin-bottom: 8px; }
+  .q label { display: block; padding: 7px 10px; border-radius: 8px; cursor: pointer; margin: 3px 0; border: 1px solid transparent; font-size: 14px; }
+  .q label:hover { background: var(--panel2); }
+  .q label.sel { border-color: var(--accent2); background: rgba(99,179,237,.1); }
+  .q label.ok { border-color: var(--ok); background: rgba(104,211,145,.12); }
+  .q label.bad { border-color: var(--err); background: rgba(252,129,129,.12); }
+  .q .resp { display: none; margin-top: 8px; padding: 10px; border-radius: 8px; font-size: 14px; }
+  .q .resp.show { display: block; }
+  .q .resp.ok { background: rgba(104,211,145,.12); border: 1px solid var(--ok); }
+  .q .resp.bad { background: rgba(252,129,129,.12); border: 1px solid var(--err); }
+  button { background: var(--accent); color: #0b0f18; border: none; padding: 8px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+  button:hover { filter: brightness(1.1); }
+  button.sec { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
+  .flashcard { perspective: 900px; margin: 10px 0; cursor: pointer; }
+  .fcInner { position: relative; width: 100%; min-height: 84px; transition: transform .5s; transform-style: preserve-3d; }
+  .flashcard.flip .fcInner { transform: rotateY(180deg); }
+  .fcFace { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; }
+  .fcFront { background: var(--panel2); }
+  .fcBack { background: var(--panel); transform: rotateY(180deg); color: var(--accent2); }
+  .simRow { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+  .simRow input { background: var(--panel2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 10px; font-family: var(--mono); width: 90px; text-align: center; }
+  #cronOut { margin-top: 12px; font-family: var(--mono); font-size: 13px; }
+  .nextRun { background: var(--panel2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; margin: 4px 0; display: inline-flex; align-items: center; gap: 8px; }
+  .nextRun .t { color: var(--accent); font-weight: 700; }
+  .tipo { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-right: 6px; vertical-align: middle; }
+  .t-bash { background: rgba(79,209,197,.15); color: var(--accent); }
+  .t-gnu { background: rgba(246,173,85,.15); color: var(--warn); }
+  .t-solaris { background: rgba(99,179,237,.15); color: var(--accent2); }
+  .tip { border-left: 3px solid var(--accent); background: rgba(79,209,197,.06); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 14px; }
+  .num { display: inline-block; background: var(--panel2); border: 1px solid var(--border); color: var(--accent2); border-radius: 50%; width: 22px; height: 22px; text-align: center; line-height: 20px; font-size: 12px; font-weight: 700; margin-right: 6px; }
+  .score { font-size: 15px; font-weight: 700; color: var(--accent); }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Lab 03 · Scripts Shell</h1>
+  <nav>
+    <a href="#base" class="active">Base</a>
+    <a href="#s1">1 · Cron</a>
+    <a href="#s2">2 · Procesos</a>
+    <a href="#s3">3 · Archivos</a>
+    <a href="#port">Portabilidad</a>
+    <a href="#final">Quiz final</a>
+    <a href="#flash">Flashcards</a>
+  </nav>
+  <div id="progresoWrap"><span id="progresoPct">0%</span><div id="barra"><div id="barraFill"></div></div></div>
+</header>
+
+<main>
+
+<!-- ==================== BASE ==================== -->
+<section id="base">
+  <h2>Base: las 5 piezas que usan los 3 scripts</h2>
+  <p class="muted">Antes de tocar un script, entendé estas piezas. Son las mismas en los tres.</p>
+
+  <div class="card">
+    <h3>1. Shebang y ejecución</h3>
+    <pre><span class="ln">1</span>#!/bin/sh</pre>
+    <p>La primera línea le dice al sistema <b>qué intérprete usar</b>. <code>#!/bin/sh</code> = shell POSIX (funciona en Solaris Y Slackware). Para ejecutar: <code>chmod +x script.sh</code> y después <code>./script.sh</code>. Sin el <code>./</code>, el shell no busca en el directorio actual.</p>
+  </div>
+
+  <div class="card">
+    <h3>2. Parámetros y defaults: <code>${1:-valor}</code></h3>
+    <pre><span class="ln">1</span>NUM="${1:-10}"   # parámetro 1, o "10" si no lo pasaron</pre>
+    <p><code>$1</code>, <code>$2</code>, <code>$3</code> son los parámetros de la línea de comandos. La forma <code>${1:-default}</code> significa: <b>"si el parámetro 1 existe y no está vacío, úsalo; si no, usá default"</b>. Así el script funciona con o sin argumentos.</p>
+    <div class="tip">Ejemplo: <code>./files-script.sh</code> usa NUM=10; <code>./files-script.sh 5 2MB</code> usa NUM=5.</div>
+  </div>
+
+  <div class="card">
+    <h3>3. Sustitución de comando: <code>$( ... )</code></h3>
+    <pre><span class="ln">1</span>CAMPOS=$(echo "$FREC" | awk '{print NF}')</pre>
+    <p>Todo lo que está dentro de <code>$( ... )</code> se <b>ejecuta primero</b> y su salida se guarda en la variable. Es como llamar a una función: la variable queda con el resultado del comando.</p>
+  </div>
+
+  <div class="card">
+    <h3>4. Pipes: <code>|</code> (tuberías)</h3>
+    <pre><span class="ln">1</span>comando1 | comando2 | comando3</pre>
+    <p>El pipe conecta la <b>salida</b> de un comando con la <b>entrada</b> del siguiente. Es el superpoder de UNIX: comando chico hace una cosa, y encadenás varios. Los pipes son la forma de pensar "transformaciones en serie": <code>find</code> produce → <code>sort</code> ordena → <code>head</code> recorta → <code>awk</code> formatea.</p>
+  </div>
+
+  <div class="card">
+    <h3>5. Redirección: <code>></code>, <code>2&gt;</code></h3>
+    <pre><span class="ln">1</span>crontab -l 2>/dev/null   # manda los errores a la basura
+<span class="ln">2</span>/bin/date >> /tmp/x.log   # agrega al final (>>), no pisa (&gt;)</pre>
+    <p><code>></code> pisa el archivo, <code>>></code> agrega al final. <code>2&gt;</code> redirige la salida de <b>errores</b> (stdin=0, stdout=1, stderr=2). <code>/dev/null</code> es el "tacho de basura" del sistema.</p>
+  </div>
+</section>
+
+<!-- ==================== SCRIPT 1 ==================== -->
+<section id="s1">
+  <h2>Script 1 · <code>schedult-task-script.sh</code> — tareas periódicas</h2>
+  <p><b>Problema:</b> programar un comando para que el sistema lo ejecute solo, cada cierto tiempo. Lo resuelve <b>cron</b>: un demonio que lee una tabla por usuario (<code>crontab</code>) y ejecuta lo que encuentra.</p>
+
+  <div class="card">
+    <h3>Cron: los 5 campos</h3>
+    <table>
+      <tr><th>Campo</th><th>Rango</th><th>Significado</th></tr>
+      <tr><td>1º minuto</td><td>0-59</td><td>En qué minuto de la hora</td></tr>
+      <tr><td>2º hora</td><td>0-23</td><td>En qué hora del día</td></tr>
+      <tr><td>3º día del mes</td><td>1-31</td><td>Qué día del mes</td></tr>
+      <tr><td>4º mes</td><td>1-12</td><td>En qué mes</td></tr>
+      <tr><td>5º día de semana</td><td>0-7</td><td>Qué día (0 o 7 = domingo)</td></tr>
+    </table>
+    <p><span class="badge">*</span> = "todos". <code>* * * * *</code> = cada minuto. <code>*/5 * * * *</code> = cada 5 minutos. <code>0 3 * * 1</code> = lunes a las 3:00 AM.</p>
+  </div>
+
+  <h3>Simulador de cron</h3>
+  <div class="card">
+    <p class="muted">Completa los 5 campos y mirá cuándo se ejecutaría tu tarea hoy. Probá: <code>* * * * *</code>, <code>*/10 * * * *</code>, <code>30 8 * * 1</code>.</p>
+    <div class="simRow">
+      <input id="cM" value="*" title="minuto"> <input id="cH" value="*" title="hora"> <input id="cD" value="*" title="día del mes"> <input id="cMES" value="*" title="mes"> <input id="cS" value="*" title="día de semana">
+      <button class="sec" onclick="simCron()">Simular</button>
+    </div>
+    <div id="cronOut"></div>
+  </div>
+
+  <h3>Desglose línea por línea — clickeá cada línea del código</h3>
+  <div class="grid2">
+    <pre id="codeS1"><span class="ln">1</span>#!/bin/sh
+<span class="ln">2</span># schedult-task-script.sh [frecuencia] [tarea]
+<span class="ln">3</span>
+<span class="ln">4</span>FREC="${1:-* * * * *}"
+<span class="ln">5</span>TAREA="${2:-/bin/date >> /tmp/schedult-task.log}"
+<span class="ln">6</span>
+<span class="ln">7</span>CAMPOS=$(echo "$FREC" | awk '{print NF}')
+<span class="ln">8</span>if [ "$CAMPOS" -ne 5 ]; then
+<span class="ln">9</span>    echo "Frecuencia invalida..."
+<span class="ln">10</span>    exit 1
+<span class="ln">11</span>fi
+<span class="ln">12</span>
+<span class="ln">13</span>( crontab -l 2>/dev/null | grep -v -F "$TAREA"; echo "$FREC $TAREA" ) | crontab -
+<span class="ln">14</span>
+<span class="ln">15</span>echo "Tarea programada:"
+<span class="ln">16</span>echo "  $FREC $TAREA"
+<span class="ln">17</span>echo ""
+<span class="ln">18</span>echo "Crontab actual:"
+<span class="ln">19</span>crontab -l</pre>
+    <div>
+      <div class="card" id="expS1">
+        <p class="muted">Hacé click en una línea del código para ver su explicación.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>La línea estrella (línea 13), desarmada</h3>
+    <p><code>crontab -l</code> lista la tabla actual → <code>grep -v -F "$TAREA"</code> <b>elimina</b> líneas que ya contengan la tarea (evita duplicados; <code>-v</code> = invertir, <code>-F</code> = texto fijo, no regex) → <code>echo "$FREC $TAREA"</code> agrega la tarea nueva. Todo dentro de <code>( ... )</code> (subshell) se junta y se <b>pipa a <code>crontab -</code></b>, que reemplaza la tabla desde stdin. Patrón clásico: <b>leer → filtrar → escribir</b>.</p>
+  </div>
+
+  <div class="quiz" data-quiz="s1"></div>
+</section>
+
+<!-- ==================== SCRIPT 2 ==================== -->
+<section id="s2">
+  <h2>Script 2 · <code>menu-procesos.sh</code> — administración de procesos</h2>
+  <p><b>Problema:</b> un menú interactivo para administrar procesos sin memorizar comandos. Estructura: <b>loop infinito + read + case</b> — el patrón de TODO menú en shell.</p>
+
+  <div class="card">
+    <h3>La estructura: while + case</h3>
+    <pre><span class="ln">1</span>while true; do
+<span class="ln">2</span>    echo "1) Listar procesos"
+<span class="ln">3</span>    read OPC          # espera que el usuario escriba
+<span class="ln">4</span>    case "$OPC" in    # despachador: decide según lo escrito
+<span class="ln">5</span>        1) ... ;;
+<span class="ln">6</span>        5) exit 0 ;;  # salir del script
+<span class="ln">7</span>        *) echo "Opcion invalida." ;;
+<span class="ln">8</span>    esac
+<span class="ln">9</span>done</pre>
+    <p><code>read</code> bloquea esperando input. <code>case ... esac</code> compara y ejecuta. <code>*</code> es el caso "cualquier otra cosa". <code>done</code> cierra el loop → vuelve a mostrar el menú. Sin <code>exit 0</code>, el menú nunca termina: eso es lo que querés en un menú.</p>
+  </div>
+
+  <h3>Los 4 comandos de procesos que tenés que conocer</h3>
+  <div class="card">
+    <table>
+      <tr><th>Comando</th><th>Qué hace</th><th>En el script</th></tr>
+      <tr><td><code>ps -eo comm,pid,%mem,%cpu</code></td><td>Lista procesos con columnas personalizadas (<code>-o</code> = formato propio, <code>-e</code> = todos)</td><td>opción 1 y 2</td></tr>
+      <tr><td><code>kill &lt;PID&gt;</code></td><td>Manda señal 15 (SIGTERM): "pedido de cortesía" para terminar</td><td>opción 3</td></tr>
+      <tr><td><code>pgrep -x nombre</code></td><td>Busca el PID de un proceso con nombre <b>exacto</b> (<code>-x</code>)</td><td>opción 4</td></tr>
+      <tr><td><code>ps -p PID -o args=</code></td><td>Devuelve la línea de comando completa de un PID</td><td>opción 4</td></tr>
+    </table>
+    <div class="tip">El truco <code>grep -v grep</code>: cuando buscás procesos con <code>ps | grep nombre</code>, el propio grep aparece en la lista. <code>grep -v grep</code> lo filtra. Lo vas a ver en TODOS los scripts de la vida real.</div>
+  </div>
+
+  <div class="card">
+    <h3>Reiniciar = matar y relanzar</h3>
+    <pre><span class="ln">1</span>CMD=$(ps -p "$PID" -o args=)   # 1. guardar el comando
+<span class="ln">2</span>kill "$PID"                     # 2. matar
+<span class="ln">3</span>sleep 1                         # 3. esperar a que suelte recursos
+<span class="ln">4</span>sh -c "$CMD" >/dev/null 2>&1 &  # 4. relanzar en background (&)</pre>
+    <p>No existe un comando "reiniciar proceso": es <b>kill + relanzar</b>. Se lanza con <code>&amp;</code> al final para que corra en background y no bloquee el menú. Si no sos root, el script te avisa que uses <code>service nombre restart</code>.</p>
+  </div>
+
+  <h3>Código completo — clickeá las líneas</h3>
+  <div class="grid2">
+    <pre id="codeS2"><span class="ln">1</span>#!/bin/sh
+<span class="ln">2</span># menu-procesos.sh
+<span class="ln">3</span>while true; do
+<span class="ln">4</span>    echo ""
+<span class="ln">5</span>    echo "===== ADMINISTRACION DE PROCESOS ====="
+<span class="ln">6</span>    echo "1) Listar procesos (nombre, PID, %mem, %cpu)"
+<span class="ln">7</span>    echo "2) Buscar proceso por nombre"
+<span class="ln">8</span>    echo "3) Matar proceso"
+<span class="ln">9</span>    echo "4) Reiniciar proceso"
+<span class="ln">10</span>    echo "5) Salir"
+<span class="ln">11</span>    echo -n "Opcion: "
+<span class="ln">12</span>    read OPC
+<span class="ln">13</span>    case "$OPC" in
+<span class="ln">14</span>        1)
+<span class="ln">15</span>            ps -eo comm,pid,%mem,%cpu --sort=-%mem | head -n 20
+<span class="ln">16</span>            ;;
+<span class="ln">17</span>        2)
+<span class="ln">18</span>            echo -n "Nombre del proceso: "
+<span class="ln">19</span>            read NOMBRE
+<span class="ln">20</span>            ps -eo pid,comm,%mem,%cpu,args | grep -i "$NOMBRE" | grep -v grep
+<span class="ln">21</span>            ;;
+<span class="ln">22</span>        3)
+<span class="ln">23</span>            echo -n "PID a matar: "
+<span class="ln">24</span>            read PID
+<span class="ln">25</span>            kill "$PID" && echo "Proceso $PID terminado." || echo "No se pudo terminar $PID."
+<span class="ln">26</span>            ;;
+<span class="ln">27</span>        4)
+<span class="ln">28</span>            echo -n "Nombre del proceso a reiniciar: "
+<span class="ln">29</span>            read NOMBRE
+<span class="ln">30</span>            PID=$(pgrep -x "$NOMBRE" | head -n 1)
+<span class="ln">31</span>            if [ -z "$PID" ]; then
+<span class="ln">32</span>                echo "Proceso '$NOMBRE' no esta en ejecucion."
+<span class="ln">33</span>            else
+<span class="ln">34</span>                CMD=$(ps -p "$PID" -o args=)
+<span class="ln">35</span>                kill "$PID" && echo "Proceso $PID terminado."
+<span class="ln">36</span>                sleep 1
+<span class="ln">37</span>                if [ "$(whoami)" = "root" ]; then
+<span class="ln">38</span>                    case "$CMD" in
+<span class="ln">39</span>                        *" "* | *"/"*) sh -c "$CMD" >/dev/null 2>&1 & echo "Reiniciado: $CMD" ;;
+<span class="ln">40</span>                        *) "$CMD" >/dev/null 2>&1 & echo "Reiniciado: $CMD" ;;
+<span class="ln">41</span>                    esac
+<span class="ln">42</span>                else
+<span class="ln">43</span>                    echo "Reinicio manual (requiere privilegios): service $NOMBRE restart"
+<span class="ln">44</span>                fi
+<span class="ln">45</span>            fi
+<span class="ln">46</span>            ;;
+<span class="ln">47</span>        5)
+<span class="ln">48</span>            echo "Saliendo..."
+<span class="ln">49</span>            exit 0
+<span class="ln">50</span>            ;;
+<span class="ln">51</span>        *)
+<span class="ln">52</span>            echo "Opcion invalida."
+<span class="ln">53</span>            ;;
+<span class="ln">54</span>    esac
+<span class="ln">55</span>done</pre>
+    <div>
+      <div class="card" id="expS2">
+        <p class="muted">Hacé click en una línea del código para ver su explicación.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" data-quiz="s2"></div>
+</section>
+
+<!-- ==================== SCRIPT 3 ==================== -->
+<section id="s3">
+  <h2>Script 3 · <code>files-script.sh</code> — recorrido del filesystem</h2>
+  <p><b>Problema:</b> recorrer un árbol de directorios y mostrar los N archivos más pequeños menores a un tamaño máximo.</p>
+
+  <div class="card">
+    <h3>La conversión de unidades (líneas 9-11): la joya del script</h3>
+    <pre><span class="ln">1</span>UNI=1; case "$MAX" in *GB) UNI=1073741824;; *MB) UNI=1048576;; *KB) UNI=1024;; esac
+<span class="ln">2</span>MAXB=$(( ${MAX%[GMK]B} * UNI ))</pre>
+    <p><code>$(( ... ))</code> = aritmética del shell. <code>${MAX%[GMK]B}</code> = <b>recorte de sufijo</b>: <code>%</code> recorta desde el final la parte que calce con el patrón <code>[GMK]B</code> (una letra G, M o K seguida de B). <code>1GB</code> → <code>1</code> → <code>1 × 1073741824</code> bytes. Un case que convierte y una línea de aritmética: unidad lista.</p>
+  </div>
+
+  <div class="card">
+    <h3>El find con tamaño en bytes</h3>
+    <pre><span class="ln">1</span>find "$DIR" -type f -size -"$MAXB"c -printf '%s %p\n'</pre>
+    <p><code>find</code> recorre recursivamente. <code>-type f</code> = solo archivos (no carpetas). <code>-size -Nc</code> = menores a N <b>bytes</b> (la <code>c</code> después del número le dice a find "esto está en bytes"). <code>-printf '%s %p\n'</code> = imprime tamaño (%s) y ruta (%p). El <code>2>/dev/null</code> silencia errores de permisos en carpetas que no podés leer.</p>
+    <div class="tip">Si omitís la <code>c</code>, find interpreta el tamaño en bloques de 512 bytes — un clásico error que confunde a todos.</div>
+  </div>
+
+  <div class="card">
+    <h3>La pipa final: producir → ordenar → recortar → formatear</h3>
+    <pre><span class="ln">1</span>find ... | sort -n | head -n "$NUM" | awk '{ ... }'</pre>
+    <p><code>sort -n</code> = orden numérico (si no, "10" iría antes que "9"). <code>head -n N</code> = quedarse con los primeros N → como ya está ordenado de menor a mayor, son los N más chicos. <code>awk</code> formatea: separa nombre de ruta con <code>sub()</code>.</p>
+  </div>
+
+  <h3>Código completo — clickeá las líneas</h3>
+  <div class="grid2">
+    <pre id="codeS3"><span class="ln">1</span>#!/bin/sh
+<span class="ln">2</span># files-script.sh [no_files] [max_size] [dir]
+<span class="ln">3</span>NUM="${1:-10}"; MAX="$2"; DIR="${3:-.}"
+<span class="ln">4</span>
+<span class="ln">5</span>[ -z "$MAX" ] && { echo "Uso: $0 [no_files] [max_size] [dir] (ej: $0 10 1GB)"; exit 1; }
+<span class="ln">6</span>
+<span class="ln">7</span># Convierte 1GB/100MB/50KB a bytes (1 linea en vez de un case por sufijo)
+<span class="ln">8</span>UNI=1; case "$MAX" in *GB) UNI=1073741824;; *MB) UNI=1048576;; *KB) UNI=1024;; esac
+<span class="ln">9</span>MAXB=$(( ${MAX%[GMK]B} * UNI ))
+<span class="ln">10</span>
+<span class="ln">11</span>echo "Los $NUM archivos mas pequenos (< $MAX) en $DIR:"
+<span class="ln">12</span>find "$DIR" -type f -size -"$MAXB"c -printf '%s %p\n' 2>/dev/null \
+<span class="ln">13</span> | sort -n | head -n "$NUM" \
+<span class="ln">14</span> | awk '{ n=$2; sub(/.*\//,"",n); d=$2; sub(/\/[^/]*$/,"",d); print n" -> "d" ("$1" bytes)" }'</pre>
+    <div>
+      <div class="card" id="expS3">
+        <p class="muted">Hacé click en una línea del código para ver su explicación.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>El <code>-z</code> y el <code>&&</code> de la línea 5</h3>
+    <p><code>[ -z "$MAX" ]</code> = "¿la variable está vacía?" (<code>-z</code> = zero-length). Si está vacía, ejecuta <code>{ ...; exit 1; }</code> — muestro el uso y salgo con código de error 1. El <code>&&</code> significa "solo ejecutá lo de la derecha si lo de la izquierda fue exitoso". Validar entrada antes de trabajar = la diferencia entre script profesional y script de juguete.</p>
+  </div>
+
+  <div class="quiz" data-quiz="s3"></div>
+</section>
+
+<!-- ==================== PORTABILIDAD ==================== -->
+<section id="port">
+  <h2>Portabilidad: Solaris vs Slackware (lo que te destaca)</h2>
+  <p>La guía exige que los scripts corran en <b>Solaris Y Slackware</b>. Slackware usa herramientas GNU (procps, GNU findutils); Solaris usa las suyas. Hay 3 construcciones que funcionan en Slackware y <b>fallan en Solaris</b>:</p>
+
+  <table>
+    <tr><th>Construcción</th><th>Script</th><th>Por qué falla en Solaris</th><th>Alternativa portable</th></tr>
+    <tr>
+      <td><code class="tipo t-gnu">GNU</code><code>ps --sort=-%mem</code></td>
+      <td>Menú, opción 1</td>
+      <td><code>--sort</code> es extensión de GNU ps; el ps de Solaris no lo acepta</td>
+      <td><code>ps -eo comm,pid,pcpu,pmem | sort -k4 -rn</code></td>
+    </tr>
+    <tr>
+      <td><code class="tipo t-gnu">GNU</code><code>%mem</code> / <code>%cpu</code></td>
+      <td>Menú, opciones 1-2</td>
+      <td>En Solaris el keyword es <code>pcpu</code> / <code>pmem</code></td>
+      <td>Usar <code>pcpu,pmem</code> — GNU ps también los acepta, así que funcionan en ambos</td>
+    </tr>
+    <tr>
+      <td><code class="tipo t-gnu">GNU</code><code>find -printf</code></td>
+      <td>files-script</td>
+      <td><code>-printf</code> es extensión GNU; el find de Solaris no la tiene</td>
+      <td><code>find ... -exec ls -l {} \;</code> o <code>-exec wc -c {} \;</code> + procesar</td>
+    </tr>
+  </table>
+
+  <div class="tip">
+    <b>Receta:</b> ps con keywords <code>pcpu,pmem</code> corre en ambas máquinas. Para ordenar, usá <code>sort -k4 -rn</code> (cuarta columna, numérica, reversa). Para find, evitá <code>-printf</code>. Así un solo script sirve para los dos servidores — que es exactamente lo que pide la guía.
+  </div>
+</section>
+
+<!-- ==================== QUIZ FINAL ==================== -->
+<section id="final">
+  <h2>Quiz final · autoevaluación</h2>
+  <p>Apretá una opción por pregunta: te dice al toque si está bien y por qué. <span id="finalScore" class="score"></span></p>
+  <div class="quiz" data-quiz="final"></div>
+  <button id="reiniciarQuiz">Reiniciar quiz final</button>
+</section>
+
+<!-- ==================== FLASHCARDS ==================== -->
+<section id="flash">
+  <h2>Flashcards — repaso rápido</h2>
+  <p class="muted">Click en cada tarjeta para ver la respuesta.</p>
+  <div id="flashcards"></div>
+</section>
+
+</main>
+
+<footer>
+  Lab 03 — Scripts Shell · hecho para estudiar la sustentación · Apache-2.0 no: tuyo, para vos.
+</footer>
+
+<script>
+/* ---------------- Datos de explicaciones ---------------- */
+const S1 = {
+  1:"Shebang: le dice al kernel que ejecute esto con /bin/sh (shell POSIX, funciona en Solaris y Slackware).",
+  2:"Comentario de uso. Documentar el uso esperado = cortesía profesional.",
+  4:"FREC = parámetro 1 (frecuencia cron) o '* * * * *' si no lo pasan. ${1:-default} = parámetro con valor por defecto.",
+  5:"TAREA = parámetro 2 (comando a programar) o '/bin/date >> /tmp/schedult-task.log' (escribir la fecha en un log).",
+  7:"$(...) ejecuta el comando y guarda SU SALIDA en CAMPOS. echo piped a awk: NF = 'Number of Fields' → cuenta cuántas palabras tiene la frecuencia.",
+  8:"if [ ... ] = test. -ne = 'not equal'. Valida que la frecuencia tenga exactamente 5 campos.",
+  9:"Mensaje de error claro.",
+  10:"exit 1 = salir con código de error (1 = falló). Los scripts buenos siempre devuelven códigos de salida.",
+  11:"fi cierra el if (if al revés).",
+  13:"LA LÍNEA ESTRELLA. ( crontab -l | grep -v -F \"$TAREA\"; echo \"$FREC $TAREA\" ) | crontab - : lista el crontab actual, ELIMINA líneas con la tarea vieja (grep -v -F), agrega la nueva (echo), y todo se pipea a 'crontab -' que reemplaza la tabla desde stdin. Patrón leer→filtrar→escribir.",
+  15:"Confirmación visual de lo programado.",
+  16:"Muestra la línea exacta que quedó en cron.",
+  19:"crontab -l = verifica que quedó instalada. Probar lo que hacés = siempre."
+};
+const S2 = {
+  1:"Shebang /bin/sh.",
+  3:"while true = loop infinito. El menú vuelve a aparecer hasta que el usuario elija Salir.",
+  4:"echo vacío = línea en blanco para airear el menú.",
+  6:"Las opciones visibles del menú.",
+  11:"echo -n = sin salto de línea al final: el cursor queda al lado de 'Opcion: '.",
+  12:"read OPC = bloquea esperando input del teclado y lo guarda en OPC.",
+  13:"case \"$OPC\" in = despachador: compara OPC contra los patrones.",
+  15:"ps -eo comm,pid,%mem,%cpu = lista procesos con formato propio (comm=nombre, pid, %mem, %cpu). --sort=-%mem = ordena por memoria descendente. head -n 20 = solo 20 líneas.",
+  17:"Opción buscar.",
+  19:"read NOMBRE = captura el nombre a buscar.",
+  20:"ps con más columnas (args= línea de comando completa) | grep -i \"$NOMBRE\" (búsqueda SIN distinguir mayúsculas) | grep -v grep (filtra el propio grep de la lista — truco clásico).",
+  22:"Opción matar.",
+  24:"read PID = captura el número de proceso.",
+  25:"kill \"$PID\" = envía SIGTERM (15), pedido de cortesía. && echo éxito || echo fallo = cadena condicional: solo corre el echo correspondiente.",
+  27:"Opción reiniciar.",
+  30:"pgrep -x \"$NOMBRE\" = busca PID con nombre EXACTO (-x). head -n 1 = si hay varios, toma el primero.",
+  31:"[ -z \"$PID\" ] = ¿está vacío? Si no encontró nada, no hay nada que reiniciar.",
+  34:"CMD=$(ps -p \"$PID\" -o args=) = guarda la línea de comando COMPLETA del proceso para poder relanzarlo.",
+  35:"kill \"$PID\" = mata el proceso.",
+  36:"sleep 1 = espera 1 segundo para que suelte recursos (archivos, sockets).",
+  37:"[ \"$(whoami)\" = \"root\" ] = ¿quién soy? Reiniciar procesos del sistema requiere privilegios.",
+  39:"case \"$CMD\" in *\" \"* | *\"/\"*) = si el comando tiene espacios o barras, se relanza con sh -c. >/dev/null 2>&1 = sin salida. & = background (no bloquea el menú).",
+  40:"Si es un comando simple (sin espacios), se ejecuta directo en background.",
+  42:"else = no sos root.",
+  43:"Te orienta al comando correcto: service NOMBRE restart.",
+  47:"Opción salir.",
+  49:"exit 0 = termina el script con éxito. El único escape del loop infinito.",
+  51:"* = cualquier otra cosa.",
+  52:"Mensaje para opciones inexistentes. Validar input = siempre.",
+  54:"esac cierra el case (case al revés).",
+  55:"done cierra el while. Al llegar, vuelve a empezar."
+};
+const S3 = {
+  1:"Shebang /bin/sh.",
+  2:"Comentario de uso: [no_files] [max_size] [dir].",
+  3:"Tres parámetros con defaults: NUM=10, MAX= obligatorio, DIR=. (directorio actual).",
+  5:"[ -z \"$MAX\" ] = ¿MAX está vacío? && { ... } = si sí, muestro el uso y exit 1 (error). Validar antes de trabajar.",
+  8:"case \"$MAX\" in *GB) UNI=1073741824;; ... esac = convierte el sufijo a un multiplicador. *GB = 'termina en GB'.",
+  9:"$(( ... )) = aritmética. ${MAX%[GMK]B} = recorta el sufijo (G/M/K + B) desde el final. '1GB' → 1 → 1 × 1073741824 = bytes.",
+  11:"Header de salida con los parámetros usados.",
+  12:"find \"$DIR\" -type f = recorre recursivo, solo archivos. -size -Nc = menores a N bytes (la c = bytes). -printf '%s %p\\n' = tamaño + ruta. 2>/dev/null = silencia errores de permisos. \\ continua en la línea siguiente.",
+  13:"sort -n = orden numérico (si no, 10 < 9). head -n \"$NUM\" = los primeros N = los más chicos.",
+  14:"awk: $2 = ruta completa. sub(/.*\\//,\"\",n) = borra todo hasta la última / (queda el nombre). sub(/\\/[^/]*$/,\"\",d) = borra el último segmento (queda el directorio). print = nombre -> ruta (tamaño)."
+};
+
+/* ---------------- Explicaciones clickeables ---------------- */
+function setupExplorer(codeId, expId, data) {
+  const pre = document.getElementById(codeId);
+  const exp = document.getElementById(expId);
+  if (!pre) return;
+  pre.querySelectorAll('.ln').forEach(ln => {
+    const num = parseInt(ln.textContent, 10);
+    ln.style.cursor = 'pointer';
+    ln.addEventListener('click', () => {
+      pre.querySelectorAll('.ln').forEach(x => x.classList.remove('hl'));
+      ln.classList.add('hl');
+      exp.innerHTML = data[num]
+        ? `<p><span class="num">${num}</span>${data[num]}</p>`
+        : '<p class="muted">Línea sin explicación especial.</p>';
+    });
+  });
+}
+setupExplorer('codeS1','expS1',S1);
+setupExplorer('codeS2','expS2',S2);
+setupExplorer('codeS3','expS3',S3);
+
+/* ---------------- Simulador cron ---------------- */
+function parseCronField(v) {
+  if (v === '*') return v;
+  if (/^\*\/\d+$/.test(v)) return v;
+  if (/^\d+$/.test(v)) return v;
+  return null;
+}
+function fieldMatches(field, val) {
+  if (!field) return false;
+  if (field === '*') return true;
+  if (field.startsWith('*/')) {
+    const step = parseInt(field.slice(2), 10);
+    return step > 0 && val % step === 0;
+  }
+  return parseInt(field, 10) === val;
+}
+function simCron() {
+  const out = document.getElementById('cronOut');
+  const fMin = document.getElementById('cM').value.trim();
+  const fH = document.getElementById('cH').value.trim();
+  const fD = document.getElementById('cD').value.trim();
+  const fMes = document.getElementById('cMES').value.trim();
+  const fS = document.getElementById('cS').value.trim();
+  if (![fMin,fH,fD,fMes,fS].every(parseCronField)) {
+    out.innerHTML = '<p style="color:var(--err)">Formato inválido. Usá *, */n o un número. Ej: * * * * *</p>';
+    return;
+  }
+  const hoy = new Date();
+  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const found = [];
+  for (let d = 0; d < 3 && found.length < 3; d++) {
+    const base = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + d);
+    for (let h = (d === 0 ? hoy.getHours() : 0); h < 24 && found.length < 3; h++) {
+      for (let m = (d === 0 && h === hoy.getHours() ? hoy.getMinutes() : 0); m < 60 && found.length < 3; m++) {
+        if (fieldMatches(fMin, m) && fieldMatches(fH, h) && fieldMatches(fD, base.getDate()) && fieldMatches(fMes, base.getMonth()+1) && fieldMatches(fS, base.getDay())) {
+          const pad = x => String(x).padStart(2,'0');
+          found.push({ t: `${pad(base.getDate())}/${pad(base.getMonth()+1)} ${pad(h)}:${pad(m)}`, di: base.getDay() });
+        }
+      }
+    }
+  }
+  if (!found.length) {
+    out.innerHTML = '<p style="color:var(--warn)">No hay próximas coincidencias en los próximos 3 días. Ajustá los campos.</p>';
+    return;
+  }
+  out.innerHTML = '<p class="muted">Próximas ejecuciones:</p>' + found.map(f =>
+    `<div class="nextRun"><span class="t">${f.t}</span> ${dias[f.di]}</div>`).join('');
+}
+
+/* ---------------- Quizzes ---------------- */
+const QUIZZES = {
+  s1: [
+    { q: "¿Qué significan los 5 campos de cron en orden?", opts: ["Hora, minuto, mes, día, año", "Minuto, hora, día del mes, mes, día de semana", "Minuto, hora, día de semana, mes, día del mes"], ok: 1, why: "El orden exacto es: minuto, hora, día del mes, mes, día de semana. Si lo invertís, tus tareas se ejecutan cuando no querés." },
+    { q: "¿Qué hace ${1:-* * * * *}?", opts: ["Toma el parámetro 1, o usa '* * * * *' si no lo pasaron", "Multiplica el parámetro 1 por 5", "Convierte el parámetro 1 a minúsculas"], ok: 0, why: "${1:-default} = parámetro con valor por defecto: si $1 está vacío, usa el default. Así el script funciona sin argumentos." },
+    { q: "¿Qué hace CAMPOS=$(echo \"$FREC\" | awk '{print NF}')?", opts: ["Cuenta cuántas palabras tiene la frecuencia", "Cuenta caracteres de la frecuencia", "Imprime la frecuencia en pantalla"], ok: 0, why: "$( ) ejecuta el comando y guarda su salida. awk con NF (Number of Fields) cuenta palabras → valida que sean 5." },
+    { q: "¿Para qué sirve grep -v -F \"$TAREA\" en la línea 13?", opts: ["Para borrar líneas del crontab que ya contengan la tarea (evitar duplicados)", "Para contar cuántas veces aparece la tarea", "Para ordenar las líneas del crontab"], ok: 0, why: "-v invierte el filtro (deja todo MENOS lo que calce) y -F lo trata como texto fijo, no regex. Luego echo agrega la tarea nueva → leer, filtrar, escribir." },
+    { q: "¿Qué hace crontab - al final de la pipa?", opts: ["Reemplaza la tabla cron desde stdin (entrada estándar)", "Borra la tabla cron", "Muestra la tabla cron con formato -"], ok: 0, why: "El '-' le dice a crontab que lea la nueva tabla desde la entrada estándar (lo que sale de la subshell)." }
+  ],
+  s2: [
+    { q: "¿Cuál es la estructura del menú?", opts: ["for + if", "while true + read + case", "until + switch"], ok: 1, why: "while true (loop infinito) + read (captura input) + case (despacha). exit rompe el loop en Salir." },
+    { q: "¿Qué señal envía kill por defecto?", opts: ["SIGKILL (9) — destrucción inmediata", "SIGTERM (15) — pedido cortés de terminar", "SIGHUP (1) — recargar configuración"], ok: 1, why: "kill sin opciones manda SIGTERM (15). SIGKILL (kill -9) es el último recurso: el proceso no puede limpiar nada." },
+    { q: "¿Para qué el grep -v grep al buscar procesos?", opts: ["El propio grep aparece en la lista y hay que filtrarlo", "El comando grep se duplica y hay que borrarlo", "Es para evitar errores de sintaxis"], ok: 0, why: "ps | grep nombre lista también el proceso grep que estás ejecutando. grep -v grep lo filtra. Lo vas a ver en todos lados." },
+    { q: "¿Qué hace pgrep -x sshd?", opts: ["Busca el PID del proceso llamado exactamente sshd", "Mata el proceso sshd", "Reinicia el proceso sshd"], ok: 0, why: "pgrep busca por nombre y devuelve PID(s). -x = coincidencia exacta (sin -x, 'sshd_config' también calzaría)." },
+    { q: "¿Por qué reiniciar un proceso NO es un comando mágico?", opts: ["Porque es matar y relanzar: CMD=$(ps -o args=), kill, sleep 1, sh -c \"$CMD\" &", "Porque Windows lo hace solo", "Porque cron lo reinicia automáticamente"], ok: 0, why: "El script guarda la línea de comando, mata, espera 1 segundo, y relanza en background con &. Eso es 'reiniciar' en UNIX." },
+    { q: "¿Qué hace sh -c \"$CMD\" >/dev/null 2>&1 & ?", opts: ["Ejecuta el comando en background sin mostrar salida", "Ejecuta el comando en primer plano mostrando todo", "Borra el comando"], ok: 0, why: "sh -c ejecuta una cadena; >/dev/null descarta salida normal; 2>&1 manda errores al mismo lugar; & = background para no bloquear el menú." }
+  ],
+  s3: [
+    { q: "¿Qué hace ${MAX%[GMK]B} en el files-script?", opts: ["Recorta el sufijo (G/M/K + B) del final de la cadena", "Multiplica MAX por 1024", "Agrega la letra B al final"], ok: 0, why: "% recorta desde el final la parte que calce con [GMK]B. '1GB' → '1'. Después $(( 1 * 1073741824 )) = bytes." },
+    { q: "¿Qué significa la 'c' en -size -${MAXB}c ?", opts: ["Que el tamaño está en bytes", "Que es un directorio", "Que hay que contar caracteres"], ok: 0, why: "Sin la c, find interpreta el tamaño en bloques de 512 bytes — error clásico. La c = bytes." },
+    { q: "¿Por qué sort -n y no sort a secas?", opts: ["Orden numérico real: 9 va antes que 10", "Para ordenar por nombre", "Igual da"], ok: 0, why: "sort normal ordena como texto: '10' < '9'. -n ordena como números: 9 < 10. Con tamaños siempre -n." },
+    { q: "¿Qué hace -type f en find?", opts: ["Solo archivos (no directorios)", "Solo carpetas", "Archivos de tipo texto"], ok: 0, why: "-type f = regular file. Sin esto, find también listaría directorios y sus tamaños, que no son lo que pedimos." },
+    { q: "¿Qué hace [ -z \"$MAX\" ] && { ...; exit 1; }?", opts: ["Si MAX está vacío, muestra el uso y termina con error", "Si MAX tiene valor, muestra el uso", "Comprueba si MAX es un número"], ok: 0, why: "-z = 'zero-length' (vacío). && = si es verdad, ejecuta el bloque. exit 1 = código de error. Validar siempre." },
+    { q: "¿Por qué 2>/dev/null en el find?", opts: ["Silencia errores de permisos de carpetas ilegibles", "Para que sea más rápido", "Para interactuar con el usuario"], ok: 0, why: "find recorre TODO el árbol y puede tocar carpetas sin permiso. El error iría a stderr; 2>/dev/null lo descarta para no ensuciar la salida." }
+  ],
+  final: [
+    { q: "Ordena los campos de cron: cada 5 minutos a las 3 AM de lunes a viernes sería:", opts: ["*/5 3 * * 1-5", "3 */5 * * 1-5", "*/5 3 1-5 * *"], ok: 0, why: "Campo 1 = minuto (*/5), campo 2 = hora (3), campo 4 = mes (*), campo 5 = día de semana (1-5 = lun-vie)." },
+    { q: "¿Cuál patrón lee → filtra → escribe el crontab?", opts: ["( crontab -l | grep -v -F \"$TAREA\"; echo \"$FREC $TAREA\" ) | crontab -", "crontab -e", "kill $(pgrep cron)"], ok: 0, why: "La subshell lee la tabla, remove la tarea vieja, agrega la nueva, y recarga desde stdin. Sin duplicados y sin prompts." },
+    { q: "Para que el ps funcione en Solaris Y Slackware, el keyword correcto es:", opts: ["pcpu / pmem", "%cpu / %mem", "cpu% / mem%"], ok: 0, why: "GNU ps acepta pcpu/pmem Y %cpu/%mem; el ps de Solaris solo pcpu/pmem. Usar el común denominador." },
+    { q: "¿Qué rompe -printf en Solaris?", opts: ["find de Solaris no tiene -printf (es GNU)", "Slackware no tiene find", "Los archivos de Windows"], ok: 0, why: "-printf es extensión de GNU findutils. Solaris la reemplaza con -exec ls o -exec wc. Por eso la receta portable cambia esa parte." },
+    { q: "Reiniciar un proceso correctamente =", opts: ["kill + sleep + relanzar en background", "kill -9 y listo", "Reiniciar la VM"], ok: 0, why: "Guardás la línea de comando (ps -o args=), matás, esperás 1 s, relanzás con sh -c '...' &. Eso es reiniciar." },
+    { q: "¿Por qué validamos entradas (5 campos cron, MAX no vacío)?", opts: ["Los scripts profesionales fallan bien: error claro y exit code", "Para molestar al usuario", "Porque el profesor lo pide"], ok: 0, why: "Validar = fallar con mensaje claro ANTES de hacer daño. Un script sin validación rompe en silencio y nadie sabe por qué." },
+    { q: "El truco grep -v grep sirve para:", opts: ["Filtrar el propio grep de la lista de procesos", "Buscar el proceso grep", "Contar greps"], ok: 0, why: "Al buscar con ps | grep, el propio grep aparece como resultado. -v grep lo elimina. Universal en admin UNIX." },
+    { q: "¿Qué significa >/dev/null 2>&1?", opts: ["Enviar stdout y stderr al tacho de basura", "Enviar todo a un archivo log", "Redirigir a la pantalla"], ok: 0, why: "1 = stdout, 2 = stderr, /dev/null = agujero negro. 2>&1 = 'errores al mismo lugar que la salida'. Salida limpia." }
+  ]
+};
+
+function renderQuiz(container) {
+  const key = container.dataset.quiz;
+  const items = QUIZZES[key];
+  items.forEach((item, i) => {
+    const q = document.createElement('div');
+    q.className = 'q';
+    q.innerHTML = `<div class="qtxt"><span class="num">${i+1}</span>${item.q}</div>` +
+      item.opts.map((o, j) => `<label data-i="${j}">${o}</label>`).join('') +
+      `<div class="resp"></div>`;
+    q.querySelectorAll('label').forEach(lbl => {
+      lbl.addEventListener('click', () => {
+        const sel = parseInt(lbl.dataset.i, 10);
+        q.querySelectorAll('label').forEach(l => { l.classList.remove('sel'); });
+        lbl.classList.add('sel');
+        const resp = q.querySelector('.resp');
+        if (sel === item.ok) {
+          lbl.classList.add('ok');
+          resp.className = 'resp show ok';
+          resp.innerHTML = '<b>Correcto.</b> ' + item.why;
+        } else {
+          lbl.classList.add('bad');
+          q.querySelectorAll('label')[item.ok].classList.add('ok');
+          resp.className = 'resp show bad';
+          resp.innerHTML = '<b>No exactamente.</b> La correcta es: ' + item.opts[item.ok] + '.<br>' + item.why;
+        }
+        if (key === 'final') updateProgress();
+      });
+    });
+    container.appendChild(q);
+  });
+}
+document.querySelectorAll('.quiz').forEach(renderQuiz);
+
+/* ---------------- Progreso final ---------------- */
+function updateProgress() {
+  const items = QUIZZES.final;
+  const qs = document.querySelectorAll('#final .q');
+  let done = 0, ok = 0;
+  qs.forEach((q, i) => {
+    const sel = q.querySelector('label.sel');
+    if (sel) { done++; if (parseInt(sel.dataset.i,10) === items[i].ok) ok++; }
+  });
+  const pct = Math.round(done / items.length * 100);
+  document.getElementById('barraFill').style.width = pct + '%';
+  document.getElementById('progresoPct').textContent = pct + '%';
+  document.getElementById('finalScore').textContent = done ? `· ${ok}/${items.length} correctas` : '';
+}
+document.getElementById('reiniciarQuiz').addEventListener('click', () => {
+  document.querySelectorAll('#final .q').forEach(q => {
+    q.querySelectorAll('label').forEach(l => l.classList.remove('sel','ok','bad'));
+    const r = q.querySelector('.resp'); r.className = 'resp'; r.innerHTML = '';
+  });
+  document.getElementById('barraFill').style.width = '0%';
+  document.getElementById('progresoPct').textContent = '0%';
+  document.getElementById('finalScore').textContent = '';
+});
+
+/* ---------------- Flashcards ---------------- */
+const CARDS = [
+  ["${1:-valor}", "Parámetro con valor por defecto: usa $1 o 'valor' si viene vacío"],
+  ["$(comando)", "Sustitución: ejecuta el comando y guarda su salida en la variable"],
+  ["crontab -l", "Lista la tabla cron del usuario actual"],
+  ["crontab -", "Reemplaza la tabla cron leyendo desde stdin (entrada estándar)"],
+  ["grep -v", "Invierte el filtro: deja todo lo que NO calza"],
+  ["grep -F", "Trata el patrón como texto fijo, no como expresión regular"],
+  ["ps -eo comm,pid,%mem,%cpu", "Lista procesos con columnas personalizadas (-e todos, -o formato)"],
+  ["kill PID", "Envía SIGTERM (15), pedido cortés de terminación"],
+  ["kill -9 PID", "SIGKILL: destrucción inmediata, sin limpieza"],
+  ["pgrep -x nombre", "Devuelve PID del proceso con nombre EXACTO"],
+  ["ps -p PID -o args=", "Devuelve la línea de comando completa de un PID"],
+  ["[ -z \"$VAR\" ]", "Test: ¿la variable está vacía? (zero-length)"],
+  ["$(( expr ))", "Aritmética del shell: 1 + 2, multiplicaciones, etc."],
+  ["${VAR%patron}", "Recorta el patrón desde el FINAL de la cadena"],
+  ["find -size -Nc", "Archivos menores a N bytes (la c = bytes)"],
+  ["-type f", "Solo archivos regulares (no directorios)"],
+  ["sort -n", "Orden numérico real: 9 antes que 10"],
+  ["head -n N", "Las primeras N líneas"],
+  ["2>/dev/null", "Descarta errores (stderr → tacho de basura)"],
+  ["cmd >/dev/null 2>&1 &", "Ejecuta en background sin ninguna salida"],
+  ["while true; do ... done", "Loop infinito — base de todo menú"],
+  ["case \"$x\" in ... esac", "Despachador condicional según el valor"],
+  ["exit 0 / exit 1", "Terminar con éxito / con error"],
+  ["ps ... | grep -v grep", "Filtrar el propio grep de la lista de procesos"],
+  ["pcpu / pmem", "Keywords de ps compatibles con GNU Y Solaris (los % solo GNU)"],
+  ["find -printf", "Extensión GNU: NO existe en find de Solaris"]
+];
+const fcWrap = document.getElementById('flashcards');
+CARDS.forEach(([f, b]) => {
+  const d = document.createElement('div');
+  d.className = 'flashcard';
+  d.innerHTML = `<div class="fcInner">
+    <div class="fcFace fcFront">${f}</div>
+    <div class="fcFace fcBack">${b}</div>
+  </div>`;
+  d.addEventListener('click', () => d.classList.toggle('flip'));
+  fcWrap.appendChild(d);
+});
+
+/* ---------------- Nav active ---------------- */
+const links = document.querySelectorAll('header nav a');
+window.addEventListener('scroll', () => {
+  let cur = 'base';
+  document.querySelectorAll('main section').forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) cur = s.id;
+  });
+  links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+});
+</script>
+</body>
+</html>

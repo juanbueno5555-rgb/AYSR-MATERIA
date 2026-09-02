@@ -94,8 +94,8 @@ transferencia de zonas y las pruebas de resolución entre máquinas:
 |---|---|---|---|
 | Slackware | 192.168.82.10 | 10.2.78.74 | BIND master `camilo.org.uk` |
 | Solaris | 192.168.82.11 | 10.2.78.75 | BIND master `juan.com.it` |
-| Windows GUI | [PENDIENTE: IP interna asignada] | 10.2.78.76 | Rol DNS, secundario `juan.com.it` |
-| Windows Core | [PENDIENTE: IP interna asignada] | 10.2.78.77 | Rol DNS, secundario `camilo.org.uk` |
+| Windows GUI | 192.168.82.13 | 10.2.78.76 | Rol DNS, secundario `juan.com.it` |
+| Windows Core | 192.168.82.12 | 10.2.78.77 | Rol DNS, secundario `camilo.org.uk` |
 
 [PENDIENTE: confirmar el rango IPv4/IPv6 "asignado al inicio del semestre" y los nombres
 concretos de servidores y alias usados en las zonas.]
@@ -127,22 +127,67 @@ zone "0.0.127.in-addr.arpa" IN {
 zone "camilo.org.uk" IN {
 	type master;
 	file "camilo.org.uk.hosts";
+	allow-transfer { 192.168.82.11; 192.168.82.12; };
+	notify yes;
 };
 
 zone "juan.com.it" IN {
-	type forward;
-	forwarders { 192.168.82.11; };
+	type slave;
+	masters { 192.168.82.11; };
+	file "juan.com.it.slave";
 };
 ```
 
 **Zona maestra `camilo.org.uk`** — archivo `/etc/DNS/camilo.org.uk.hosts`:
 
-[PENDIENTE: transcribir el contenido completo de la zona con los registros A (3 servidores),
-AAAA (2 servidores) y CNAME (2 alias IPv4 + 1 alias IPv6), y el SOA (serial en formato
-yyyymmddNN).]
+```
+; camilo.org.uk.hosts - Zona camilo.org.uk (Lab 03)
+;
+$TTL 86400
+$INCLUDE named.soa
 
-**Archivo de servidores raíz `/etc/DNS/named.ca`:** [PENDIENTE: transcribir contenido; se
-incluyeron al menos 3 servidores raíz con registros A y AAAA.]
+; Name Server
+@		IN NS	dns1.camilo.org.uk.
+
+; localhost
+localhost.camilo.org.uk.	IN A	127.0.0.1
+
+; Servers con IPv4 (rango de la universidad)
+dns1.camilo.org.uk.	IN A	10.2.78.74
+srv1.camilo.org.uk.	IN A	10.2.78.75
+srv2.camilo.org.uk.	IN A	10.2.78.76
+
+; Servers con IPv6
+dns1.camilo.org.uk.	IN AAAA	2001:db8:2::74
+srv2.camilo.org.uk.	IN AAAA	2001:db8:2::76
+
+; Aliases (2 a servers IPv4 + 1 a server IPv6)
+www.camilo.org.uk.	IN CNAME	srv1.camilo.org.uk.
+mail.camilo.org.uk.	IN CNAME	dns1.camilo.org.uk.
+v6.camilo.org.uk.	IN CNAME	srv2.camilo.org.uk.
+```
+
+SOA (archivo `named.soa`, incluido con `$INCLUDE`):
+
+```
+@ IN SOA dns1.camilo.org.uk. root.camilo.org.uk. (
+	2026082801 ; Serial yyyymmddxx
+	10800      ; Refresh 3h
+	3600       ; Retry 1h
+	604800     ; Expire 1sem
+	86400 )    ; Negative TTL 1d
+```
+
+**Archivo de servidores raíz `/etc/DNS/named.ca`:**
+
+```
+; named.ca - Root name servers (hints)
+.			3600000	IN	NS	A.ROOT-SERVERS.NET.
+A.ROOT-SERVERS.NET.	3600000	IN	A	198.41.0.4
+A.ROOT-SERVERS.NET.	3600000	IN	AAAA	2001:503:BA3E::2:30
+B.ROOT-SERVERS.NET.	3600000	IN	A	170.247.170.2
+C.ROOT-SERVERS.NET.	3600000	IN	A	192.33.4.12
+```
 
 #### 3.1.3 Configuración en Solaris (primario de `juan.com.it`)
 
@@ -171,32 +216,81 @@ zone "0.0.127.in-addr.arpa" IN {
 zone "juan.com.it" IN {
 	type master;
 	file "juan.com.it.hosts";
+	allow-transfer { 192.168.82.10; 192.168.82.13; };
+	notify yes;
 };
 
 zone "camilo.org.uk" IN {
-	type forward;
-	forwarders { 192.168.82.10; };
+	type slave;
+	masters { 192.168.82.10; };
+	file "camilo.org.uk.slave";
 };
 ```
 
 **Zona maestra `juan.com.it`** — archivo `/etc/inet/DNS/juan.com.it.hosts`:
 
-[PENDIENTE: transcribir el contenido completo de la zona con los registros A (3 servidores),
-AAAA (2 servidores) y CNAME (2 alias IPv4 + 1 alias IPv6).]
+```
+; juan.com.it.hosts - Zona juan.com.it (Lab 03)
+;
+$TTL 86400
+$INCLUDE named.soa
 
-#### 3.1.4 Configuración de los secundarios (pendiente de completar)
+; Name Server
+@		IN NS	dns1.juan.com.it.
+
+; localhost
+localhost.juan.com.it.	IN A	127.0.0.1
+
+; Servers con IPv4 (rango de la universidad)
+dns1.juan.com.it.	IN A	10.2.78.75
+srv1.juan.com.it.	IN A	10.2.78.74
+srv2.juan.com.it.	IN A	10.2.78.76
+
+; Servers con IPv6
+dns1.juan.com.it.	IN AAAA	2001:db8:1::75
+srv2.juan.com.it.	IN AAAA	2001:db8:1::76
+
+; Aliases (2 a servers IPv4 + 1 a server IPv6)
+www.juan.com.it.	IN CNAME	srv1.juan.com.it.
+mail.juan.com.it.	IN CNAME	dns1.juan.com.it.
+v6.juan.com.it.	IN CNAME	srv2.juan.com.it.
+```
+
+SOA (archivo `named.soa`, incluido con `$INCLUDE`):
+
+```
+@ IN SOA dns1.juan.com.it. root.juan.com.it. (
+	2026082801 ; Serial yyyymmddxx
+	10800      ; Refresh 3h
+	3600       ; Retry 1h
+	604800     ; Expire 1sem
+	86400 )    ; Negative TTL 1d
+```
+
+**Archivo de servidores raíz `/etc/inet/DNS/named.ca`:** mismo contenido que el de Slackware:
+A.ROOT-SERVERS.NET (198.41.0.4 + AAAA 2001:503:BA3E::2:30), B.ROOT-SERVERS.NET
+(170.247.170.2) y C.ROOT-SERVERS.NET (192.33.4.12).
+
+#### 3.1.4 Configuración de los secundarios (completada 01/09/2026)
 
 - **Windows Server GUI** — secundario de `juan.com.it`:
   - Instalación del rol **DNS** completada (29/08/2026, sin reinicio requerido).
-  - [PENDIENTE: crear zona secundaria apuntando al maestro Solaris 192.168.82.11;
-    asignar IP interna 192.168.82.x; permitir transferencia de zona en el maestro.]
+  - Zona secundaria `juan.com.it` creada apuntando al maestro Solaris `192.168.82.11`
+    (verificado: `ZoneType Secondary`, MasterServers 192.168.82.11, servicio `DNS`
+    `Running`/`Automatic`).
 - **Windows Server Core** — secundario de `camilo.org.uk`:
   - Instalación del rol **DNS** completada (29/08/2026, sin reinicio requerido).
-  - [PENDIENTE: crear zona secundaria apuntando al maestro Slackware 192.168.82.10;
-    asignar IP interna 192.168.82.x; permitir transferencia de zona en el maestro.]
+  - Zona secundaria `camilo.org.uk` creada apuntando al maestro Slackware `192.168.82.10`
+    (verificado: `ZoneType Secondary`, MasterServers 192.168.82.10, servicio `DNS`
+    `Running`/`Automatic`).
 - **Slackware** — secundario de `juan.com.it` y **Solaris** — secundario de `camilo.org.uk`:
-  - [PENDIENTE: reemplazar la zona `type forward` actual por `type slave` con dirección del
-    maestro, y agregar la zona esclava correspondiente en el otro servidor.]
+  - Slackware: zona `juan.com.it` `type slave` con `masters { 192.168.82.11; }`
+    (maestro Solaris), `allow-transfer` y `notify` habilitados en el maestro.
+  - Solaris: zona `camilo.org.uk` `type slave` con `masters { 192.168.82.10; }`
+    (maestro Slackware), `allow-transfer` y `notify` habilitados en el maestro.
+  - Transferencia verificada: ambos esclavos resuelven los registros de la zona del otro
+    (Slackware resuelve `srv1.juan.com.it` → 10.2.78.74; Solaris resuelve
+    `srv1.camilo.org.uk` → 10.2.78.75), serial `2026082801` coincidente.
 
 #### 3.1.5 Respuestas a las preguntas de la guía (parte DNS)
 
@@ -212,20 +306,37 @@ raíz, que le indica los servidores autoritativos del TLD, y así sucesivamente.
 - **A**: asocia un nombre de host canónico con su dirección IPv4.
 - **CNAME**: define un alias que apunta a un nombre canónico (no a una IP).
 
-**6. Revisión de logs** — [PENDIENTE: capturas de los logs del servicio en los servidores.]
+**6. Revisión de logs** — estado registrado en `/var/svc/log/network-dns-server:default.log` (Solaris) y
+`/var/log/messages` (Slackware) sin errores de carga de zona en el arranque verificado (01/09/2026).
 
 **7. Pruebas con nslookup en un cliente** — [PENDIENTE: video de máximo 5 minutos y
 resultados de los puntos A–G: propósito de nslookup, pruebas contra el DNS propio, cambio
 al DNS de la escuela (10.2.65.1), `set type=NS`, `set debug`, `set type=A`, `set q=MX`.]
 
-**8. Prueba en el propio servidor DNS** — [PENDIENTE: verificar si nslookup funciona en el
-servidor mismo, explicar el porqué y documentar la configuración IP final del servidor.]
+**8. Prueba en el propio servidor DNS** — verificado el 01/09/2026 en ambos servidores
+básicos (evidencias en `evidencias/server-propio-slackware.txt` y `server-propio-solaris.txt`):
+- **Slackware** (`nslookup camilo.org.uk 127.0.0.1`): SOA `dns1.camilo.org.uk`, serial
+  `2026082801`; `www.camilo.org.uk` → CNAME `srv1.camilo.org.uk` → `10.2.78.75`;
+  `srv1.juan.com.it` (zona esclava) → `10.2.78.74`. IP final: `192.168.82.10` (intnet).
+- **Solaris** (`nslookup juan.com.it 127.0.0.1`): SOA `dns1.juan.com.it`, serial
+  `2026082801`; `srv1.juan.com.it` → `10.2.78.74`; `www.juan.com.it` → CNAME → `10.2.78.74`;
+  `srv1.camilo.org.uk` (zona esclava) → `10.2.78.75`. IP final: `192.168.82.11` (intnet).
+- **Explicación**: `nslookup` funciona en el propio servidor porque el demonio BIND escucha
+  en `127.0.0.1` (interfaz loopback) además de las IPs físicas, y porque el servidor es
+  autoritativo para sus zonas: responde de forma *authoritative* sin consultar a nadie.
+  Las zonas esclavas responden igual porque se transfirieron desde el maestro y el servidor
+  las sirve en modo autoritativo; lo único necesario es que el archivo de zona exista y el
+  serial coincida con el maestro (verificado: serial `2026082801` en las dos zonas).
 
-**9. Activación del servicio al arranque**:
-- Slackware: [PENDIENTE: script de inicio en `/etc/rc.d/` o equivalente; verificar estado].
-- Solaris: activación por SMF (`svc:/network/dns/server`), [PENDIENTE: captura de estado
-  del servicio y persistencia al reiniciar].
-- Windows: el rol DNS instala el servicio con arranque automático; [PENDIENTE: captura].
+**9. Activación del servicio al arranque** — verificado el 01/09/2026
+(evidencia en `evidencias/servicio-boot.txt`):
+- Slackware: script `/etc/rc.d/rc.bind` presente y ejecutable (`rwxr-xr-x`), demonio
+  activo: `/usr/sbin/named -u named`.
+- Solaris: SMF `svc:/network/dns/server:default` con `enabled=true` y `online`
+  (persistente entre reinicios; manifest `/lib/svc/manifest/network/dns/server.xml`).
+- Windows Core y GUI: servicio `DNS` en estado `Running` con arranque `Automatic`;
+  zonas secundarias activas (`camilo.org.uk` ← 192.168.82.10 en Core, `juan.com.it` ←
+  192.168.82.11 en GUI).
 
 **10. Configuración mostrada al instructor** — pendiente de sustentación.
 

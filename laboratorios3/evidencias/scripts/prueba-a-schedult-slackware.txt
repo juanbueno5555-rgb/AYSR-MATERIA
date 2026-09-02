@@ -1,0 +1,17 @@
+PRUEBA SCRIPT (a) - schedult-task-script.sh
+Fecha: 2026-08-31 | VM: slackware-15.0 (Slackware 15.0, Linux)
+Usuario: vagrant (sudo NOPASSWD)
+Comando:
+  bash /tmp/schedult-task-script.sh '*' '*' '*' '*' '*' '/bin/echo Hola-cron'
+
+Salida:
+  Tarea programada con éxito:
+  Frecuencia: * * * * *
+  Comando:    /bin/echo Hola-cron
+
+Verificación crontab -l:
+  * * * * * /bin/echo Hola-cron
+
+Nota portabilidad: se corrigió el script para usar archivo temporal (crontab /tmp/crontab.$$~)
+en lugar del pipe "crontab -", porque el cron de Solaris no lee el crontab desde stdin.
+La sintaxis con paso */1 solo existe en Vixie cron (Linux); el cron clásico de Solaris la rechaza.
