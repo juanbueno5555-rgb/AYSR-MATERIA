@@ -1,0 +1,260 @@
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=2.5cm}
+
+\lstset{
+  language=bash,
+  basicstyle=\ttfamily\footnotesize\color[RGB]{229,229,229},
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  backgroundcolor=\color{black},
+  frame=none,
+  keywordstyle=\color[RGB]{86,182,194},
+  commentstyle=\color[RGB]{106,153,85},
+  stringstyle=\color[RGB]{206,145,120},
+  identifierstyle=\color[RGB]{229,229,229},
+  numberstyle=\color[RGB]{127,127,127},
+  tabsize=2
+}
+
+% ------------------------------------------------------------------
+% Macro de figura tolerante: si la imagen todavia no existe, dibuja
+% un recuadro con el nombre del archivo que falta (asi el .tex compila
+% mientras se van agregando las capturas a img/lab04/).
+%   \fig[ancho]{archivo.png}{epigrafe}
+% ------------------------------------------------------------------
+\newcommand{\fig}[3][0.92]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{img/lab04/#2}{\includegraphics[width=#1\linewidth]{img/lab04/#2}}%
+      {\fbox{\parbox[c][4.5cm][c]{0.85\linewidth}{\centering\itshape [FALTA la captura: \texttt{img/lab04/#2}]}}}
+    \caption{#3}
+  \end{figure}
+}
+
+\begin{document}
+
+\sloppy
+
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+
+  {\large Laboratorio No. 04 --- Application Layer and Physical Layer Protocols \par}
+  \vspace{1.5cm}
+
+  {\large Por: \par}
+  {\large Camilo Aguirre \par}
+  {\large Juan David Rangel \par}
+  \vspace{1cm}
+
+  {\large Profesor: John Alexander Pachón Pinzón \par}
+  \vspace{1.5cm}
+
+  {\large Escuela Colombiana de Ingeniería Julio Garavito \par}
+  {\large Universidad \par}
+  \vspace{0.5cm}
+
+  {\large ISIS AYSR - 1 \par}
+  {\large Arquitectura y Servicios de Red \par}
+  \vspace{0.5cm}
+
+  {\large Asignatura: Arquitectura y Servicios de Red (AYSR) \par}
+  \vspace{1cm}
+
+  {\large Grupo: 2 estudiantes --- Camilo Aguirre, Juan David Rangel \par}
+  {\large Fecha: \today \par}
+  \vspace{1.5cm}
+
+  {\large Bogotá, D.C., \today \par}
+
+  \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introducción}
+
+En este laboratorio se prueban y analizan los \textbf{protocolos de capa de aplicación} de la
+infraestructura, y se realizan actividades de \textbf{capa física} (cableado estructurado).
+El trabajo tiene dos grandes escenarios:
+
+\begin{enumerate}
+  \item Una \textbf{red simulada en Cisco Packet Tracer}, con tres sedes
+        (\texttt{sistemas.com}, \texttt{civil.com} y \texttt{electrica.com}) que ofrecen
+        servicios de \textbf{DNS, HTTP, correo (SMTP/POP3) y FTP}.
+  \item La \textbf{red real}, donde se monitorean protocolos con \textbf{Wireshark}, se
+        consulta información de dominios en \textbf{centralops.net}, se monta un
+        \textbf{servidor NTP} y se construyen \textbf{cables de red} (patch cords y
+        crimpado en patch panel).
+\end{enumerate}
+
+\section{Marco teórico}
+
+\subsection{Protocolos de capa de aplicación y sus puertos}
+
+Los protocolos de la capa de aplicación se apoyan en TCP o UDP y se identifican por su
+\textbf{puerto} en la capa de transporte.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\linewidth}{@{}llX@{}}
+    \toprule
+    \textbf{Protocolo} & \textbf{Puerto} & \textbf{Función} \\
+    \midrule
+    DNS  & 53 (UDP/TCP)  & Traduce nombres a direcciones IP. \\
+    HTTP & 80 (TCP)      & Transferencia de páginas web. \\
+    HTTPS & 443 (TCP)    & HTTP cifrado. \\
+    SMTP & 25 (TCP)      & \emph{Envío} de correo. \\
+    POP3 & 110 (TCP)     & \emph{Recepción/descarga} de correo. \\
+    IMAP & 143 (TCP)     & Recepción/consulta de correo en el servidor. \\
+    FTP  & 21 y 20 (TCP) & Transferencia de archivos (control y datos). \\
+    DHCP & 67/68 (UDP)   & Asignación automática de direcciones IP. \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Puertos de los protocolos usados en el laboratorio.}
+\end{table}
+
+\subsection{Cableado estructurado}
+
+El cableado estructurado organiza el cableado físico de un edificio en subsistemas
+(entrada, backbone, horizontal, área de trabajo) usando conectores estándar
+(\textbf{RJ-45}) y organización central (\textbf{patch panel}). El estándar define dos
+asignaciones de color para los 8 hilos del par trenzado, \textbf{T568A} y \textbf{T568B};
+un cable \emph{directo} usa la misma norma de los dos extremos, y uno \emph{cruzado}
+usa T568A en un extremo y T568B en el otro.
+
+\subsection{NTP}
+
+\textbf{NTP} (Network Time Protocol, puerto 123/UDP) sincroniza el reloj de los equipos de
+una red. Es importante porque muchos servicios (logs, autenticación, correo, bases de
+datos, certificados) dependen de una hora consistente.
+
+\section{Desarrollo}
+
+\subsection{Parte A --- Cisco Packet Tracer}
+
+\subsubsection{Topología}
+
+La red tiene tres sedes, cada una con su switch (2950), en topología de estrella: un
+switch central (\texttt{Switch0}) conecta a los otros dos. Se usa máscara
+\textbf{255.0.0.0 (/8)}, por lo que todos los dispositivos quedan en la misma red
+\texttt{27.0.0.0/8} y \textbf{no se requiere router}.
+
+\fig{fig-pt-topologia.png}{Topología de la red de las tres sedes en Packet Tracer.}
+
+\subsubsection{Direccionamiento}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\linewidth}{@{}lllX@{}}
+    \toprule
+    \textbf{Sede} & \textbf{Dispositivo} & \textbf{IP} & \textbf{Gateway / DNS} \\
+    \midrule
+    sistemas  & www.sistemas.com  & 27.100.0.32  & 27.0.0.1 / 27.1.0.2 \\
+    sistemas  & mail.sistemas.com & 27.100.0.33  & 27.0.0.1 / 27.1.0.2 \\
+    sistemas  & DNS               & 27.1.0.2     & 27.0.0.1 / --- \\
+    sistemas  & Student S1        & 27.100.0.34  & 27.0.0.1 / 27.1.0.2 \\
+    sistemas  & Student S2        & 27.100.0.35  & 27.0.0.1 / 27.1.0.2 \\
+    civil     & www.civil.com     & 27.200.0.53  & 27.0.0.1 / 27.1.0.2 \\
+    civil     & mail.civil.com    & 27.200.0.52  & 27.0.0.1 / 27.1.0.2 \\
+    civil     & Student C1        & 27.200.0.55  & 27.0.0.1 / 27.1.0.2 \\
+    civil     & Student C2        & 27.200.0.54  & 27.0.0.1 / 27.1.0.2 \\
+    electrica & Student E1        & 27.150.0.101 & 27.150.0.1 / 27.1.0.2 \\
+    electrica & Mail              & 27.150.0.102 & 27.150.0.1 / 27.1.0.2 \\
+    electrica & Student E2        & 27.150.0.103 & 27.150.0.1 / 27.1.0.2 \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Direccionamiento de la red simulada.}
+\end{table}
+
+\fig{fig-pt-ipconfig.png}{Configuración estática de PC2: IP \texttt{27.100.0.34}, máscara \texttt{255.0.0.0}, gateway \texttt{27.0.0.1} y DNS \texttt{27.1.0.2}.}
+
+\subsubsection{Servicios}
+
+\paragraph{DNS.} En el servidor \texttt{27.1.0.2} se cargaron los registros de los tres
+dominios (registros \texttt{A} para los servidores de correo y web, y \texttt{CNAME} para
+los alias \texttt{www}, \texttt{pop3} y \texttt{smtp}).
+
+\fig{fig-pt-dns.png}{Registros DNS cargados en el servidor 27.1.0.2.}
+\fig{fig-pt-nslookup.png}{Resolución de \texttt{smtp.sistemas.com} consultando al DNS \texttt{27.1.0.2}.}
+
+\paragraph{HTTP.} En los servidores web se activó el servicio y se personalizó la página
+\texttt{index.html} de cada facultad.
+
+\fig{fig-pt-http.png}{Acceso a la web por IP (\texttt{27.100.0.32}).}
+\fig{fig-pt-http-url.png}{Acceso a la web por URL (\texttt{www.sistemas.com}), lo que prueba el DNS y el alias CNAME.}
+
+\paragraph{Correo.} En cada servidor de correo se configuró el dominio y las cuentas de
+usuario (una por equipo cliente).
+
+\fig{fig-pt-email-client.png}{Configuración del cliente de correo en PC2 (POP3/SMTP de \texttt{sistemas.com}).}
+\fig{fig-pt-email-server.png}{Cuentas de correo creadas en el servidor de sistemas.}
+\fig{fig-pt-email-recibido.png}{Recepción de un correo entre clientes del mismo dominio.}
+\fig{fig-pt-email-entre-dominios.png}{Recepción de un correo entre dominios: de \texttt{PC0@civil.com} a \texttt{PC2@sistemas.com}.}
+
+\paragraph{FTP.} Se habilitó el servicio FTP en el servidor web de sistemas y se creó un
+usuario con permisos de lectura y escritura.
+
+\fig{fig-pt-ftp-server.png}{Servicio FTP y usuarios configurados en el servidor de sistemas.}
+\fig{fig-pt-ftp.png}{Transferencia de un archivo por FTP desde el cliente (comando \texttt{put}).}
+\fig{fig-pt-ftp-get.png}{Listado de archivos (\texttt{dir}) y descarga (\texttt{get}) por FTP; se aprecia \texttt{datos.txt}, subido previamente.}
+
+\subsubsection{Pruebas y simulación}
+
+\fig{fig-pt-ping.png}{Prueba de conectividad con el servidor DNS (\texttt{ping 27.1.0.2}).}
+\fig{fig-pt-simulacion.png}{Inspección de un PDU HTTP en modo Simulation: capa de aplicación (HTTP), puertos de transporte (80 y 1061) y direccionamiento IP/MAC.}
+
+\subsection{Parte B --- Red real}
+
+\subsubsection{Wireshark}
+
+\fig{fig-wireshark-web.png}{Captura de una consulta web: protocolos y puertos.}
+\fig{fig-wireshark-dhcp.png}{Captura del tráfico DHCP (\texttt{release}/\texttt{renew}).}
+\fig{fig-wireshark-telnet-http.png}{Comparación TELNET vs HTTP.}
+
+\subsubsection{Consulta DNS (centralops)}
+
+\fig{fig-centralops.png}{Resultados de la consulta de un dominio en centralops.net.}
+
+\subsubsection{Servidor NTP}
+
+\fig{fig-ntp-server.png}{Servidor NTP configurado.}
+\fig{fig-ntp-client.png}{Cliente sincronizando su hora con el servidor NTP.}
+
+\subsubsection{Cableado estructurado}
+
+\fig{fig-cable-recto.png}{Patch cord directo (misma norma en ambos extremos).}
+\fig{fig-cable-cruzado.png}{Patch cord cruzado (T568A en un extremo, T568B en el otro).}
+\fig{fig-patch-panel.png}{Crimpado en patch panel y faceplates.}
+\fig{fig-cableado-edificio.png}{Cableado estructurado observado en el Edificio I.}
+
+\section{Conclusiones}
+
+% [PENDIENTE: redactar al cerrar el laboratorio]
+
+\section{Bibliografía}
+
+\begin{itemize}
+  \item Cisco Networking Academy. \emph{Introduction to Networks}. Cisco Press.
+  \item Documentación de Cisco Packet Tracer.
+  \item Material de clase de Arquitectura y Servicios de Red (AYSR).
+\end{itemize}
+
+\end{document}
