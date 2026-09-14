@@ -97,8 +97,10 @@ transferencia de zonas y las pruebas de resolución entre máquinas:
 | Windows GUI | 192.168.82.13 | 10.2.78.76 | Rol DNS, secundario `juan.com.it` |
 | Windows Core | 192.168.82.12 | 10.2.78.77 | Rol DNS, secundario `camilo.org.uk` |
 
-[PENDIENTE: confirmar el rango IPv4/IPv6 "asignado al inicio del semestre" y los nombres
-concretos de servidores y alias usados en las zonas.]
+Rango IP confirmado: `10.2.78.74-77` en la red universitaria y `192.168.82.0/24` en la
+intnet `lab-uni` (ambos asignados al inicio del semestre). Los nombres de servidores
+(`dns1`, `srv1`, `srv2`) y alias (`www`, `mail`, `v6`) quedaron definidos en las zonas de
+las secciones 3.1.2 y 3.1.3.
 
 #### 3.1.2 Configuración en Linux Slackware (primario de `camilo.org.uk`)
 

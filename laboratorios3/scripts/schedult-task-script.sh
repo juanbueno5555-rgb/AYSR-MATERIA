@@ -1,29 +1,25 @@
 #!/bin/bash
-# Uso: ./schedult-task-script.sh * * * * * echo "Hola"
-# O con intervalos: ./schedult-task-script.sh 0 5 * * * /ruta/script.sh
+# Uso: ./schedult-task-script.sh min hora dia mes dia_sem comando...
+# Ejemplo: ./schedult-task-script.sh "* * * * *" "/bin/date >> /tmp/fecha.log"
 
-# Validar que al menos existan 5 campos de tiempo + 1 comando (mínimo 6 argumentos)
 if [ "$#" -lt 6 ]; then
-    echo "Error: Faltan argumentos."
-    echo "Uso: $0 min hora dia mes dia_sem comando [argumentos_comando...]"
+    echo "Uso: $0 min hora dia mes dia_sem comando [args...]"
     exit 1
 fi
 
-# Los primeros 5 argumentos forman la frecuencia de cron
-FREQUENCY="$1 $2 $3 $4 $5"
-
-# Shift desplaza los argumentos 5 posiciones a la izquierda, 
-# dejando en $@ todo lo que sobre, que es estrictamente el comando y sus flags
+FREQ="$1 $2 $3 $4 $5"
 shift 5
 TASK="$*"
 
-# Agregar la tarea al crontab del usuario actual.
-# Se usa un archivo temporal y NO el pipe "crontab -" porque el cron de
-# Solaris no lee el crontab desde stdin (portabilidad Solaris + Linux).
-(crontab -l 2>/dev/null; echo "$FREQUENCY $TASK") > /tmp/crontab.$$~ 2>/dev/null
-crontab /tmp/crontab.$$~ 2>/dev/null
-rm -f /tmp/crontab.$$~
+# Agrega al crontab sin duplicados (portable Solaris + Linux)
+TMP=$(mktemp /tmp/crontab.XXXXXX)
+crontab -l 2>/dev/null | grep -v -F "$TASK" > "$TMP"
+echo "$FREQ $TASK" >> "$TMP"
+crontab "$TMP"
+rm -f "$TMP"
 
-echo "Tarea programada con éxito:"
-echo "Frecuencia: $FREQUENCY"
-echo "Comando:    $TASK"
+echo "Tarea agregada:"
+echo "  $FREQ $TASK"
+echo ""
+echo "Crontab actual:"
+crontab -l

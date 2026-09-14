@@ -19,27 +19,16 @@ matar_proceso() {
 
 reiniciar_proceso() {
     read -p "Ingrese el PID del proceso a reiniciar: " pid_restart
-
-    # Guardar el comando ANTES de matar (si no, se pierde)
-    CMD=$(ps -p "$pid_restart" -o args=)
-
-    if kill -15 "$pid_restart"; then
-        echo "Proceso detenido. Reiniciando..."
-
-        # Volver a lanzar el COMANDO en segundo plano (&) para que no congele el menú
-        nohup $CMD >/dev/null 2>&1 &
-
-        echo "¡Proceso $pid_restart reiniciado!"
-    else
-        echo "Error: No se pudo detener el proceso."
-    fi
+    CMD=$(ps -p "$pid_restart" -o args=) || { echo "PID no encontrado."; return; }
+    kill -15 "$pid_restart"; sleep 1; nohup $CMD &>/dev/null &
+    echo "Reiniciado: $CMD"
 }
 
 mostrar_menu() {
     echo "=============================="
-    echo "      MENÚ DE GESTIÓN         "
+    echo "      MENU DE GESTION         "
     echo "=============================="
-    echo "1. Mostrar procesos en ejecución"
+    echo "1. Mostrar procesos en ejecucion"
     echo "2. Buscar proceso por nombre"
     echo "3. Matar un proceso"
     echo "4. Reiniciar un proceso"
@@ -50,7 +39,7 @@ opcion=0
 
 while [ "$opcion" -ne 5 ]; do
     mostrar_menu
-    read -p "Seleccione una opción: " opcion
+    read -p "Seleccione una opcion: " opcion
 
     case $opcion in
         1) mostrar_procesos ;;
@@ -58,9 +47,9 @@ while [ "$opcion" -ne 5 ]; do
         3) matar_proceso ;;
         4) reiniciar_proceso ;;
         5) echo "Saliendo del sistema..." ;;
-        *) echo "Opción inválida. Intente de nuevo." ;;
+        *) echo "Opcion invalida. Intente de nuevo." ;;
     esac
-    
+
     if [ "$opcion" -ne 5 ]; then
         echo ""
         read -p "Presione [Enter] para continuar..."
