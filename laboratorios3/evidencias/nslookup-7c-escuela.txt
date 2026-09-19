@@ -1,0 +1,74 @@
+﻿== 7C: DNS DE LA ESCUELA 10.2.65.1 ==
+--- srv1.juan.com.it ---
+Server:		10.2.65.1
+Address:	10.2.65.1#53
+
+** server can't find srv1.juan.com.it: NXDOMAIN
+
+--- mail.camilo.org.uk ---
+Server:		10.2.65.1
+Address:	10.2.65.1#53
+
+** server can't find mail.camilo.org.uk: NXDOMAIN
+
+--- www.google.com ---
+Server:		10.2.65.1
+Address:	10.2.65.1#53
+
+Non-authoritative answer:
+Name:	www.google.com
+Address: 142.251.151.119
+Name:	www.google.com
+Address: 142.251.155.119
+Name:	www.google.com
+Address: 142.251.152.119
+Name:	www.google.com
+Address: 142.251.157.119
+Name:	www.google.com
+Address: 142.251.150.119
+Name:	www.google.com
+Address: 142.251.156.119
+Name:	www.google.com
+Address: 142.251.154.119
+Name:	www.google.com
+Address: 142.251.153.119
+Name:	www.google.com
+Address: 64:ff9b::8efb:9977
+Name:	www.google.com
+Address: 64:ff9b::8efb:9c77
+Name:	www.google.com
+Address: 64:ff9b::8efb:9877
+Name:	www.google.com
+Address: 64:ff9b::8efb:9a77
+Name:	www.google.com
+Address: 64:ff9b::8efb:9b77
+Name:	www.google.com
+Address: 64:ff9b::8efb:9677
+Name:	www.google.com
+Address: 64:ff9b::8efb:9777
+Name:	www.google.com
+Address: 64:ff9b::8efb:9d77
+
+--- www.escuelaing.edu.co ---
+Server:		10.2.65.1
+Address:	10.2.65.1#53
+
+Non-authoritative answer:
+www.escuelaing.edu.co	canonical name = mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com.
+Name:	mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Address: 35.71.179.82
+Name:	mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Address: 75.2.60.68
+Name:	mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Address: 13.248.244.96
+Name:	mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Address: 99.83.220.108
+Name:	mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Address: 64:ff9b::df8:f460
+Name:	mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Address: 64:ff9b::2347:b352
+Name:	mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Address: 64:ff9b::6353:dc6c
+Name:	mighty-hollows-3jrmkc241dj1tjvr11jqa4jt.herokudns.com
+Address: 64:ff9b::4b02:3c44
+

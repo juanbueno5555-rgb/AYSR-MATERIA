@@ -1,0 +1,28 @@
+PRUEBA SCRIPT (b) - menu-procesos.sh
+Fecha: 2026-08-31 | VM: slackware-15.0 (Slackware 15.0, Linux)
+Usuario: vagrant
+
+Opcion 1 (listar procesos) - salida (extracto):
+  PID | %MEM | %CPU | COMANDO
+  566  1.4  0.0 smbd
+  513  1.4  0.0 named
+  568  0.8  0.0 smbd-notifyd
+  ... (procesos ordenados por %MEM desc)
+
+Opcion 2 (buscar 'sshd') - salida (extracto):
+  root       505     1  0 23:14 ?        00:00:00 sshd: /usr/sbin/sshd [listener]
+  root      1819   505  0 23:51 ?        00:00:00 sshd: vagrant [priv]
+  vagrant   1827  1819  0 23:51 ?        00:00:00 sshd: vagrant@notty
+  ... (todos los procesos que contienen sshd)
+
+Opcion 3 (matar) - se probo con un proceso de prueba `sleep 300` (PID 1866):
+  -> "Proceso 1866 terminado." / sleep YA NO EXISTE (kill -9 OK)
+
+Opcion 4 (reiniciar) - se probo con `sleep 300` (PID 1924):
+  -> "Proceso detenido. Reiniciando... / ¡Proceso 1924 reiniciado!"
+  -> el proceso se relanza con nohup (nuevo PID, correcto para reinicio)
+
+Opcion 5 (salir): OK
+
+Nota portabilidad: se reemplazo la sintaxis GNU `ps -eo pid,%mem,%cpu,comm --sort=-%mem`
+por `ps -eo pid,pmem,pcpu,comm | sort -k2 -nr`, que funciona en ps de Linux Y de Solaris.

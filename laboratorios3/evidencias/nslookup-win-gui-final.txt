@@ -1,0 +1,60 @@
+﻿==1-self
+juan==
+Server:  localhost
+Address:  127.0.0.1
+
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+Name:    srv1.juan.com.it
+Address:  10.2.78.74
+Aliases:  www.juan.com.it
+
+==2-core
+camilo
+via
+.12==
+DNS request timed out.
+    timeout was 2 seconds.
+Server:  UnKnown
+Address:  192.168.82.12
+
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+Name:    dns1.camilo.org.uk
+Addresses:  2001:db8:2::74
+	  10.2.78.74
+Aliases:  mail.camilo.org.uk
+
+==3-externo==
+Server:  localhost
+Address:  127.0.0.1
+
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+ssh : Cannot process the XML from the 'Error' stream of 'C:\WINDOWS\System32\OpenSSH\ssh.exe': Data at the root level 
+is invalid. Line 1, position 1.
+At line:1 char:366
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2225 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SyntaxError: (C:\WINDOWS\System32\OpenSSH\ssh.exe:String) [], XmlException
+    + FullyQualifiedErrorId : ProcessStreamReader_CliXmlError
+ 
+==4-servicio==
+
+
+Name      : DNS
+Status    : Running
+StartType : Automatic
+
+
+

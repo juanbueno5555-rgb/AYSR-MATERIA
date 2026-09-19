@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entender las salidas — Lab 03 (DNS · Shell · EC2)</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2128; --muted:#5b6570;
+    --line:#e3e6ea; --accent:#1f6feb; --accent-soft:#eaf2ff;
+    --code-bg:#1e2430; --code-ink:#e6edf3; --ok:#1a7f37; --warn:#9a6700; --bad:#b42318;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:32px 22px 80px}
+  header.hero{
+    background:linear-gradient(135deg,#1f6feb,#0b4bc0); color:#fff;
+    border-radius:16px; padding:30px 28px; margin-bottom:26px;
+    box-shadow:0 10px 30px rgba(31,111,235,.25);
+  }
+  header.hero .eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+  header.hero h1{margin:6px 0 8px;font-size:30px;line-height:1.2}
+  header.hero p{margin:0;opacity:.92}
+  .toc{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:18px 22px; margin-bottom:26px;
+  }
+  .toc h2{margin:0 0 10px;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .toc ol{margin:0;padding-left:20px}
+  .toc a{color:var(--accent);text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:24px 26px; margin-bottom:22px;
+  }
+  section h2{margin:0 0 6px;font-size:23px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+  section h3{margin:26px 0 8px;font-size:18px}
+  section h4{margin:18px 0 6px;font-size:15.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  p{margin:10px 0}
+  code{font-family:"Cascadia Code",Consolas,"Courier New",monospace;font-size:.92em}
+  p code, li code, td code{background:#eef1f4;border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+  pre{
+    background:var(--code-bg); color:var(--code-ink); border-radius:10px;
+    padding:14px 16px; overflow:auto; font-size:13.5px; line-height:1.5;
+    margin:10px 0; border:1px solid #2b3342;
+  }
+  pre code{color:inherit;background:none;border:none;padding:0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f0f3f7;font-weight:600}
+  tr:nth-child(even) td{background:#fafbfc}
+  .callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:8px;margin:14px 0}
+  .callout.key{border-color:var(--ok);background:#eaf7ee}
+  .callout.warn{border-color:var(--warn);background:#fff8e6}
+  .callout p{margin:4px 0}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid #cfe0ff}
+  .ok{color:var(--ok);font-weight:600}
+  .warn{color:var(--warn);font-weight:600}
+  .bad{color:var(--bad);font-weight:600}
+  .why{color:var(--muted)}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+  @page{size:A4;margin:16mm}
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    section,header.hero,.toc{box-shadow:none}
+    header.hero{background:#0b4bc0 !important}
+    section{break-inside:avoid;border-color:#ccd2da}
+    a{color:inherit;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">AYSR · Laboratorio No.03</div>
+  <h1>Entender las salidas de los comandos</h1>
+  <p>DNS · Shell · Amazon EC2 — Camilo Aguirre &amp; Juan David Rangel</p>
+</header>
+
+<nav class="toc">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#s0">Cliente vs servidor: el concepto que más confunde</a></li>
+    <li><a href="#idea">¿Cuál es la idea del lab?</a></li>
+    <li><a href="#dns">DNS — comando por comando</a></li>
+    <li><a href="#transfer">Transferencia de zona (replicación) en 2 PCs</a></li>
+    <li><a href="#shell">Shell — comando por comando</a></li>
+    <li><a href="#ec2">EC2 — comando por comando</a></li>
+    <li><a href="#resumen">Tabla resumen: "¿por qué veo esto?"</a></li>
+  </ol>
+</nav>
+
+<section id="s0">
+  <h2>0. Cliente vs servidor: el concepto que más confunde</h2>
+  <p>En este lab <strong>cada máquina es las DOS cosas al mismo tiempo</strong>: corre un servidor DNS <em>y</em> actúa como cliente.</p>
+  <table>
+    <tr><th>Rol</th><th>Dónde vive la config</th><th>Qué significa</th></tr>
+    <tr><td><strong>Cliente</strong> (pregunta)</td><td><code>/etc/resolv.conf</code> o el adaptador (Windows)</td><td>"A qué servidor le pido que resuelva"</td></tr>
+    <tr><td><strong>Servidor</strong> (responde)</td><td><code>/etc/named.conf</code> + zonas, o rol DNS de Windows</td><td>"De qué zonas soy dueño y qué datos tengo"</td></tr>
+  </table>
+  <div class="callout key">
+    <p><strong>Regla 1:</strong> <code>nameserver 127.0.0.1</code> = <em>"me pregunto a mí mismo"</em> → prueba del <strong>punto 8</strong> (en el propio servidor).</p>
+    <p><strong>Regla 2:</strong> poner la <strong>IP de otra máquina</strong> como resolver = prueba del <strong>punto 7</strong> (un cliente usando nuestro DNS).</p>
+  </div>
+
+  <h3>¿Por qué a veces responde "el local" y no "el servidor DNS"?</h3>
+  <p>Porque en esa prueba <strong>el local ES el servidor DNS</strong>. No son máquinas distintas: es la misma.</p>
+  <ul>
+    <li>Para <code>camilo.org.uk</code>, Slackware es <strong>maestro</strong> → dueño de los datos.</li>
+    <li>Para <code>juan.com.it</code>, Slackware es <strong>esclavo</strong> → BIND guardó una <strong>copia completa</strong> (transferida una vez) y la sirve como autoritativa. Un esclavo <strong>NO reenvía</strong> la consulta al maestro: responde con su copia.</li>
+    <li>Por eso, al preguntar desde Slackware, <strong>no sale a la red</strong>: ya tiene la respuesta adentro.</li>
+  </ul>
+  <p><code>nslookup</code> muestra <strong>a quién le preguntaste</strong>, no "de dónde vinieron los datos":</p>
+<pre><code>Slackware (misma máquina):   Server: 127.0.0.1        &lt;- me pregunté a mí mismo
+Windows GUI (otra máquina):  Server: 192.168.82.10    &lt;- le pregunté a Slackware</code></pre>
+</section>
+
+<section id="idea">
+  <h2>1. ¿Cuál es la idea del lab?</h2>
+  <p>Montar un <strong>servicio DNS de empresa</strong> y demostrar que resuelve. Concretamente:</p>
+  <ol>
+    <li><strong>Dos dominios reales</strong> (<code>juan.com.it</code>, <code>camilo.org.uk</code>) con primario + secundarios.</li>
+    <li><strong>Redundancia</strong>: si un servidor cae, otro responde igual.</li>
+    <li>Que resuelva <strong>hacia adentro</strong> (tus dominios) <strong>y hacia afuera</strong> (<code>google</code>, <code>escuelaing</code>).</li>
+    <li>Que <strong>un cliente distinto del servidor</strong> lo use y resuelva (punto 7).</li>
+  </ol>
+  <div class="callout warn">
+    <p><strong>Por qué cada máquina es cliente y servidor:</strong> en una empresa los <em>secundarios</em> existen para dar redundancia. El lab no da VMs "de cliente" aparte, entonces usa las mismas máquinas en los dos roles. De ahí sale toda la confusión del <code>127.0.0.1</code>.</p>
+  </div>
+  <p>El <strong>punto 8</strong> ("¿funciona en el servidor? ¿por qué?") es un <em>control</em> puesto a propósito: te obliga a ver que un servidor también es cliente de sí mismo, y que su propio resolver (y su IP) tienen que estar bien configurados. Por eso la guía pide <strong>mostrar la IP final del servidor</strong>.</p>
+  <div class="callout">
+    <p><strong>Resumen:</strong> la idea NO es "que contesta el local". La idea es: <em>hay un servicio DNS con redundancia, que resuelve adentro y afuera, y lo demuestra un cliente que NO es el servidor</em>. La prueba que más pesa es la de la <strong>Windows GUI apuntando a 192.168.82.10</strong>.</p>
+  </div>
+</section>
+
+<section id="dns">
+  <h2>2. DNS — comando por comando</h2>
+
+  <h3><code>nslookup srv1.camilo.org.uk</code></h3>
+<pre><code>Server:   127.0.0.1
+Address:  127.0.0.1#53
+
+Name:   srv1.camilo.org.uk
+Address: 10.2.78.75</code></pre>
+  <p><strong>Qué ves:</strong></p>
+  <ul>
+    <li><strong>Primer bloque</strong> = <em>quién contestó</em>. <code>127.0.0.1</code> es el <code>named</code> local. El <code>#53</code> es el puerto.</li>
+    <li><strong>Segundo bloque</strong> = <em>la respuesta</em>: el registro <strong>A</strong> (nombre → IPv4).</li>
+  </ul>
+  <p class="why"><strong>Por qué:</strong> el resolver está en <code>127.0.0.1</code>, así que la consulta fue al servidor local, que es autoritativo y responde de memoria.</p>
+  <div class="callout"><p>Si aparece <code>Non-authoritative answer</code>, quien contestó <strong>no es dueño</strong> de la zona y respondió desde <strong>caché</strong> (no es falso: es una copia reciente). Cuando contesta el dueño, esa línea no aparece.</p></div>
+
+  <h3><code>nslookup srv1.juan.com.it</code> (desde Slackware)</h3>
+<pre><code>Name:   srv1.juan.com.it
+Address: 10.2.78.74</code></pre>
+  <p class="why"><strong>Por qué funciona sin preguntarle a Solaris:</strong> Slackware es <strong>esclavo</strong> de <code>juan.com.it</code>. Un esclavo que carga una zona la sirve como autoritativa. Ese es el objetivo de la replicación: cualquiera de los servidores puede responder, incluso si el primario está caído.</p>
+
+  <h3><code>nslookup www.camilo.org.uk</code> (un alias)</h3>
+<pre><code>www.camilo.org.uk  canonical name = srv1.camilo.org.uk.
+Name:   srv1.camilo.org.uk
+Address: 10.2.78.75</code></pre>
+  <p class="why"><strong>Por qué salen DOS cosas:</strong> <code>www</code> es un <strong>CNAME</strong> (alias). El servidor devuelve el nombre canónico <strong>y</strong> el A del destino, en el mismo mensaje.</p>
+
+  <h3><code>nslookup www.google.com</code> (dominio externo)</h3>
+  <p>Con internet, aparece normalmente <span class="pill">Non-authoritative answer</span>.</p>
+  <p class="why"><strong>Por qué:</strong> el <code>named</code> local <strong>no es dueño</strong> de <code>google.com</code>, así que actúa de <strong>recursor</strong>: consulta las raíces (<code>named.ca</code>), luego el TLD <code>.com</code>, luego Google. Guarda en <strong>caché</strong> y entrega. Al venir de caché → "no autoritativa".</p>
+
+  <h3><code>nslookup -type=NS juan.com.it</code></h3>
+<pre><code>juan.com.it  nameserver = dns1.juan.com.it.</code></pre>
+  <p class="why">Se pidió el registro <strong>NS</strong> (quién es autoritativo), no una IP.</p>
+
+  <h3><code>nslookup -type=MX juan.com.it</code></h3>
+<pre><code>juan.com.it   No answer</code></pre>
+  <p class="why"><strong>Por qué NO es un error:</strong> el nombre <strong>existe</strong> pero no tiene registro de ese <strong>tipo</strong> (MX = correo, comentado en la zona).</p>
+  <table>
+    <tr><th>Resultado</th><th>Significa</th></tr>
+    <tr><td><code>No answer</code></td><td>El nombre existe, ese tipo de registro no</td></tr>
+    <tr><td><code>NXDOMAIN</code></td><td>El nombre <strong>no existe</strong> (p. ej. contra el DNS de la escuela)</td></tr>
+  </table>
+
+  <h3><code>set debug</code></h3>
+  <p class="why">Baja el detalle al máximo y muestra el <strong>paquete DNS completo</strong>: <code>QUESTIONS</code> (qué se preguntó, con tipo <strong>A y AAAA</strong>), <code>ANSWERS</code>, flags y SOA. Es la radiografía de la consulta.</p>
+
+  <h3><code>cat /etc/named.conf</code></h3>
+  <table>
+    <tr><th>Bloque</th><th>Significa</th></tr>
+    <tr><td><code>options { directory "/etc/DNS"; }</code></td><td>Dónde están los archivos de zona</td></tr>
+    <tr><td><code>zone "." { type hint; file "named.ca"; }</code></td><td><strong>Raíces</strong>: sin esto no resuelve dominios externos</td></tr>
+    <tr><td><code>zone "camilo.org.uk" { type master; }</code></td><td><strong>Soy el dueño</strong> de esta zona</td></tr>
+    <tr><td><code>zone "juan.com.it" { type slave; masters {...}; }</code></td><td><strong>Copio</strong> esta zona de otro servidor</td></tr>
+    <tr><td><code>allow-transfer { ... }</code></td><td>Solo estas IPs pueden pedir la copia (AXFR)</td></tr>
+    <tr><td><code>notify yes;</code></td><td>Avisa a los esclavos apenas cambia la zona</td></tr>
+  </table>
+
+  <h3><code>ps -ef | grep named</code></h3>
+<pre><code>named  514  1  0 21:02 ?  /usr/sbin/named -u named</code></pre>
+  <ul>
+    <li><code>514</code> = <strong>PID</strong>.</li>
+    <li><code>1</code> = <strong>proceso padre</strong> (init): lo levantó el sistema, no un usuario.</li>
+    <li><code>-u named</code> = <strong>bajó privilegios</strong>: corre como usuario <code>named</code>, <strong>no como root</strong>. Seguridad.</li>
+  </ul>
+
+  <h3><code>svcs dns/server</code> (Solaris)</h3>
+<pre><code>STATE    STIME   FMRI
+online   ...     svc:/network/dns/server:default</code></pre>
+  <p class="why"><code>online</code> = corre <strong>ahora</strong>; <code>enabled=true</code> = arranca <strong>al boot</strong>. Son cosas distintas, y el punto 9 pide lo segundo.</p>
+
+  <h3><code>nslookup</code> en Windows → <code>Server: UnKnown</code></h3>
+<pre><code>Server:  UnKnown
+Address:  192.168.82.10</code></pre>
+  <p class="why"><strong>Por qué dice "UnKnown":</strong> Windows intenta mostrar el <em>nombre</em> del servidor DNS y para eso consulta el inverso (PTR) de la IP. Como no hay registro inverso → no lo puede nombrar. <strong>Es cosmético, no un error.</strong></p>
+
+  <h3>Comandos de Windows útiles</h3>
+<pre><code>Get-DnsClientServerAddress -InterfaceAlias "Ethernet 2" -AddressFamily IPv4
+#   -> a qué servidor DNS apunta el cliente (lado "cliente")
+
+Get-DnsServerZone -Name "juan.com.it"
+#   -> ZoneType: Secondary  (lado "servidor": es esclavo de esa zona)
+
+Resolve-DnsName srv1.juan.com.it -Type A
+#   -> equivalente moderno de nslookup</code></pre>
+</section>
+
+<section id="transfer">
+  <h2>3. Transferencia de zona (replicación) en 2 PCs</h2>
+  <p>Un <strong>esclavo</strong> no inventa los datos: le pide la zona al <strong>maestro</strong> y guarda la copia. Eso es la <em>transferencia de zona</em>, y es lo que permite que el esclavo responda aunque el maestro esté caído (la redundancia del lab).</p>
+
+  <h3>Las 3 piezas que la hacen funcionar</h3>
+  <table>
+    <tr><th>Pieza</th><th>Dónde</th><th>Qué dice</th></tr>
+    <tr><td><code>type master</code> / <code>type slave</code></td><td>En cada zona</td><td>Si soy el dueño o el que copia</td></tr>
+    <tr><td><code>allow-transfer { ... }</code></td><td>En el <strong>maestro</strong></td><td><strong>A quiénes</strong> les permito pedir la copia (seguridad)</td></tr>
+    <tr><td><code>masters { ... }</code></td><td>En el <strong>esclavo</strong></td><td><strong>De quién</strong> copio la zona</td></tr>
+  </table>
+
+  <h3>Cuándo transfiere: el serial</h3>
+  <p>El esclavo revisa el <strong>serial</strong> del SOA cada <code>Refresh</code> (o enseguida si el maestro manda <code>notify</code>). Si el serial del maestro es <strong>mayor</strong>, pide la zona (<strong>AXFR</strong> = completa, <strong>IXFR</strong> = incremental). Si el serial <strong>no sube</strong>, no transfiere. Verificación: comparar el serial con <code>nslookup -type=SOA</code> en maestro y esclavo — debe ser el mismo.</p>
+
+  <div class="callout warn">
+    <p><strong>El detalle de las 2 PCs:</strong> el <code>intnet</code> de VirtualBox es <strong>local de cada host</strong> — no cruza entre computadoras. Con las VMs repartidas en 2 PCs, la transferencia tiene que viajar por la <strong>red física de la uni (<code>10.2.78.x</code>)</strong>. Por eso se agregaron esas IPs a <code>allow-transfer</code> / <code>masters</code>.</p>
+  </div>
+
+  <h3>Configuración actual (lista para 2 PCs)</h3>
+  <table>
+    <tr><th>Servidor</th><th>Zona</th><th>Rol</th><th>Quién puede transferir / de quién</th></tr>
+    <tr><td>Slackware</td><td><code>camilo.org.uk</code></td><td>maestro</td><td><code>allow-transfer { 192.168.82.11; 192.168.82.12; 10.2.78.75; 10.2.78.77; }</code></td></tr>
+    <tr><td>Solaris</td><td><code>juan.com.it</code></td><td>maestro</td><td><code>allow-transfer { 192.168.82.10; 192.168.82.13; 10.2.78.74; 10.2.78.76; }</code></td></tr>
+    <tr><td>Slackware</td><td><code>juan.com.it</code></td><td>esclavo</td><td><code>masters { 192.168.82.11; 10.2.78.75; }</code></td></tr>
+    <tr><td>Solaris</td><td><code>camilo.org.uk</code></td><td>esclavo</td><td><code>masters { 192.168.82.10; 10.2.78.74; }</code></td></tr>
+    <tr><td>Windows GUI</td><td><code>juan.com.it</code></td><td>secundario</td><td><code>MasterServers 192.168.82.11; 10.2.78.75</code></td></tr>
+    <tr><td>Windows Core</td><td><code>camilo.org.uk</code></td><td>secundario</td><td><code>MasterServers 192.168.82.10; 10.2.78.74</code></td></tr>
+  </table>
+
+  <div class="callout key">
+    <p><strong>Regla práctica:</strong> cualquier par de máquinas que quede en <strong>PCs distintas</strong> tiene que hablarse por <code>10.2.78.x</code>. Por eso se dejan <em>ambas</em> IPs en la config: funciona con las VMs repartidas en 2 PCs <strong>o</strong> todas en una sola.</p>
+  </div>
+</section>
+
+<section id="shell">
+  <h2>4. Shell — comando por comando</h2>
+
+  <h3><code>schedult-task-script.sh * * * * *</code> y luego <code>crontab -l</code></h3>
+<pre><code>* * * * * /usr/local/bin/mi-script.sh</code></pre>
+  <p><strong>Por qué 5 asteriscos:</strong> son los 5 campos de tiempo de cron:</p>
+<pre><code>minuto  hora  día-mes  mes  día-semana   comando</code></pre>
+  <p class="why"><code>* * * * *</code> = "todos los minutos". Por eso el script corre solo.<br>
+  <strong>Ojo Solaris:</strong> el cron viejo <strong>no soporta <code>*/N</code></strong>; usar <code>* * * * *</code> o expandir el rango (<code>0-59/1</code>).</p>
+
+  <h3><code>menu-procesos.sh</code> → opción "listar"</h3>
+  <p class="why">El script pide <code>ps</code> con formato propio (<code>-eo</code> en Linux / <code>-efo</code> en Solaris) para mostrar exactamente lo que pide la guía: <strong>nombre, PID, %memoria, %CPU</strong>.</p>
+
+  <h3><code>menu-procesos.sh</code> → buscar / matar / reiniciar</h3>
+  <ul>
+    <li><strong>Buscar:</strong> filtra <code>ps</code> por el nombre ingresado.</li>
+    <li><strong>Matar:</strong> <code>kill &lt;PID&gt;</code> → <code>SIGTERM</code>; <code>kill -9</code> → <code>SIGKILL</code>.</li>
+    <li><strong>Reiniciar:</strong> <code>kill -CONT &lt;PID&gt;</code> → <code>SIGCONT</code> (reanuda un proceso detenido).</li>
+  </ul>
+
+  <h3><code>files-script.sh 10 1GB</code></h3>
+  <p class="why">Se pasaron 2 argumentos → <code>$1</code>=10 (cantidad), <code>$2</code>=1GB (tamaño máximo). Internamente: <code>find</code> recorre (con subdirectorios), <code>du</code> mide, <code>sort -n</code> ordena y <code>head -n 10</code> corta los 10 más pequeños.</p>
+</section>
+
+<section id="ec2">
+  <h2>5. EC2 — comando por comando</h2>
+
+  <h3><code>ssh -i lab03-key.pem ec2-user@ec2-...</code></h3>
+  <p class="why"><strong>Por qué pregunta "Are you sure you want to continue connecting":</strong> es <strong>TOFU</strong> (<em>trust on first use</em>): la primera vez no conoce la huella del host, te la muestra para que la verifiques y la guarda en <code>known_hosts</code>. Si no coincide con la de la consola (<em>Get system log</em>), puede haber un <strong>man-in-the-middle</strong>.</p>
+  <p class="why"><strong>Por qué <code>ec2-user</code>:</strong> es el usuario por defecto de la AMI de <strong>Amazon Linux</strong> (cada distro trae el suyo: <code>ubuntu</code> en Ubuntu, etc.).</p>
+
+  <h3><code>lsblk</code> / montaje de un EBS</h3>
+  <p class="why">El volumen EBS se adjunta <strong>en caliente</strong> y el SO lo ve como un disco nuevo. Pasos: <code>mkfs.ext4 /dev/xvdf</code> → <code>mount</code> → <code>/etc/fstab</code> para que persista.</p>
+
+  <h3>STOP vs TERMINATE vs RESTART</h3>
+  <table>
+    <tr><th>Acción</th><th>Qué pasa con el EBS raíz</th></tr>
+    <tr><td><strong>Stop</strong></td><td>La instancia se apaga; el EBS <strong>persiste</strong>; se deja de facturar cómputo</td></tr>
+    <tr><td><strong>Terminate</strong></td><td>La instancia se <strong>elimina</strong>; el EBS raíz se borra (salvo protección)</td></tr>
+    <tr><td><strong>Restart</strong></td><td>Reinicia el SO en la misma instancia (cambios de kernel/config)</td></tr>
+  </table>
+  <p class="why"><strong>Ephemeral (instance store):</strong> disco temporal ligado al host físico → <strong>se pierde siempre</strong> al detener/terminar.</p>
+</section>
+
+<section id="resumen">
+  <h2>6. Tabla resumen: "¿por qué veo esto?"</h2>
+  <table>
+    <tr><th>Ves…</th><th>Porque…</th></tr>
+    <tr><td><code>Server: 127.0.0.1</code></td><td>El resolver está en la máquina local (punto 8)</td></tr>
+    <tr><td><code>Server: 192.168.82.10</code></td><td>El cliente apunta al DNS de otra máquina (punto 7)</td></tr>
+    <tr><td><code>Non-authoritative answer</code></td><td>Contestó un recursor desde su <strong>caché</strong>, no el dueño de la zona</td></tr>
+    <tr><td><code>No answer</code></td><td>El nombre existe, pero no ese <strong>tipo</strong> de registro</td></tr>
+    <tr><td><code>NXDOMAIN</code></td><td>El nombre <strong>no existe</strong> para ese servidor</td></tr>
+    <tr><td><code>canonical name =</code></td><td>Es un <strong>CNAME</strong> (alias → nombre real)</td></tr>
+    <tr><td><code>named -u named</code></td><td>El servicio <strong>bajó privilegios</strong> (no corre como root)</td></tr>
+    <tr><td><code>online</code> + <code>enabled=true</code></td><td>Está activo <strong>y</strong> arranca al boot</td></tr>
+    <tr><td><code>UnKnown</code> (nslookup Windows)</td><td>No hay registro inverso (PTR) del servidor DNS</td></tr>
+    <tr><td><code>allow-transfer { ... }</code></td><td>Lista de <strong>quiénes</strong> pueden pedir la copia de mi zona (seguridad)</td></tr>
+    <tr><td><code>masters { ... }</code></td><td>De <strong>quién</strong> copio esta zona (soy esclavo)</td></tr>
+    <tr><td>Serial distinto entre maestro y esclavo</td><td>El esclavo <strong>no transfiere</strong>: la copia quedó vieja</td></tr>
+  </table>
+</section>
+
+<footer>Guía de estudio interna — AYSR Lab 03 · generada 13/09/2026</footer>
+
+</div>
+</body>
+</html>

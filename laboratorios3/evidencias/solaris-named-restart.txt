@@ -1,0 +1,21 @@
+﻿fmri         svc:/network/dns/server:default
+name         BIND DNS server
+enabled      true
+state        online
+next_state   none
+state_time   Fri Aug 28 23:40:27 2026
+logfile      /var/svc/log/network-dns-server:default.log
+restarter    svc:/system/svc/restarter:default
+contract_id  215 
+manifest     /lib/svc/manifest/network/dns/server.xml
+dependency   require_all/none svc:/system/filesystem/local (online)
+dependency   require_any/error svc:/network/loopback (online)
+dependency   optional_all/error svc:/milestone/network (online)
+===
+total 15
+drwxr-xr-x   2 root     root           6 Aug 28 23:40 .
+drwxr-xr-x   5 root     sys           21 Aug 28 23:15 ..
+-rw-r--r--   1 root     root         165 Aug 28 23:15 127.0.0.rev
+-rw-r--r--   1 root     root         605 Aug 28 23:15 juan.com.it.hosts
+-rw-r--r--   1 root     root         269 Aug 28 23:15 named.ca
+-rw-r--r--   1 root     root         240 Aug 28 23:15 named.soa

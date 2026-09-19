@@ -1,0 +1,23 @@
+PRUEBA SCRIPT (a) - schedult-task-script.sh
+Fecha: 2026-08-31 | VM: solaris-11.4 (Oracle Solaris 11.4)
+Usuario: root (vía SSH con llave gentle-ai)
+Comando:
+  bash /tmp/schedult-task-script.sh '*' '*' '*' '*' '*' '/bin/echo Hola-cron'
+
+Salida:
+  Tarea programada con éxito:
+  Frecuencia: * * * * *
+  Comando:    /bin/echo Hola-cron
+
+Verificación crontab -l:
+  * * * * * /bin/echo Hola-cron
+
+Hallazgos (portabilidad Solaris):
+1. "crontab -" (stdin) NO funciona en Solaris: intenta abrir un archivo literal "-"
+   (verificado con truss: openat "-" -> ENOENT). Se corrigió el script para usar
+   archivo temporal: (crontab -l; echo ...) > /tmp/crontab.$$~ ; crontab /tmp/crontab.$$~.
+2. El cron clásico de Solaris rechaza la sintaxis de paso "*/1" ("unexpected character").
+   Con "* * * * *" funciona correctamente.
+3. El crontab de usuario requiere que exista /etc/cron.d/cron.allow o el spool
+   /var/spool/cron/crontabs con permisos 1777; se creó cron.allow (root, admin) y se
+   aplicó chmod 1777 al spool.

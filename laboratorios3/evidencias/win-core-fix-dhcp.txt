@@ -1,0 +1,83 @@
+﻿DHCP is already enabled on this interface.
+
+
+
+Pinging 8.8.8.8 with 32 bytes of data:
+PING: transmit failed. General failure. 
+PING: transmit failed. General failure. 
+
+Ping statistics for 8.8.8.8:
+    Packets: Sent = 2, Received = 0, Lost = 2 (100% loss),
+ssh : Get-NetRoute : No MSFT_NetRoute objects found with property 'DestinationPrefix' equal to '0.0.0.0/0'.  Verify 
+the 
+
+At line:1 char:356
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Get-NetRoute : ...  Verify the 
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh : value of the property and retry.
+
+At line:1 char:356
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (value of the property and retry.
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh : At line:1 char:136
+
+At line:1 char:356
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (At line:1 char:136
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh : + ... p; Start-Sleep 8; Get-NetRoute -DestinationPrefix "0.0.0.0/0" | Selec ...
+
+At line:1 char:356
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (+ ... p; Start-..." | Selec ...
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh : +                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+At line:1 char:356
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (+              ...~~~~~~~~~~~~~
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh :     + CategoryInfo          : ObjectNotFound: (0.0.0.0/0:String) [Get-NetRoute], CimJobException
+
+At line:1 char:356
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (    + CategoryI...mJobException
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh :     + FullyQualifiedErrorId : CmdletizationQuery_NotFound_DestinationPrefix,Get-NetRoute
+
+At line:1 char:356
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (    + FullyQual...,Get-NetRoute
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh :  
+
+At line:1 char:356
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( 
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

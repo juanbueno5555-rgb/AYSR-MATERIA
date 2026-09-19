@@ -1,0 +1,5 @@
+﻿True
+Interface: 192.168.82.13 --- 0x9
+  192.168.82.10         08-00-27-c0-a9-6d     dynamic   
+  192.168.82.11         08-00-27-ed-d6-c2     dynamic   
+  192.168.82.255        ff-ff-ff-ff-ff-ff     static    

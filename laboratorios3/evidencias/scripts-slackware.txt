@@ -1,0 +1,24 @@
+﻿===S1-SCHEDULT===
+Tarea programada:
+  */1 * * * * /bin/date >> /tmp/tarea-ejemplo.log
+
+Crontab actual:
+crontab 4.5
+crontab file [-u user]  replace crontab from file
+crontab -  [-u user]    replace crontab from stdin
+crontab -l [-u user]    list crontab
+crontab -e [-u user]    edit crontab
+crontab -d [-u user]    delete crontab
+crontab -c dir <opts>   specify crontab directory
+ssh : ./schedult-task-script.sh: line 85: syntax error: unexpected end of file
+At line:8 char:5
++ " | ssh -i .ssh/vagrant.key -o ConnectTimeout=8 -o StrictHostKeyCheck ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (./schedult-task...ted end of file:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+===M1-LISTAR-Y-SALIR===
+./menu-procesos.sh: line 58: syntax error: unexpected end of file
+===M2-BUSCAR===
+./menu-procesos.sh: line 58: syntax error: unexpected end of file
+sh: line 8: $'\r': command not found

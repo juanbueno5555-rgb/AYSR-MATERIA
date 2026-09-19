@@ -1,0 +1,58 @@
+﻿Ok.
+
+
+Pinging 8.8.8.8 with 32 bytes of data:
+Reply from 8.8.8.8: bytes=32 time=6ms TTL=128
+Reply from 8.8.8.8: bytes=32 time=6ms TTL=128
+
+Ping statistics for 8.8.8.8:
+    Packets: Sent = 2, Received = 2, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 6ms, Maximum = 6ms, Average = 6ms
+===EXT-LOCAL-DNS===
+Server:  localhost
+Address:  127.0.0.1
+
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+ssh : Cannot process the XML from the 'Error' stream of 'C:\WINDOWS\System32\OpenSSH\ssh.exe': Data at the root level 
+is invalid. Line 1, position 1.
+At line:1 char:447
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2225 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SyntaxError: (C:\WINDOWS\System32\OpenSSH\ssh.exe:String) [], XmlException
+    + FullyQualifiedErrorId : ProcessStreamReader_CliXmlError
+ 
+===EXT-ESCUELA===
+Server:  localhost
+Address:  127.0.0.1
+
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+DNS request timed out.
+    timeout was 2 seconds.
+===CRUZADO===
+DNS request timed out.
+    timeout was 2 seconds.
+Server:  UnKnown
+Address:  192.168.82.12
+
+Name:    srv1.camilo.org.uk
+Address:  10.2.78.75
+Aliases:  www.camilo.org.uk
+
+===NS===
+Server:  localhost
+Address:  127.0.0.1
+
+juan.com.it	nameserver = dns1.juan.com.it
+dns1.juan.com.it	internet address = 10.2.78.75
+dns1.juan.com.it	AAAA IPv6 address = 2001:db8:1::75

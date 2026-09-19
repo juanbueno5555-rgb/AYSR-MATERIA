@@ -1,0 +1,32 @@
+﻿-rwxr-xr-x 1 root root 3990 Sep 24  2021 /etc/rc.d/rc.bind
+===
+#!/bin/sh
+# Start/stop/restart the BIND name server daemon (named).
+
+# Start BIND. By default this will run with user "named". If you'd like to
+# change this or other options, see: /etc/default/named
+
+# You might also consider running BIND in a "chroot jail",
+# a discussion of which may be found in
+# /usr/doc/Linux-HOWTOs/Chroot-BIND-HOWTO.
+ 
+# One last note: rndc has a lot of other nice features that it is not
+# within the scope of this start/stop/restart script to support.
+# For more details, see "man rndc" or just type "rndc" to see the options.
+
+# Load command defaults:
+if [ -f /etc/default/named ] ; then . /etc/default/named ; fi
+if [ -f /etc/default/rndc ] ; then . /etc/default/rndc ; fi
+
+# In case /etc/default/named was missing, provide fallbacks:
+if [ -z "$NAMED_USER" ]; then
+  NAMED_USER="named"
+fi
+if [ -z "$NAMED_GROUP" ]; then
+  NAMED_GROUP="named"
+fi
+if [ -z "$NAMED_OPTIONS" ]; then
+  NAMED_OPTIONS="-u $NAMED_USER"
+fi
+
+# Sanity check. If /usr/sbin/named is missing then it

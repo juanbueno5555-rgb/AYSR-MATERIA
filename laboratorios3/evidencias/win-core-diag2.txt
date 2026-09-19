@@ -1,0 +1,85 @@
+﻿
+IPAddress Result                  RoundTripTime TcpTried UdpTried
+--------- ------                  ------------- -------- --------
+127.0.0.1 NotAuthoritativeForZone 00:00:00      False    True    
+
+Name   : backup
+Length : 
+
+
+Name   : samples
+Length : 
+
+
+Name   : CACHE.DNS
+Length : 3864
+
+
+Name   : dns.log
+Length : 0
+
+
+
+ssh : Resolve-DnsName : camilo.org.uk : A socket operation was attempted to an unreachable network
+
+At line:1 char:450
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Resolve-DnsName...hable network
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh : At line:1 char:293
+
+At line:1 char:450
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (At line:1 char:293
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh : + ... ame,Length; Resolve-DnsName camilo.org.uk -Server 192.168.82.10 -Type ...
+
+At line:1 char:450
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (+ ... ame,Lengt....10 -Type ...
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh : +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+At line:1 char:450
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (+              ...~~~~~~~~~~~~~
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh :     + CategoryInfo          : ResourceUnavailable: (camilo.org.uk:String) [Resolve-DnsName], Win32Exception
+
+At line:1 char:450
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (    + CategoryI...in32Exception
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh :     + FullyQualifiedErrorId : 10051,Microsoft.DnsClient.Commands.ResolveDnsName
+
+At line:1 char:450
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (    + FullyQual...esolveDnsName
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ssh :  
+
+At line:1 char:450
++ ... Bytes($c)); ssh -i .ssh/gentle-ai -p 2224 -o ConnectTimeout=8 -o Stri ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( 
+:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
