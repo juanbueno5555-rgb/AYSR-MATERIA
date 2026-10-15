@@ -1,0 +1,9 @@
+﻿
+ZoneName         ZoneType  IsSecondary IsAutoCreated
+--------         --------  ----------- -------------
+0.in-addr.arpa   Primary                        True
+127.in-addr.arpa Primary                        True
+255.in-addr.arpa Primary                        True
+camilo.org.uk    Secondary                     False
+
+

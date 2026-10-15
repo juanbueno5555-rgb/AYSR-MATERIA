@@ -1,0 +1,12 @@
+﻿  demo-windows.txt                    N       46  Mon Aug 17 20:29:15 2026
+  demo-slack-lab03.txt                N       37  Sat Aug 29 15:03:54 2026
+  demo-slackware.txt                  N       52  Mon Aug 17 20:28:55 2026
+
+		19852854 blocks of size 1024. 19852811 blocks available
+ssh : sh: line 2: $'\r': command not found
+At line:2 char:5
++ " | ssh -i .ssh/vagrant.key -o ConnectTimeout=8 -o StrictHostKeyCheck ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (sh: line 2: $'\r': command not found:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

@@ -1,0 +1,16 @@
+﻿
+Name       Status
+----       ------
+Ethernet   Up    
+Ethernet 2 Up    
+
+
+
+InterfaceAlias              IPAddress      PrefixLength
+--------------              ---------      ------------
+Ethernet 2                  192.168.82.12            24
+Ethernet 2                  169.254.202.72           16
+Ethernet                    10.0.2.15                24
+Loopback Pseudo-Interface 1 127.0.0.1                 8
+
+

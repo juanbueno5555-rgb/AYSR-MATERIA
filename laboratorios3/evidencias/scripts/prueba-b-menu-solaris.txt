@@ -1,0 +1,24 @@
+PRUEBA SCRIPT (b) - menu-procesos.sh
+Fecha: 2026-08-31 | VM: solaris-11.4 (Oracle Solaris 11.4)
+Usuario: root
+
+Opcion 1 (listar procesos) - salida (extracto):
+  PID | %MEM | %CPU | COMANDO
+  842  7.6  0.2 /usr/lib/sstore/bin/sstored
+   15  2.6  0.0 /lib/svc/bin/svc.configd
+  853  1.4  0.0 /usr/lib/fm/fmd/fmd
+  ... (procesos ordenados por %MEM desc)
+
+Opcion 2 (buscar 'named') - OK (devuelve procesos que contienen el nombre)
+
+Opcion 3 (matar) - se probo con `sleep 300` (PID 1904):
+  -> "Proceso 1904 terminado." / sleep YA NO EXISTE (kill -9 OK)
+
+Opcion 4 (reiniciar) - se probo con `sleep 300` (PID 1913):
+  -> "Proceso detenido. Reiniciando... / ¡Proceso 1913 reiniciado!"
+  -> nuevo PID 1918 (relanzado con nohup, correcto para reinicio)
+
+Opcion 5 (salir): OK
+
+Nota portabilidad: el ps de Solaris no acepta las opciones GNU %mem,%cpu ni --sort;
+se uso `ps -eo pid,pmem,pcpu,comm | sort -k2 -nr` que es portable. Verificado OK.

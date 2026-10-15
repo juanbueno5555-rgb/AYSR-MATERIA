@@ -1,0 +1,247 @@
+================================================================================
+LABORATORIO No. 03 — BASE PLATFORM AND APPLICATION LAYER PROTOCOLS
+Resumen detallado (fuente: Laboratory No.03.pdf)
+Grupo: 2 estudiantes (Camilo Aguirre — Juan David Rangel)
+================================================================================
+
+OBJETIVO
+--------
+Continuar con la instalacion de software base en los servidores de la
+infraestructura de la empresa; en particular los servicios DNS y NTP,
+complementado con conocimiento de programacion de Shell.
+
+HERRAMIENTAS
+------------
+- Computadores (2 fisicos del grupo)
+- Acceso a Internet
+- Software de virtualizacion (VirtualBox)
+
+NOTA DE GRUPO
+-------------
+- El grupo tiene 2 estudiantes => se configuran los dominios 1 y 2:
+    student1.com.it  ->  se reemplaza "student 1" por nombre/apellido del grupo
+    student2.org.uk  ->  idem
+  (student3.gov.jp era solo para grupos de 3)
+- NO se necesita CentOS (solo grupos de 3 estudiantes).
+- Se usan MVs: Solaris, Slackware y Windows Server (ya existentes).
+
+--------------------------------------------------------------------------------
+PARTE 1 — SERVIDOR DNS LINUX (BIND)
+--------------------------------------------------------------------------------
+Se configura el servicio de resolucion de nombres DNS con dominios de prueba.
+
+1.1 RECURSOS QUE DEBEN DEFINIRSE POR DOMINIO
+--------------------------------------------
+- 3 nombres de servidor con sus direcciones IPv4 (usar el rango asignado al
+  inicio del semestre).
+- 2 servidores con sus direcciones IPv6.
+- 2 alias (CNAME) para 2 servidores con IPv4 y 1 alias (CNAME) para 1
+  servidor con IPv6 (los nombres de alias son libres).
+
+1.2 DISTRIBUCION DE SERVIDORES DNS (grupo de 2 estudiantes)
+-----------------------------------------------------------
+Para student1.com.it:
+  * DNS PRIMARIO en la MV Solaris.
+  * DNS SECUNDARIOS en Slackware y Windows Server.
+Para student2.org.uk:
+  * DNS PRIMARIO en la MV Slackware.
+  * DNS SECUNDARIOS en Solaris y Windows Server.
+  (con grupo de 3, Windows Server se reemplaza por CentOS)
+
+OBSERVACION CLAVE: la MV secundaria de student1.com.it y la primaria de
+student2.org.uk son LA MISMA maquina (Slackware). En total se configuran 3
+servidores DNS (Solaris, Slackware, Windows Server).
+
+1.3 PASOS DE INSTALACION Y CONFIGURACION (ejemplo en Slackware)
+---------------------------------------------------------------
+1. Instalar el paquete DNS (BIND) desde el CD/ISO si hace falta:
+     mount /dev/cdrom /mnt/cdrom
+     cd /mnt/cdrom/slackwareX.X
+     installpkg bindX.X.txz
+     umount /mnt/cdrom
+2. Verificar que los paquetes quedaron instalados (en Slackware usar pkgtools).
+3. Configurar el servicio:
+   a) /etc/named.conf
+      - options { directory "/etc/DNS"; };
+      - zona raiz (hint) "." con archivo named.ca (resolucion de dominios
+        externos).
+      - zona del dominio propio: type master; file "mi_dominio.hosts".
+      - la zona reversa (127.0.0) NO se configura en este lab (opcional).
+   b) /etc/DNS/named.ca  -> lista de servidores raiz. Empezar con uno,
+      probar y luego agregar al menos dos mas (con registros A y AAAA).
+   c) /etc/DNS/mi_dominio.hosts -> registros:
+      - $INCLUDE named.soa (o escribir el SOA directo)
+      - registro NS del servidor (dns.mi_dominio.)
+      - MX comentado (no se usa en este lab)
+      - localhost.mi_dominio. IN A 127.0.0.1
+      - this_server.mi_dominio. IN A <ip del servidor DNS>
+      - real_name_1.mi_dominio. IN A <ip servidor 1>
+      - real_name_2.mi_dominio. IN A <ip servidor 2>
+      - alias_1.mi_dominio.  IN CNAME real_name_1.mi_dominio.
+      - alias_2.mi_dominio.  IN CNAME real_name_2.mi_dominio.
+      - (IPv6: revisar como configurar los registros AAAA)
+   d) /etc/DNS/named.soa -> SOA:
+      @ IN SOA this_server.mi_dominio. root.mi_dominio. ( serial )
+      Serial: formato yyyyMMddxx (consecutivo del dia).
+4. Arrancar el servicio:  /usr/sbin/named start
+
+1.4 RESOLUCIONES QUE DEBEN FUNCIONAR
+------------------------------------
+Ejemplos a resolver con el DNS propio (dentro de los dominios) y externos:
+  server1.student1.com.it
+  server2.student1.com.it
+  server3.student2.org.uk
+  alias1.student2.org.uk
+  www.escuelaing.edu.co
+  www.google.com
+
+1.5 PREGUNTAS / ACTIVIDADES OBLIGATORIAS
+----------------------------------------
+4.  Que son los registros A y AAAA en el archivo de servidores raiz?
+5.  Que son los registros NS, MX, A y CNAME en el archivo del dominio?
+6.  Revisar los logs del sistema para verificar que el servicio funciona.
+7.  Probar en un CLIENTE:
+    i.  Configurar un equipo cliente para usar el DNS propio.
+    ii. Usar nslookup y GRABAR UN VIDEO de maximo 5 minutos explicando:
+        A. Para que sirve nslookup.
+        B. Probar su funcionamiento.
+        C. Cambiar al DNS de la escuela (10.2.65.1) y repetir las mismas
+           consultas; documentar los resultados.
+        D. set type=NS  -> que se obtuvo? explicar.
+        E. set debug   -> que se obtuvo? explicar.
+        F. set type=A  -> que se obtuvo? explicar.
+        G. set q=MX    -> que se obtuvo? explicar.
+8.  Probar en el PROPIO SERVIDOR DNS:
+    i.  Repetir el paso anterior en el servidor. Funciona? Por que?
+    ii. Resolver el problema y mostrar la configuracion IP final del servidor.
+9.  Configurar el servicio DNS para que se active al ARRANCAR el sistema.
+10. Mostrar la configuracion al instructor.
+
+--------------------------------------------------------------------------------
+PARTE 2 — COMANDOS UTILES (PROGRAMACION SHELL)
+--------------------------------------------------------------------------------
+Escribir programas Shell para los servidores Solaris y Linux Slackware:
+
+(a) PROGRAMACION DE TAREAS PERIODICAS
+    Script que permite configurar una tarea para que se ejecute
+    periodicamente. El usuario especifica la tarea y su frecuencia POR LINEA
+    DE COMANDOS (NO se piden parametros interactivamente). Ejemplos:
+      solaris# ./schedult-task-script.sh [frecuencia]
+      solaris# ./schedult-task-script.sh * * * * *
+    (equivale a programar cron segun la frecuencia dada)
+
+(b) SHELL CON MENU DE OPCIONES
+    Menu con una opcion para salir; las otras ejecutan un comando y
+    vuelven al menu. Debe permitir:
+      - Mostrar los procesos en ejecucion del servidor con: nombre del
+        proceso, identificador (PID), % de uso de memoria y % de uso de CPU.
+      - Buscar un proceso dado por el usuario y mostrar su informacion
+        completa.
+      - Matar/cerrar un proceso en ejecucion.
+      - Reiniciar un proceso en ejecucion.
+
+(c) RECORRIDO DEL SISTEMA DE ARCHIVOS
+    Script que recorre el sistema de archivos desde un directorio dado,
+    incluyendo subdirectorios, y muestra los n archivos mas pequenos dentro
+    de un tamano especificado por el usuario. La salida debe indicar:
+    nombre del archivo, ruta donde se encuentra y tamano. Ejemplos:
+      slackware# ./files-script.sh [no_files] [max_size]
+      slackware# ./files-script.sh 10 1GB
+
+NOTAS:
+- Para grupos de 3: los puntos (b) y (c) tambien en PowerShell en Windows
+  Server. Grupo de 1: Shell para Solaris. (Grupo de 2: Shell para Solaris
+  y Slackware, sin PowerShell.)
+- Mostrar el funcionamiento de los servidores y scripts al instructor.
+
+--------------------------------------------------------------------------------
+PARTE 3 — CLOUD (AMAZON EC2)
+--------------------------------------------------------------------------------
+3.1 PREGUNTAS GENERALES
+-----------------------
+1. Cuales son las principales caracteristicas de Amazon EC2?
+2. Que servicios se pueden usar con Amazon EC2?
+
+3.2 LANZAR UNA INSTANCIA (paso a paso segun la guia)
+----------------------------------------------------
+1. Abrir la consola de EC2.
+2. Seleccionar la Region (usar la actual u otra mas cercana).
+3. Launch instance desde el dashboard.
+4. Nombre descriptivo para la instancia.
+5. Application and OS Images: Quick Start, Amazon Linux recomendado,
+   elegir AMI con Free Tier eligible.
+6. Instance type: elegir tipo Free Tier eligible.
+7. Key pair: crear nueva o usar existente.
+8. Network settings: VPC y subnet default. Security group debe permitir
+   SSH (Linux) o RDP (Windows). Para el primer intento usar defaults.
+9. Configure storage: root volume (suficiente para pruebas).
+10. Revisar el resumen y Launch instance.
+11. Ir a la pagina Instances y monitorear el estado: pending -> running.
+12. Cuando pase los status checks, esta lista para conexiones.
+
+3.3 CONECTARSE A LA INSTANCIA
+-----------------------------
+- Desde Windows: abrir terminal y usar el comando ssh (OpenSSH).
+- En la consola: Instances -> seleccionar -> Connect -> pestaña SSH client.
+- Copiar el comando de ejemplo:
+    ssh -i key-pair-name.pem ec2-user@ec2-198-51-100-1.us-east-2.compute.amazonaws.com
+- Si el .pem no esta en el directorio actual, usar ruta completa.
+- Verificar el fingerprint (Actions -> Monitor and troubleshoot -> Get
+  system log) para evitar man-in-the-middle.
+- Responder yes a la autenticidad del host.
+
+3.4 NEXT STEPS (preguntas a documentar)
+---------------------------------------
+1. Diferencia entre STOP, TERMINATE y RESTART de una instancia EC2.
+2. Que rol juega la AMI al lanzar una instancia?
+3. En que casos conviene elegir una AMI distinta a Amazon Linux por defecto?
+4. Como agregar y adjuntar volumenes? Diferencia entre EBS y almacenamiento
+   ephemeral.
+5. Como ejecutar comandos remotos SIN SSH?
+6. Pasos para adjuntar un volumen EBS adicional a una instancia Linux.
+7. Que pasa con los datos de un volumen EBS cuando la instancia se detiene
+   o termina?
+8. El Shell configurado en Linux Slackware funcionara en la instancia?
+   Que habria que cambiar? Probar su funcionamiento.
+
+NOTA: mostrar el funcionamiento de la instancia EC2 y los resultados de las
+pruebas al instructor.
+
+================================================================================
+ENTREGABLES DEL LABORATORIO
+================================================================================
+1. Configuracion DNS completa en 3 servidores (Solaris primario de d1,
+   Slackware secundario de d1 + primario de d2, Windows Server secundario
+   de ambos dominios) con resolucion interna y externa funcionando.
+2. Respuestas a las preguntas de la parte DNS (4-10).
+3. Video de maximo 5 minutos con nslookup (puntos A-G).
+4. Tres scripts Shell funcionando en Solaris y Slackware
+   (tarea periodica, menu de procesos, recorrido del filesystem).
+5. Preguntas respondidas de las partes 1-3 de EC2 + instancia lanzada y
+   probada con conexion SSH (incluye probar el Shell del lab en la instancia).
+6. Informe con evidencia (mismo formato autosuficiente de los labs 01 y 02).
+
+================================================================================
+CONTEXTO DE INFRAESTRUCTURA DISPONIBLE (referencia interna)
+================================================================================
+Red de la universidad: 10.2.0.0/16, gateway + DNS 10.2.65.1, SIN DHCP.
+IPs estaticas actuales de las VMs (verificadas 22-23/08):
+  Slackware      -> 10.2.78.74  (SSH NAT 2222 / llave .ssh/vagrant.key)
+  Solaris        -> 10.2.78.75  (SSH NAT 2223 / llave .ssh/gentle-ai)
+  Windows GUI    -> 10.2.78.76  (SSH NAT 2225 / llave .ssh/gentle-ai)
+  Windows Core   -> 10.2.78.77  (SSH NAT 2224 / llave .ssh/gentle-ai)
+Watchdog de red: ajusta IP uni/hogar automaticamente en las 4 VMs
+(ver RED-CONFIG.md). Snapshot por VM: estado-watchdog-2026-08-22/23.
+Credenciales: ver CREDENCIALES.md (NO incluir en entregables).
+
+PENDIENTES POR DEFINIR CON EL GRUPO / PROFESOR:
+  - Nombre real del dominio (reemplazo de "student n"): ej.
+    aguirre-rangel.com.it y aguirre-rangel.org.uk (o el acordado).
+  - Rango IPv4/IPv6 "asignado al inicio del semestre" para los registros
+    de los 3 servidores: confirmar si se usan las IPs 10.2.78.x actuales
+    u otro rango; definir tambien las IPv6 a registrar.
+  - Elegir cual Windows Server actua como DNS secundario (GUI vs Core) y
+    verificar si el rol DNS necesita instalacion (Install-WindowsFeature).
+  - Cuenta AWS con Free Tier para la parte EC2 (definir quien la crea).
+  - Fecha de sustentacion / limite de entrega.
+================================================================================

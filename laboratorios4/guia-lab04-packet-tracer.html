@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 04 — Packet Tracer paso a paso</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2128; --muted:#5b6570;
+    --line:#e3e6ea; --accent:#0b6bcb; --accent-soft:#eaf2ff;
+    --code-bg:#1e2430; --code-ink:#e6edf3; --ok:#1a7f37; --warn:#9a6700; --bad:#b42318;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 22px 80px}
+  header.hero{background:linear-gradient(135deg,#0b6bcb,#083f7a);color:#fff;border-radius:16px;padding:30px 28px;margin-bottom:26px;box-shadow:0 10px 30px rgba(11,107,203,.25)}
+  header.hero .eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+  header.hero h1{margin:6px 0 8px;font-size:30px;line-height:1.2}
+  header.hero p{margin:0;opacity:.92}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:26px}
+  .toc h2{margin:0 0 10px;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .toc ol{margin:0;padding-left:20px}
+  .toc a{color:var(--accent);text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 26px;margin-bottom:22px}
+  section h2{margin:0 0 6px;font-size:23px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+  section h3{margin:26px 0 8px;font-size:18px}
+  section h4{margin:18px 0 6px;font-size:14.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  p{margin:10px 0}
+  ol,ul{margin:10px 0;padding-left:24px}
+  li{margin:5px 0}
+  code{font-family:"Cascadia Code",Consolas,"Courier New",monospace;font-size:.92em}
+  p code,li code,td code,h3 code,h4 code{background:#eef1f4;border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:14px 16px;overflow:auto;font-size:13.5px;line-height:1.5;margin:10px 0;border:1px solid #2b3342}
+  pre code{color:inherit;background:none;border:none;padding:0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#f0f3f7;font-weight:600}
+  tr:nth-child(even) td{background:#fafbfc}
+  .callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:8px;margin:14px 0}
+  .callout.key{border-color:var(--ok);background:#eaf7ee}
+  .callout.warn{border-color:var(--warn);background:#fff8e6}
+  .callout.bad{border-color:var(--bad);background:#fdeceb}
+  .callout p{margin:4px 0}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid #cfe0ff}
+  .step{counter-reset:sub}
+  .step h3:before{counter-increment:none}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+  @page{size:A4;margin:15mm}
+  @media print{body{background:#fff}.wrap{max-width:none;padding:0}section,header.hero,.toc{box-shadow:none}header.hero{background:#083f7a !important}section{break-inside:avoid;border-color:#ccd2da}a{color:inherit;text-decoration:none}pre{white-space:pre-wrap}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">AYSR · Laboratorio No.04 · Bloque A</div>
+  <h1>Cisco Packet Tracer — Guía paso a paso</h1>
+  <p>Red de 3 sedes con DNS, HTTP, Email y FTP · Packet Tracer 9.0.1</p>
+</header>
+
+<nav class="toc">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#s0">Antes de empezar</a></li>
+    <li><a href="#s1">Montar la topología</a></li>
+    <li><a href="#s2">Direccionamiento (IP + máscara + gateway + DNS)</a></li>
+    <li><a href="#s3">Configurar los servicios (DNS, HTTP, Email, FTP)</a></li>
+    <li><a href="#s4">Probar (ping, web, correo, FTP)</a></li>
+    <li><a href="#s5">Modo Simulation: ver los PDU</a></li>
+    <li><a href="#s6">Comandos explicados (con parámetros)</a></li>
+    <li><a href="#s7">Errores comunes y entregable</a></li>
+  </ol>
+</nav>
+
+<section id="s0">
+  <h2>0. Antes de empezar</h2>
+  <ul>
+    <li>Tenés <strong>Cisco Packet Tracer 9.0.1</strong> instalado (<code>C:\Program Files\Cisco Packet Tracer 9.0.1</code>).</li>
+    <li>Guardá temprano: <strong>File → Save As…</strong> → <code>lab04-aguirre-rangel.pkt</code>. Guardá cada tanto.</li>
+    <li>Se trabaja con un <strong>espacio de trabajo</strong> (workspace) donde arrastrás dispositivos y los cableás.</li>
+  </ul>
+  <div class="callout key">
+    <p><strong>Idea central del diseño:</strong> la máscara es <code>255.0.0.0</code> (<strong>/8</strong>). Entonces <code>27.100.0.32</code>, <code>27.200.0.53</code> y <code>27.1.0.2</code> están <strong>todos en la misma red</strong> <code>27.0.0.0/8</code>. Por eso <strong>no hay router</strong> y el DNS <code>27.1.0.2</code> sirve a las 3 sedes. Todo se ve con cableado directo y switches.</p>
+  </div>
+</section>
+
+<section id="s1">
+  <h2>1. Montar la topología</h2>
+
+  <h3>1.1 Colocar los dispositivos</h3>
+  <p>En el panel <strong>inferior izquierdo</strong> están las categorías. Hacé clic y arrastrá al área de trabajo:</p>
+  <ol>
+    <li><strong>Network Devices → Switches → 2950-24</strong> (arrastrá <strong>3</strong>).</li>
+    <li><strong>End Devices → PC</strong> (arrastrá <strong>5</strong>: S1, S2, C1, C2, E1, E2 → en realidad <strong>6</strong>).</li>
+    <li><strong>End Devices → Server</strong> (arrastrá <strong>6</strong>: www.sistemas, mail.sistemas, DNS, www.civil, mail.civil, mail.electrica).</li>
+  </ol>
+  <p>Renombrá cada equipo: clic sobre el <strong>nombre</strong> debajo del ícono, o seleccioná el equipo → pestaña <strong>Config → Global Settings → Display Name</strong>.</p>
+
+  <h3>1.2 Cablear</h3>
+  <ol>
+    <li>Elegí <strong>Connections</strong> (el ícono del rayo) → <strong>Copper Straight-Through</strong> (cable <em>directo</em>).</li>
+    <li>Primero clic en el <strong>dispositivo</strong> → elegí la interfaz (en PC/Server: <code>FastEthernet0</code>; en switch: <code>FastEthernet0/1</code>, <code>0/2</code>…).</li>
+    <li>Clic en el otro dispositivo → su interfaz.</li>
+  </ol>
+  <p>Esquema de conexiones (estrella):</p>
+<pre><code>Cada PC/Server  -> a un puerto libre de SU switch          (cable directo)
+Switch0 (sistemas) -> Switch1 (civil)    en un puerto libre (cable directo)
+Switch0 (sistemas) -> Switch2 (electric) en un puerto libre (cable directo)</code></pre>
+  <div class="callout">
+    <p>Los switches <strong>2950</strong> ya funcionan de fábrica (no hay que configurarlos para esta topología). Un cable <em>directo</em> alcanza porque los switches modernos tienen auto-MDIX. Podés ver los puertos usados abriendo el switch → pestaña <strong>Config</strong>, o pasar el mouse por el cable.</p>
+  </div>
+
+  <h3>1.3 Inventario de la red</h3>
+  <table>
+    <tr><th>Sede</th><th>Dispositivos</th><th>Switch</th></tr>
+    <tr><td><strong>sistemas</strong></td><td>www.sistemas.com, mail.sistemas.com, DNS, Student S1, Student S2</td><td>Switch0 (2950-24)</td></tr>
+    <tr><td><strong>civil</strong></td><td>www.civil.com, mail.civil.com, Student C1, Student C2</td><td>Switch1 (2950-24)</td></tr>
+    <tr><td><strong>electrica</strong></td><td>Student E1, Mail, Student E2</td><td>Switch2 (2950-24)</td></tr>
+  </table>
+</section>
+
+<section id="s2">
+  <h2>2. Direccionamiento</h2>
+
+  <h3>2.1 Cómo cargar la IP en una PC o Server</h3>
+  <ol>
+    <li>Clic en la PC/Server → pestaña <strong>Desktop</strong> → <strong>IP Configuration</strong>.</li>
+    <li>Elegí <strong>Static</strong> (estático) y completá: <strong>IPv4 Address</strong>, <strong>Subnet Mask</strong>, <strong>Default Gateway</strong>, <strong>DNS Server</strong>.</li>
+    <li>Cerrá la ventana (se aplica solo).</li>
+  </ol>
+  <p>Alternativa: pestaña <strong>Config → Settings</strong> (mismos campos) o <strong>Config → Global Settings</strong> para el nombre.</p>
+
+  <h3>2.2 Tabla de direcciones (según el diagrama)</h3>
+  <table>
+    <tr><th>Sede</th><th>Dispositivo</th><th>IP</th><th>Máscara</th><th>Gateway</th><th>DNS</th></tr>
+    <tr><td>sistemas</td><td>Server <code>www.sistemas.com</code></td><td><strong>27.100.0.32</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>sistemas</td><td>Server <code>mail.sistemas.com</code></td><td><strong>27.100.0.33</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>sistemas</td><td>Server <code>DNS</code></td><td><strong>27.1.0.2</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>sistemas</td><td>PC <code>Student S1</code></td><td><strong>27.100.0.34</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>sistemas</td><td>PC <code>Student S2</code></td><td><strong>27.100.0.35</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>civil</td><td>Server <code>www.civil.com</code></td><td><strong>27.200.0.53</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>civil</td><td>Server <code>mail.civil.com</code></td><td><strong>27.200.0.52</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>civil</td><td>PC <code>Student C1</code></td><td><strong>27.200.0.55</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>civil</td><td>PC <code>Student C2</code></td><td><strong>27.200.0.54</strong></td><td>255.0.0.0</td><td>27.0.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>electrica</td><td>PC <code>Student E1</code></td><td><strong>27.150.0.101</strong></td><td>255.0.0.0</td><td>27.150.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>electrica</td><td>Server <code>Mail</code></td><td><strong>27.150.0.102</strong></td><td>255.0.0.0</td><td>27.150.0.1</td><td>27.1.0.2</td></tr>
+    <tr><td>electrica</td><td>PC <code>Student E2</code></td><td><strong>27.150.0.103</strong></td><td>255.0.0.0</td><td>27.150.0.1</td><td>27.1.0.2</td></tr>
+  </table>
+  <div class="callout warn">
+    <p><strong>Ojo:</strong> los gateways son los que dice el diagrama (sistemas/civil <code>27.0.0.1</code>; electrica <code>27.150.0.1</code>). Como <strong>no hay router</strong>, ese campo no se usa: es informativo. Con la máscara /8 todo se alcanza directo.</p>
+  </div>
+  <p><strong>Verificación rápida:</strong> en cada PC, <strong>Desktop → Command Prompt</strong> y escribí <code>ipconfig</code> — tenés que ver tu IP.</p>
+</section>
+
+<section id="s3">
+  <h2>3. Configurar los servicios</h2>
+  <p>Todos los servicios se configuran abriendo el <strong>Server</strong> → pestaña <strong>Services</strong>. A la izquierda elegís el servicio (DNS, HTTP, …) y a la derecha lo configurás. Después <strong>guardás</strong> con el botón del servicio (Save / Add / Start según corresponda).</p>
+
+  <h3>3.1 DNS — en el Server <code>27.1.0.2</code></h3>
+  <ol>
+    <li>Server DNS → <strong>Services → DNS</strong>.</li>
+    <li>En <strong>DNS Service</strong>: <code>On</code> (Service). En <strong>Name</strong> poné el nombre, en <strong>Type</strong> elegí <code>A Record</code> o <code>CNAME</code>, en <strong>Address</strong> poné la IP (para A) o el <strong>nombre destino</strong> (para CNAME). <strong>Add</strong>.</li>
+  </ol>
+  <table>
+    <tr><th>Name</th><th>Type</th><th>Address</th><th>Qué significa</th></tr>
+    <tr><td><code>sistemas.com</code></td><td>A Record</td><td><code>27.100.0.33</code></td><td>El dominio "a secas" apunta al <strong>mail server</strong></td></tr>
+    <tr><td><code>pop3.sistemas.com</code></td><td>CNAME</td><td><code>sistemas.com</code></td><td>Alias para POP3</td></tr>
+    <tr><td><code>smtp.sistemas.com</code></td><td>CNAME</td><td><code>sistemas.com</code></td><td>Alias para SMTP</td></tr>
+    <tr><td><code>http.sistemas.com</code></td><td>A Record</td><td><code>27.100.0.32</code></td><td>El <strong>web server</strong></td></tr>
+    <tr><td><code>www.sistemas.com</code></td><td>CNAME</td><td><code>http.sistemas.com</code></td><td>Alias "www" del web</td></tr>
+    <tr><td><code>civil.com</code></td><td>A Record</td><td><code>27.200.0.52</code></td><td>Mail server de civil</td></tr>
+    <tr><td><code>pop3.civil.com</code></td><td>CNAME</td><td><code>civil.com</code></td><td>Alias POP3</td></tr>
+    <tr><td><code>smtp.civil.com</code></td><td>CNAME</td><td><code>civil.com</code></td><td>Alias SMTP</td></tr>
+    <tr><td><code>http.civil.com</code></td><td>A Record</td><td><code>27.200.0.53</code></td><td>Web server de civil</td></tr>
+    <tr><td><code>www.civil.com</code></td><td>CNAME</td><td><code>http.civil.com</code></td><td>Alias "www"</td></tr>
+    <tr><td><code>electrica.com</code></td><td>A Record</td><td><code>27.150.0.102</code></td><td>Mail server de electrica</td></tr>
+    <tr><td><code>pop3.electrica.com</code></td><td>CNAME</td><td><code>electrica.com</code></td><td>Alias POP3</td></tr>
+    <tr><td><code>smtp.electrica.com</code></td><td>CNAME</td><td><code>electrica.com</code></td><td>Alias SMTP</td></tr>
+  </table>
+  <div class="callout warn">
+    <p>La guía escribe <code>pop3.crear.com</code> y <code>smtp.crear.com</code>: es un <strong>typo</strong> — van sobre <code>electrica.com</code>. Y <code>electrica</code> <strong>no tiene web server</strong> (solo Mail), así que no hay <code>http.electrica.com</code>.</p>
+  </div>
+
+  <h3>3.2 HTTP — en <code>27.100.0.32</code> y <code>27.200.0.53</code></h3>
+  <ol>
+    <li>Server → <strong>Services → HTTP</strong> → <code>On</code>.</li>
+    <li>En la lista de archivos elegí <code>index.html</code> → botón <strong>Edit</strong> (se abre un editor). Cambiá el contenido para <strong>personalizarlo por facultad</strong> (p. ej. "Bienvenido a Sistemas" / "Bienvenido a Civil"). Guardá con <strong>Save</strong>.</li>
+    <li>Opcional: agregá otra página (por ejemplo <code>prueba.txt</code>) para probar descargas.</li>
+  </ol>
+
+  <h3>3.3 Email — en <code>27.100.0.33</code>, <code>27.200.0.52</code>, <code>27.150.0.102</code></h3>
+  <ol>
+    <li>Mail server → <strong>Services → Email</strong> → <code>On</code>.</li>
+    <li><strong>Domain name</strong>: <code>sistemas.com</code> (o <code>civil.com</code> / <code>electrica.com</code> según el server).</li>
+    <li>En <strong>User Setup</strong>: <strong>User</strong> = nombre del cliente (p. ej. <code>StudentS1</code>), <strong>Password</strong> = la que quieras → <strong>Add</strong>. Repetí por cada usuario de esa facultad.</li>
+    <li>En cada <strong>PC</strong>: <strong>Desktop → Email</strong> → completá:
+      <ul>
+        <li><strong>Your Name</strong>: Student S1</li>
+        <li><strong>Email Address</strong>: <code>students1@sistemas.com</code></li>
+        <li><strong>Incoming Mail Server</strong>: <code>pop3.sistemas.com</code></li>
+        <li><strong>Outgoing Mail Server</strong>: <code>smtp.sistemas.com</code></li>
+        <li><strong>User Name / Password</strong>: los del paso 3</li>
+      </ul>
+      → <strong>Save</strong>.</li>
+    <li>Para enviar: <strong>Compose</strong> → To: el correo del otro → Subject/Body → <strong>Send</strong>. Luego <strong>Receive</strong> (icono del sobre) para bajar los correos nuevos.</li>
+  </ol>
+
+  <h3>3.4 FTP — en el web server de sistemas (<code>27.100.0.32</code>)</h3>
+  <ol>
+    <li>Server → <strong>Services → FTP</strong> → <code>On</code>.</li>
+    <li>En <strong>User Setup</strong>: <strong>Username</strong> = tu nombre (p. ej. <code>camilo</code>), <strong>Password</strong> = tu apellido (<code>aguirre</code>) → marcá <strong>todos</strong> los permisos → <strong>Add</strong>.</li>
+    <li>Asegurate de que en la lista de archivos haya alguno para descargar (los que ya trae Packet Tracer sirven).</li>
+  </ol>
+
+  <h4>Los permisos del FTP (ojo con esto)</h4>
+  <table>
+    <tr><th>Letra</th><th>Permiso</th><th>Qué habilita</th></tr>
+    <tr><td><strong>R</strong></td><td>Read</td><td><code>get</code> (descargar)</td></tr>
+    <tr><td><strong>W</strong></td><td>Write</td><td><code>put</code> (subir)</td></tr>
+    <tr><td><strong>D</strong></td><td>Delete</td><td>borrar archivos</td></tr>
+    <tr><td><strong>N</strong></td><td>Rename</td><td>renombrar archivos</td></tr>
+    <tr><td><strong>L</strong></td><td>List</td><td><code>dir</code> (listar el directorio)</td></tr>
+  </table>
+  <div class="callout bad">
+    <p><strong>Error típico:</strong> si el usuario <em>no tiene</em> <code>L</code>, el <code>dir</code> da <em>"permission denied"</em> y el <code>get</code> falla con <em>"file not found"</em> — aunque el archivo exista. Solución: tildá <strong>List</strong> (dejá R, W, D, N, L todos marcados).</p>
+  </div>
+  <div class="callout">
+    <p><strong>Ojo:</strong> Packet Tracer <strong>no tiene un botón para "agregar" archivos</strong> al FTP. Los que aparecen ya vienen puestos. Para agregar uno propio, se <strong>sube desde el cliente</strong> con <code>put</code>.</p>
+  </div>
+</section>
+
+<section id="s4">
+  <h2>4. Probar</h2>
+
+  <h3>4.1 Ping por nombre</h3>
+  <p>En un cliente de <strong>cada</strong> sede: <strong>Desktop → Command Prompt</strong>:</p>
+<pre><code>ping sistemas.com
+ping mail.sistemas.com
+ping www.civil.com
+ping electrica.com</code></pre>
+  <p>Si resuelve el nombre y responde → <strong>el DNS funciona</strong>. (La primera respuesta puede ser <em>Request timed out</em> por ARP; las siguientes responden.)</p>
+
+  <h3>4.2 HTTP por IP y por URL</h3>
+  <p>En una PC: <strong>Desktop → Web Browser</strong>. Probá:</p>
+  <pre><code>http://27.100.0.32          (por IP)
+http://www.sistemas.com     (por URL -> usa DNS)
+http://http.civil.com       (por URL)</code></pre>
+  <p>Tenés que ver la página que personalizaste. <strong>Por IP</strong> y <strong>por URL</strong> deben dar lo mismo.</p>
+
+  <h3>4.3 Correo dentro y entre dominios</h3>
+  <ul>
+    <li>Dentro: S1 → S2 (ambos <code>@sistemas.com</code>).</li>
+    <li>Entre dominios: S1 → C1 (<code>@sistemas.com</code> → <code>@civil.com</code>).</li>
+    <li>Responder el correo recibido y verificar que llega.</li>
+  </ul>
+
+  <h3>4.4 FTP: descargar y subir</h3>
+  <p>Desde el <strong>Command Prompt</strong> de una PC:</p>
+  <pre><code>ftp 27.100.0.32      (conecta al FTP)
+camilo               (usuario)
+aguirre              (password)
+ls                   (lista archivos)
+get datos.txt        (descarga)
+quit                 (sale)</code></pre>
+  <p>Verificá que el archivo quedó en la PC (abrí <strong>Desktop</strong> o usá otros comandos del prompt).</p>
+
+  <h3>4.5 DNS: consultar directo</h3>
+  <pre><code>nslookup www.sistemas.com
+nslookup pop3.civil.com</code></pre>
+  <p>Te muestra el servidor DNS usado y el resultado. Con <code>CNAME</code> vas a ver la cadena <em>alias → destino</em>.</p>
+</section>
+
+<section id="s5">
+  <h2>5. Modo Simulation: ver los PDU</h2>
+  <ol>
+    <li>Abajo a la derecha, cambiá de <strong>Realtime</strong> a <strong>Simulation</strong>.</li>
+    <li><strong>Show All/None</strong> o el filtro por protocolo: dejá solo <code>DNS</code>, <code>HTTP</code>, <code>SMTP</code>, <code>POP3</code>, <code>FTP</code>, <code>TCP</code>, <code>UDP</code>… según lo que quieras ver.</li>
+    <li>En la barra lateral, elegí <strong>Add Simple PDU</strong> (el sobre cerrado), hacé clic en el <strong>origen</strong> y luego en el <strong>destino</strong> (o usá <strong>Capture/Forward</strong> para avanzar el tráfico generado por una acción real).</li>
+    <li>En el <strong>Panel de simulación</strong> (abajo) aparece la lista de eventos. Hacé clic en un evento y mirá el recuadro de la derecha:
+      <ul>
+        <li><strong>PDU Information</strong> → mirá las <strong>capas</strong> (OSI Model): en <strong>Application</strong> ves el mensaje (p. ej. la petición HTTP, o el diálogo SMTP/POP3), y en <strong>Transport</strong> ves los <strong>puertos</strong> (HTTP 80, DNS 53, SMTP 25, POP3 110, FTP 21/20).</li>
+        <li><strong>Inbound/Outbound PDU Details</strong> → el <strong>contenido literal</strong> del mensaje (headers + datos).</li>
+      </ul>
+    </li>
+  </ol>
+  <table>
+    <tr><th>Servicio</th><th>Puerto (capa transporte)</th><th>Qué mirar en Application</th></tr>
+    <tr><td>DNS</td><td>53 (UDP)</td><td>El <em>Query</em> y la <em>Answer</em> con el nombre y la IP</td></tr>
+    <tr><td>HTTP</td><td>80 (TCP)</td><td><code>GET /index.html</code> y la respuesta <code>HTTP/1.1 200 OK</code></td></tr>
+    <tr><td>SMTP</td><td>25 (TCP)</td><td><code>MAIL FROM</code>, <code>RCPT TO</code>, <code>DATA</code></td></tr>
+    <tr><td>POP3</td><td>110 (TCP)</td><td><code>USER</code>, <code>PASS</code>, <code>RETR</code></td></tr>
+    <tr><td>FTP</td><td>21 control / 20 datos (TCP)</td><td><code>USER</code>, <code>PASS</code>, <code>RETR</code>/<code>STOR</code></td></tr>
+  </table>
+</section>
+
+<section id="s6">
+  <h2>6. Comandos explicados (con parámetros)</h2>
+
+  <h3>6.1 Command Prompt de la PC (Packet Tracer)</h3>
+  <p>Se abre en <strong>PC → Desktop → Command Prompt</strong>. Es una consola tipo Windows.</p>
+
+  <h4>ipconfig — ver/renovar la IP</h4>
+  <table>
+    <tr><th>Comando</th><th>Qué hace</th></tr>
+    <tr><td><code>ipconfig</code></td><td>Muestra IP, máscara y gateway.</td></tr>
+    <tr><td><code>ipconfig /all</code></td><td>Además: MAC, DNS, DHCP…</td></tr>
+    <tr><td><code>ipconfig /release</code></td><td>Libera la IP (la "devuelve").</td></tr>
+    <tr><td><code>ipconfig /renew</code></td><td>Pide IP nueva.</td></tr>
+  </table>
+
+  <h4>ping — ¿hay conectividad?</h4>
+  <pre><code>ping &lt;destino&gt;            ping 27.100.0.33   /  ping sistemas.com
+ping &lt;destino&gt; -n &lt;n&gt;      manda n paquetes (ej. -n 5)
+ping &lt;destino&gt; -t          no para hasta Ctrl+C
+ping &lt;destino&gt; -l &lt;tam&gt;    tamaño del paquete en bytes (ej. -l 1000)</code></pre>
+  <p>Usa <strong>ICMP</strong>. "Reply from…" = OK. "Destination host unreachable" = no hay ruta (revisá IP/cable). "Request timed out" = no responde (¿firewall? ¿host apagado?).</p>
+
+  <h4>tracert — ver el camino</h4>
+  <pre><code>tracert &lt;destino&gt;         tracert www.civil.com</code></pre>
+  <p>Muestra los "saltos" (routers) hasta el destino. Acá, como es una sola red, debería salir directo.</p>
+
+  <h4>nslookup — consultar el DNS</h4>
+  <pre><code>nslookup &lt;nombre&gt;         nslookup www.sistemas.com
+nslookup &lt;nombre&gt; &lt;server&gt;  nslookup civil.com 27.1.0.2</code></pre>
+  <p>Sin el segundo parámetro usa el DNS configurado. Devuelve el nombre → IP (o la cadena CNAME).</p>
+
+  <h4>arp — tabla de direcciones MAC</h4>
+  <pre><code>arp -a                    muestra IP -> MAC conocidas</code></pre>
+
+  <h4>ftp — transferencia de archivos</h4>
+  <pre><code>ftp &lt;servidor&gt;            ftp 27.100.0.32
+  &lt;usuario&gt;                 camilo
+  &lt;password&gt;                aguirre
+  dir                       lista los archivos (¡NO es "ls"!)
+  get &lt;archivo&gt;             descarga (baja)
+  put &lt;archivo&gt;             sube
+  quit                      cierra la sesión</code></pre>
+  <p><code>get</code> = descargar; <code>put</code> = subir. FTP usa los puertos <strong>21</strong> (control) y <strong>20</strong> (datos).</p>
+  <div class="callout warn">
+    <p><strong>En Packet Tracer el listado es <code>dir</code>, no <code>ls</code></strong> (<code>ls</code> responde <em>"Invalid or non supported command"</em>). Y para que <code>dir</code> y <code>get</code> funcionen, el usuario necesita los permisos <strong>L</strong> y <strong>R</strong> (ver 3.4).</p>
+  </div>
+
+  <h4>telnet — conexión de texto a un puerto</h4>
+  <pre><code>telnet &lt;host&gt; [puerto]    telnet 27.100.0.32 80</code></pre>
+  <p>Sirve para "hablar" HTTP a mano: al conectar al puerto <strong>80</strong> escribís <code>GET /index.html</code> y ves la respuesta cruda. (La guía lo menciona para el FTP; en PT lo normal es el <code>ftp</code>.)</p>
+
+  <h3>6.2 CLI del switch (IOS) — opcional, para ordenar la red</h3>
+  <p>Se abre en <strong>Switch → CLI</strong>. Arranca en <code>Switch&gt;</code> (modo usuario).</p>
+  <table>
+    <tr><th>Comando</th><th>Qué hace / parámetros</th></tr>
+    <tr><td><code>enable</code></td><td>Pasa a modo privilegiado (<code>#</code>).</td></tr>
+    <tr><td><code>configure terminal</code> (<code>conf t</code>)</td><td>Entra a modo configuración global.</td></tr>
+    <tr><td><code>hostname Switch0</code></td><td>Le pone nombre al switch.</td></tr>
+    <tr><td><code>interface fastEthernet 0/1</code></td><td>Entra a configurar ese puerto.</td></tr>
+    <tr><td><code>description "al mail-server"</code></td><td>Etiqueta el puerto (documentación).</td></tr>
+    <tr><td><code>shutdown</code> / <code>no shutdown</code></td><td>Apaga / enciende el puerto.</td></tr>
+    <tr><td><code>exit</code> / <code>end</code></td><td>Sube un nivel / vuelve al modo privilegiado.</td></tr>
+    <tr><td><code>show mac address-table</code></td><td>Tabla MAC aprendida por el switch.</td></tr>
+    <tr><td><code>show interfaces status</code></td><td>Estado de cada puerto (connected / notconnect).</td></tr>
+    <tr><td><code>show running-config</code></td><td>Config actual en memoria.</td></tr>
+    <tr><td><code>copy running-config startup-config</code></td><td>Guarda la config (o <code>write memory</code>).</td></tr>
+  </table>
+  <div class="callout"><p>Los <strong>2950 son switch de capa 2</strong>: no llevan IP en los puertos. Su trabajo es reenviar por MAC; por eso para esta topología no hace falta configurarlos.</p></div>
+</section>
+
+<section id="s7">
+  <h2>7. Errores comunes y entregable</h2>
+  <h3>Errores comunes</h3>
+  <table>
+    <tr><th>Síntoma</th><th>Causa típica</th></tr>
+    <tr><td>No resuelve el nombre (<em>Request timed out</em> al ping por nombre)</td><td>Falta el registro DNS, o la PC no tiene el DNS <code>27.1.0.2</code> configurado.</td></tr>
+    <tr><td>No ping de una sede a otra</td><td>Falta el cable entre switches, o una IP/máscara mal cargada.</td></tr>
+    <tr><td>La web no abre por URL pero sí por IP</td><td>El DNS no tiene el registro <code>http.…</code> o el <code>www</code>.</td></tr>
+    <tr><td>El correo no llega</td><td>Usuario/clave mal en el cliente, o dominio del server distinto.</td></tr>
+    <tr><td>FTP no loguea</td><td>Usuario sin permiso (R/W), o contraseña distinta.</td></tr>
+  </table>
+
+  <h3>Entregable</h3>
+  <ul>
+    <li>El archivo <strong><code>.pkt</code></strong> con la red armada y probada.</li>
+    <li>Documento con <strong>capturas</strong>: topología, IP de cada dispositivo, registros DNS, servicios activos, pruebas (ping por nombre, web por IP y URL, correo dentro/entre dominios, FTP get/put) y las <strong>PDU</strong> en modo Simulation.</li>
+    <li>Cada estudiante configura la red y documenta la experiencia (dice la guía).</li>
+  </ul>
+</section>
+
+<footer>Guía Lab 04 · Packet Tracer · AYSR · Camilo Aguirre &amp; Juan David Rangel · 13/09/2026</footer>
+
+</div>
+</body>
+</html>

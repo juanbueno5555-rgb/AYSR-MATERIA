@@ -1,0 +1,22 @@
+﻿
+Ethernet adapter Ethernet:
+   DHCP Enabled. . . . . . . . . . . : Yes
+   Autoconfiguration Enabled . . . . : Yes
+   IPv4 Address. . . . . . . . . . . : 10.0.2.15(Preferred) 
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : fe80::2%5
+   DNS Servers . . . . . . . . . . . : 192.168.1.1
+Ethernet adapter Ethernet 2:
+   DHCP Enabled. . . . . . . . . . . : No
+   Autoconfiguration Enabled . . . . : Yes
+   IPv4 Address. . . . . . . . . . . : 192.168.82.12(Preferred) 
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 
+===ROUTE===
+Interface List
+Active Routes:
+        224.0.0.0        240.0.0.0         On-link         127.0.0.1    331
+        224.0.0.0        240.0.0.0         On-link         10.0.2.15    281
+        224.0.0.0        240.0.0.0         On-link     192.168.82.12    281
+
+

@@ -1,0 +1,14 @@
+﻿===INFO===
+Linux ip-172-31-85-216.ec2.internal 6.18.41-94.142.amzn2023.x86_64 #2 SMP PREEMPT_DYNAMIC Mon Aug 10 19:23:35 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+NAME="Amazon Linux"
+VERSION="2023"
+===UPTIME===
+ 16:06:26 up 3 min,  1 user,  load average: 0.22, 0.06, 0.02
+===DISCO===
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/xvda1      8.0G  1.7G  6.4G  21% /
+===MEM===
+               total        used        free      shared  buff/cache   available
+Mem:             957         152         559           0         245         672
+===WHO===
+ec2-user

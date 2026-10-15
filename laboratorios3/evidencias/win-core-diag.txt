@@ -1,0 +1,25 @@
+﻿
+InterfaceAlias NetworkCategory
+-------------- ---------------
+Ethernet               Private
+Ethernet 2              Public
+
+
+
+Name      Length
+----      ------
+backup          
+samples         
+CACHE.DNS 3864  
+dns.log   0     
+
+
+
+
+ZoneName       : camilo.org.uk
+ZoneType       : Secondary
+IsDsIntegrated : False
+IsPaused       : False
+
+
+

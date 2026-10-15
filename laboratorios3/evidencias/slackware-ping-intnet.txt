@@ -1,0 +1,17 @@
+﻿PING 192.168.82.12 (192.168.82.12) 56(84) bytes of data.
+
+--- 192.168.82.12 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1064ms
+
+==GUI==
+PING 192.168.82.13 (192.168.82.13) 56(84) bytes of data.
+64 bytes from 192.168.82.13: icmp_seq=1 ttl=128 time=2.10 ms
+64 bytes from 192.168.82.13: icmp_seq=2 ttl=128 time=2.63 ms
+
+--- 192.168.82.13 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1003ms
+rtt min/avg/max/mdev = 2.098/2.363/2.629/0.265 ms
+==IP==
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    inet 192.168.82.10/24 brd 192.168.82.255 scope global eth1
+       valid_lft forever preferred_lft forever

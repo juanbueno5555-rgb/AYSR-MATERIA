@@ -1,0 +1,32 @@
+﻿
+IPAddress Result  RoundTripTime TcpTried UdpTried
+--------- ------  ------------- -------- --------
+127.0.0.1 Success 00:00:00      False    True    
+
+
+
+HostName  RecordType
+--------  ----------
+@         NS        
+@         SOA       
+dns1      A         
+dns1      AAAA      
+localhost A         
+mail      CNAME     
+srv1      A         
+srv2      A         
+srv2      AAAA      
+v6        CNAME     
+www       CNAME     
+
+
+
+Name              Length
+----              ------
+backup                  
+samples                 
+CACHE.DNS         3864  
+camilo.org.uk.dns 955   
+dns.log           0     
+
+

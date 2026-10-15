@@ -1,0 +1,9 @@
+﻿
+ZoneName         ZoneType 
+--------         -------- 
+0.in-addr.arpa   Primary  
+127.in-addr.arpa Primary  
+255.in-addr.arpa Primary  
+camilo.org.uk    Secondary
+
+

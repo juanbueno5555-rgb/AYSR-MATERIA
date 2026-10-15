@@ -1,0 +1,11 @@
+﻿ssh : getting file \demo-slack-lab03.txt of size 37 as /tmp/demo-bajado.txt (1.8 KiloBytes/sec) (average 1.8 
+KiloBytes/sec)
+At line:3 char:5
++ " | ssh -i .ssh/vagrant.key -o ConnectTimeout=8 -o StrictHostKeyCheck ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (getting file \d... KiloBytes/sec):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+===CONTENIDO-BAJADO===
+saludo-desde-slackware-20260829-1003
+sh: line 3: $'\r': command not found

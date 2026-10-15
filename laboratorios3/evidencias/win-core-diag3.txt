@@ -1,0 +1,17 @@
+﻿
+
+Name                 : Ethernet 2
+Status               : Up
+MediaConnectionState : Connected
+LinkSpeed            : 1 Gbps
+
+
+
+
+
+ComputerName     : 192.168.82.10
+RemotePort       : 53
+TcpTestSucceeded : False
+
+
+

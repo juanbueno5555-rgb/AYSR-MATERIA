@@ -1,0 +1,21 @@
+﻿
+
+The configured DNS server is incorrect or does not exist.
+
+
+Windows IP Configuration
+
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::ae23:eaae:a42:2f06%7
+   Default Gateway . . . . . . . . . : 10.2.65.1
+
+Ethernet adapter Ethernet 2:
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::cb0b:3a6f:b522:6738%9
+   IPv4 Address. . . . . . . . . . . : 192.168.82.13
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 
