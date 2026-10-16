@@ -1,0 +1,22 @@
+== 2026-10-03 15:11:26 Nginx en slackware-15.0 (VM Lab 5 - UNI)
+nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok
+nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful
+nginx version: nginx/1.26.3
+4082 nginx
+4084 nginx
+23:[ -x /etc/rc.d/rc.nginx ] && /etc/rc.d/rc.nginx start
+End of keyboard-interactive prompts from server
+--- desde el PC: GET http://127.0.0.1:8082/
+HTTP/1.1 200 OK
+Server: nginx/1.26.3
+Date: Sat, 03 Oct 2026 20:11:24 GMT
+Content-Type: text/html
+Content-Length: 214
+Last-Modified: Sat, 03 Oct 2026 20:10:25 GMT
+Connection: keep-alive
+ETag: "6ac16131-d6"
+Accept-Ranges: bytes
+
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Nginx en Slackware</title></head>
+<body><h1>Nginx en Slackware</h1><p>Laboratorio 6 de AYSR: Camilo Aguirre y Juan David Rangel.</p></body></html>

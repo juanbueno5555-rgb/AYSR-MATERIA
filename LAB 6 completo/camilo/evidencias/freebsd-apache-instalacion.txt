@@ -1,0 +1,153 @@
+== 2026-10-03 12:17:41 freebsd-14.5-lab06: sh /root/instalar-apache.sh (rc=0)
+Installing pkg-2.7.5...
+Extracting pkg-2.7.5: .......... done
+Updating FreeBSD repository catalogue...
+Fetching meta.conf: . done
+Fetching data: .......... done
+Processing entries: .......... done
+FreeBSD repository update completed. 37839 packages processed.
+Updating FreeBSD-kmods repository catalogue...
+Fetching meta.conf: . done
+Fetching data: ...... done
+Processing entries: .......... done
+FreeBSD-kmods repository update completed. 289 packages processed.
+All repositories are up to date.
+Updating database digests format: . done
+The following 20 package(s) will be affected (of 0 checked):
+
+New packages to be INSTALLED:
+	apache24: 2.4.68 [FreeBSD]
+	apr: 1.7.6.1.6.3 [FreeBSD]
+	brotli: 1.2.0,1 [FreeBSD]
+	curl: 8.22.0 [FreeBSD]
+	expat: 2.8.2 [FreeBSD]
+	gdbm: 1.26 [FreeBSD]
+	gettext-runtime: 1.0_1 [FreeBSD]
+	indexinfo: 0.3.1_1 [FreeBSD]
+	jansson: 2.15.1_1 [FreeBSD]
+	libidn2: 2.3.8 [FreeBSD]
+	liblz4: 1.10.0_2,1 [FreeBSD]
+	libnghttp2: 1.69.0 [FreeBSD]
+	libpsl: 0.22.0 [FreeBSD]
+	libssh2: 1.11.1_1,3 [FreeBSD]
+	libunistring: 1.4.2 [FreeBSD]
+	libxml2: 2.15.3 [FreeBSD]
+	pcre2: 10.47_1 [FreeBSD]
+	perl5: 5.42.3 [FreeBSD]
+	readline: 8.3.3 [FreeBSD]
+	zstd: 1.5.7_2 [FreeBSD]
+
+Number of packages to be installed: 20
+
+The process will require 127 MiB more space.
+30 MiB to be downloaded.
+[ 1/20] Fetching indexinfo-0.3.1_1: . done
+[ 2/20] Fetching libnghttp2-1.69.0: .......... done
+[ 3/20] Fetching libxml2-2.15.3: .......... done
+[ 4/20] Fetching libidn2-2.3.8: .......... done
+[ 5/20] Fetching liblz4-1.10.0_2,1: .......... done
+[ 6/20] Fetching apr-1.7.6.1.6.3: .......... done
+[ 7/20] Fetching apache24-2.4.68: .......... done
+[ 8/20] Fetching perl5-5.42.3: .......... done
+[ 9/20] Fetching zstd-1.5.7_2: .......... done
+[10/20] Fetching libunistring-1.4.2: .......... done
+[11/20] Fetching pcre2-10.47_1: .......... done
+[12/20] Fetching readline-8.3.3: .......... done
+[13/20] Fetching libssh2-1.11.1_1,3: .......... done
+[14/20] Fetching libpsl-0.22.0: ......... done
+[15/20] Fetching brotli-1.2.0,1: .......... done
+[16/20] Fetching curl-8.22.0: .......... done
+[17/20] Fetching gettext-runtime-1.0_1: .......... done
+[18/20] Fetching jansson-2.15.1_1: ........ done
+[19/20] Fetching expat-2.8.2: .......... done
+[20/20] Fetching gdbm-1.26: .......... done
+Checking integrity... done (0 conflicting)
+[ 1/20] Installing brotli-1.2.0,1...
+[ 1/20] Extracting brotli-1.2.0,1: .......... done
+[ 2/20] Installing expat-2.8.2...
+[ 2/20] Extracting expat-2.8.2: .......... done
+[ 3/20] Installing indexinfo-0.3.1_1...
+[ 3/20] Extracting indexinfo-0.3.1_1: .... done
+[ 4/20] Installing gettext-runtime-1.0_1...
+[ 4/20] Extracting gettext-runtime-1.0_1: .......... done
+[ 5/20] Installing jansson-2.15.1_1...
+[ 5/20] Extracting jansson-2.15.1_1: .......... done
+[ 6/20] Installing liblz4-1.10.0_2,1...
+[ 6/20] Extracting liblz4-1.10.0_2,1: .......... done
+[ 7/20] Installing libnghttp2-1.69.0...
+[ 7/20] Extracting libnghttp2-1.69.0: .......... done
+[ 8/20] Installing libssh2-1.11.1_1,3...
+[ 8/20] Extracting libssh2-1.11.1_1,3: .......... done
+[ 9/20] Installing libunistring-1.4.2...
+[ 9/20] Extracting libunistring-1.4.2: .......... done
+[10/20] Installing libidn2-2.3.8...
+[10/20] Extracting libidn2-2.3.8: .......... done
+[11/20] Installing libpsl-0.22.0...
+[11/20] Extracting libpsl-0.22.0: .......... done
+[12/20] Installing pcre2-10.47_1...
+[12/20] Extracting pcre2-10.47_1: .......... done
+[13/20] Installing perl5-5.42.3...
+[13/20] Extracting perl5-5.42.3: .......... done
+[14/20] Installing readline-8.3.3...
+[14/20] Extracting readline-8.3.3: .......... done
+[15/20] Installing gdbm-1.26...
+[15/20] Extracting gdbm-1.26: .......... done
+[16/20] Installing apr-1.7.6.1.6.3...
+[16/20] Extracting apr-1.7.6.1.6.3: .......... done
+[17/20] Installing libxml2-2.15.3...
+[17/20] Extracting libxml2-2.15.3: .......... done
+[18/20] Installing zstd-1.5.7_2...
+[18/20] Extracting zstd-1.5.7_2: .......... done
+[19/20] Installing curl-8.22.0...
+[19/20] Extracting curl-8.22.0: .......... done
+[20/20] Installing apache24-2.4.68...
+===> Creating groups
+Using existing group 'www'
+===> Creating users
+Using existing user 'www'
+[20/20] Extracting apache24-2.4.68: .......... done
+=====
+Message from apr-1.7.6.1.6.3:
+
+--
+The Apache Portable Runtime project removed support for FreeTDS with
+version 1.6. Users requiring MS-SQL connectivity must migrate
+configurations to use the added ODBC driver and FreeTDS' ODBC features.
+=====
+Message from apache24-2.4.68:
+
+--
+To run apache www server from startup, add apache24_enable="yes"
+in your /etc/rc.conf. Extra options can be found in startup script.
+
+Your hostname must be resolvable using at least 1 mechanism in
+/etc/nsswitch.conf typically DNS or /etc/hosts or apache might
+have issues starting depending on the modules you are using.
+
+
+- apache24 default build changed from static MPM to modular MPM
+- more modules are now enabled per default in the port
+- icons and error pages moved from WWWDIR to DATADIR
+
+   If built with modular MPM and no MPM is activated in
+   httpd.conf, then mpm_prefork will be activated as default
+   MPM in etc/apache24/modules.d to keep compatibility with
+   existing php/perl/python modules!
+
+Please compare the existing httpd.conf with httpd.conf.sample
+and merge missing modules/instructions into httpd.conf!
+apache24_enable:  -> YES
+Performing sanity check on apache24 configuration:
+Syntax OK
+Performing sanity check on apache24 configuration:
+Syntax OK
+Starting apache24.
+apache24 is running as pid 1852.
+www      httpd       1858 4   tcp4      *:80                  *:*
+www      httpd       1857 4   tcp4      *:80                  *:*
+www      httpd       1856 4   tcp4      *:80                  *:*
+www      httpd       1855 4   tcp4      *:80                  *:*
+www      httpd       1854 4   tcp4      *:80                  *:*
+root     httpd       1852 4   tcp4      *:80                  *:*
+Keyboard-interactive authentication prompts from server:
+End of keyboard-interactive prompts from server

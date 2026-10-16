@@ -1,0 +1,14 @@
+// Agregar al final de /etc/named.conf de slackware. Archivos de zona en /etc/DNS (directory del options).
+
+zone "juan.com.co" IN {
+	type slave;
+	masters { 10.2.78.75; };
+	file "juan.com.co.slave";
+};
+
+zone "camilo.org.jp" IN {
+	type master;
+	file "camilo.org.jp.hosts";
+	allow-transfer { 192.168.82.11; };
+	notify yes;
+};

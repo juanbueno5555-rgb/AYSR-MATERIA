@@ -1,0 +1,63 @@
+== 2026-10-03 12:19:40 Prueba de la calculadora de notas en freebsd-14.5-lab06
+$ pkg install postgresql16-server postgresql16-client  (rc=0)
+postgresql16-client-16.15      PostgreSQL database (client)
+postgresql16-server-16.15      PostgreSQL is the most advanced open-source database available anywhere
+$ sysrc postgresql_enable=YES; service postgresql initdb  (rc=0)
+postgresql_enable:  -> YES
+    /usr/local/bin/pg_ctl -D /var/db/postgres/data16 -l logfile start
+$ service postgresql start  (rc=0)
+start postgresql
+$ crear usuario y base de prueba  (rc=0)
+CREATE ROLE
+CREATE DATABASE
+$ cargar schema.sql  (rc=0)
+CREATE TABLE
+ALTER TABLE
+$ desplegar webapp en /usr/local/www/apache24/data/notas  (rc=0)
+$ crear config.php  (rc=0)
+total 20
+-rw-r-----  1 www www  121 Oct  3 12:20 config.php
+-rw-r--r--  1 www www 4974 Oct  3 12:20 index.php
+-rw-r--r--  1 www www  830 Oct  3 12:20 lib.php
+drwxr-xr-x  2 www www  512 Oct  3 12:20 tests
+$ pg_hba: contrasena para 127.0.0.1  (rc=0)
+host    all             all             127.0.0.1/32            trust
+host    all             all             ::1/128                 trust
+host    replication     all             127.0.0.1/32            trust
+host    replication     all             ::1/128                 trust
+
+--- Prueba CLI de la logica de calculo (php tests/test_calculo.php)
+$ php tests/test_calculo.php  (rc=0)
+OK   weights add up to 1
+OK   all fives
+OK   all zeros
+OK   30/30/40 example
+OK   last third weighs more
+OK   first third weighs 30%
+OK   rounding to 2 decimals
+OK   passing at 3.0
+OK   failing at 2.99
+OK   parse dot
+OK   parse comma
+OK   parse spaces
+OK   reject above 5
+OK   reject negative
+OK   reject text
+OK   reject empty
+ALL TESTS PASSED
+
+--- Pruebas HTTP desde el PC anfitrion (http://127.0.0.1:8081/notas/ -> puerto 80 de FreeBSD)
+GET /notas/ -> HTTP 200; contiene '<?php': False; contiene 'Calculadora de notas': True
+POST Ana Prueba 4,0 / 3 / 5 -> HTTP 200; 'Nota final: 4.10' y 'registro guardado': True
+POST Beto Prueba 2.5 / 2.5 / 2.5 -> HTTP 200; 'Nota final: 2.50' y 'no aprueba': True
+POST con notas invalidas (7 y abc) -> HTTP 200; muestra errores y no guarda: True
+POST con nombre <script>: la pagina lo escapa (sin XSS): True
+
+--- Registros guardados en PostgreSQL (consulta directa en la VM)
+$ select de notas  (rc=0)
+id |        estudiante         | nota1 | nota2 | nota3 | nota_final 
+----+---------------------------+-------+-------+-------+------------
+  1 | Ana Prueba                |  4.00 |  3.00 |  5.00 |       4.10
+  2 | Beto Prueba               |  2.50 |  2.50 |  2.50 |       2.50
+  3 | <script>alert(1)</script> |  5.00 |  5.00 |  5.00 |       5.00
+(3 rows)

@@ -1,0 +1,7 @@
+== 2026-10-03 15:19:09 2.1.e Reinicio de Slackware y Windows; se prueba HTTP sin tocar nada tras el arranque
+Nginx tras reiniciar: GET http://127.0.0.1:8082/ -> HTTP 200 (intentos: 7)
+HTTP/1.1 200 OK
+Server: nginx/1.26.3
+IIS tras reiniciar: GET http://127.0.0.1:8083/ -> HTTP 200 (intentos: 7)
+HTTP/1.1 200 OK
+Server: Microsoft-IIS/10.0

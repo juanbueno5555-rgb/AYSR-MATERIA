@@ -1,0 +1,5 @@
+Configuracion de los PC (Desktop > IP Configuration):
+  PC0: IP 132.18.0.2  Mascara 255.255.0.0  Gateway 132.18.0.1
+  PC1: IP 132.19.0.2  Mascara 255.255.0.0  Gateway 132.19.0.1
+  PC2: IP 132.20.0.2  Mascara 255.255.0.0  Gateway 132.20.0.1
+  PC3: IP 132.21.0.2  Mascara 255.255.0.0  Gateway 132.21.0.1

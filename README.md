@@ -9,3 +9,7 @@ Estructura planificada:
 - `*.md` — guías y registro de avance por laboratorio
 
 Ramas de trabajo por integrante; integración en `main`.
+
+## Laboratorios completos
+
+- [LAB 6 completo](LAB%206%20completo/README.md) — informe, Packet Tracer, servidores, DNS, hosting y aplicación web.

@@ -1,0 +1,33 @@
+enable
+configure terminal
+hostname Aguirre
+banner motd #For exclusive use by RECO students#
+no ip domain-lookup
+enable secret ClaveE
+line console 0
+ logging synchronous
+ password ClaveC
+ login
+ exit
+line vty 0 15
+ logging synchronous
+ password ClaveT
+ login
+ exit
+interface GigabitEthernet0/0
+ description Red No. 3 hacia PC2
+ ip address 74.0.0.1 255.0.0.0
+ no shutdown
+ exit
+interface GigabitEthernet0/1
+ description Red No. 4 hacia PC3
+ ip address 75.0.0.1 255.0.0.0
+ no shutdown
+ exit
+interface Serial0/0/0
+ description Enlace serial hacia Router0 (DTE)
+ ip address 20.0.0.2 255.0.0.0
+ no shutdown
+ exit
+end
+copy running-config startup-config

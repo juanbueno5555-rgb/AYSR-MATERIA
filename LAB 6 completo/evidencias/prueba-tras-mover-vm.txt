@@ -1,0 +1,11 @@
+== 2026-10-05 04:51:00 Prueba tras mover las VM a D:\LAB 6\1-MAQUINAS-VIRTUALES (arranque desde la nueva ruta)
+VM "slackware-15.0-lab05-2026-09-24 - UNI" has been successfully started.
+VM "solaris-11.4-lab05-2026-09-24 - UNI" has been successfully started.
+VM "windows-server-gui-lab05-2026-09-24 - UNI" has been successfully started.
+VM "freebsd-14.5-lab06" has been successfully started.
+Nginx -> HTTP 200 (intentos 1)
+IIS -> HTTP 200 (intentos 10)
+Apache -> HTTP 200 (intentos 1)
+Solaris vhost network -> HTTP 200 (intentos 1)
+--- Apagado ordenado
+VM encendidas tras apagar: 0

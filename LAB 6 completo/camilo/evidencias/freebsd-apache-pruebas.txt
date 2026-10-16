@@ -1,0 +1,10 @@
+== 2026-10-03 12:17:52 Prueba 2.1.f desde el PC anfitrion (otro computador) -> http://127.0.0.1:8081/ (reenvia al puerto 80 de FreeBSD)
+HTTP 200
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Apache en FreeBSD</title></head>
+<body><h1>Apache en FreeBSD</h1><p>Laboratorio 6 de AYSR: Camilo Aguirre y Juan David Rangel.</p></body></html>
+== Prueba 2.1.e: reinicio de la VM sin iniciar Apache a mano
+Tras reiniciar: HTTP 200 a los 40 s
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Apache en FreeBSD</title></head>
+<body><h1>Apache en FreeBSD</h1><p>Laboratorio 6 de AYSR: Camilo Aguirre y Juan David Rangel.</p></body></html>

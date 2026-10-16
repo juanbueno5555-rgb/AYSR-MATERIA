@@ -1,0 +1,14 @@
+// Agregar al final de /etc/named.conf de solaris. Archivos de zona en /etc/inet/DNS (directory del options).
+
+zone "juan.com.co" IN {
+	type master;
+	file "juan.com.co.hosts";
+	allow-transfer { 192.168.82.10; };
+	notify yes;
+};
+
+zone "camilo.org.jp" IN {
+	type slave;
+	masters { 192.168.82.10; };
+	file "camilo.org.jp.slave";
+};

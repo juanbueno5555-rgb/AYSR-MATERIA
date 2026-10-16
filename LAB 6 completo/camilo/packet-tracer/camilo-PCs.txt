@@ -1,0 +1,5 @@
+Configuracion de los PC (Desktop > IP Configuration):
+  PC0: IP 72.0.0.2  Mascara 255.0.0.0  Gateway 72.0.0.1
+  PC1: IP 73.0.0.2  Mascara 255.0.0.0  Gateway 73.0.0.1
+  PC2: IP 74.0.0.2  Mascara 255.0.0.0  Gateway 74.0.0.1
+  PC3: IP 75.0.0.2  Mascara 255.0.0.0  Gateway 75.0.0.1

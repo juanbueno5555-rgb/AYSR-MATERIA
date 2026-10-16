@@ -1,0 +1,12 @@
+$TTL 86400
+@ IN SOA dns1.camilo.org.jp. root.camilo.org.jp. (
+    2026100301 ; serial (subirlo en cada cambio)
+    3600       ; refresh
+    900        ; retry
+    604800     ; expire
+    86400 )    ; negative cache TTL
+
+@ IN NS dns1.camilo.org.jp.
+
+dns1.camilo.org.jp. IN A 192.168.82.10
+security.camilo.org.jp. IN A 192.168.82.11

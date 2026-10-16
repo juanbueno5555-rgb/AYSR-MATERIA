@@ -1,0 +1,36 @@
+enable
+configure terminal
+hostname Juan
+banner motd #For exclusive use by RECO students#
+no ip domain-lookup
+enable secret ClaveE
+line console 0
+ logging synchronous
+ password ClaveC
+ login
+ exit
+line vty 0 15
+ logging synchronous
+ password ClaveT
+ login
+ exit
+interface GigabitEthernet0/0
+ description Red No. 1 hacia PC0
+ ip address 132.18.0.1 255.255.0.0
+ no shutdown
+ exit
+interface GigabitEthernet0/1
+ description Red No. 2 hacia PC1
+ ip address 132.19.0.1 255.255.0.0
+ no shutdown
+ exit
+interface Serial0/0/0
+ description Enlace serial hacia Router1 (DCE)
+ ip address 20.0.0.1 255.0.0.0
+ clock rate 64000
+ no shutdown
+ exit
+ip route 132.20.0.0 255.255.0.0 Serial0/0/0
+ip route 132.21.0.0 255.255.0.0 Serial0/0/0
+end
+copy running-config startup-config

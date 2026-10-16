@@ -1,0 +1,12 @@
+$TTL 86400
+@ IN SOA dns1.juan.com.co. root.juan.com.co. (
+    2026100301 ; serial (subirlo en cada cambio)
+    3600       ; refresh
+    900        ; retry
+    604800     ; expire
+    86400 )    ; negative cache TTL
+
+@ IN NS dns1.juan.com.co.
+
+dns1.juan.com.co. IN A 192.168.82.11
+network.juan.com.co. IN A 192.168.82.11

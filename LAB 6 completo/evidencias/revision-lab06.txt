@@ -1,0 +1,90 @@
+Revision Lab 6 - 2026-10-16 02:22:04
+
+== 1. Carpeta D:\LAB 6 y rutas
+[OK   ] existe 0-GUIA-OFICIAL\Laboratory_No.06.pdf
+[OK   ] existe 00-LEEME-PRIMERO.md
+[OK   ] existe LEEME-LAB6.md
+[OK   ] existe QUE HACES EN LA U (Lab 6).pdf
+[OK   ] existe informe\Informe-Laboratorio-06-AYSR.docx
+[OK   ] existe informe\Informe-Laboratorio-06-AYSR.pdf
+[OK   ] existe camilo\packet-tracer\camilo-lab06 xd.pkt
+[OK   ] existe camilo\LEEME-CAMILO.md
+[OK   ] existe juan\LEEME-JUAN.md
+[OK   ] existe juan\MENSAJE-PARA-JUAN.md
+[OK   ] existe webapp\index.php
+[OK   ] existe webapp\lib.php
+[OK   ] existe webapp\schema.sql
+[OK   ] existe dns\generar_zonas.py
+[OK   ] existe hosting\solaris\instalar.sh
+[OK   ] existe webservers\iis-windows\instalar.ps1
+[OK   ] existe webservers\nginx-slackware\instalar.sh
+[OK   ] existe webservers\freebsd-apache\instalar.sh
+[OK   ] no queda _descargas en C:
+[AVISO] SIGUE la copia vieja en C:\Users\camil\Documents\LAB 6 (duplicado, pendiente de borrar con permiso)
+
+== 2. Maquinas virtuales: registro, ruta y estado
+[OK   ] slackware-15.0-lab05-2026-09-24 - UNI: .vbox en D:\LAB 6 y existe
+[OK   ] slackware-15.0-lab05-2026-09-24 - UNI: disco en D:\LAB 6 y existe
+[OK   ] slackware-15.0-lab05-2026-09-24 - UNI: estado poweroff
+[OK   ] slackware-15.0-lab05-2026-09-24 - UNI: sin ISO colgada
+[OK   ] solaris-11.4-lab05-2026-09-24 - UNI: .vbox en D:\LAB 6 y existe
+[OK   ] solaris-11.4-lab05-2026-09-24 - UNI: disco en D:\LAB 6 y existe
+[OK   ] solaris-11.4-lab05-2026-09-24 - UNI: estado poweroff
+[OK   ] solaris-11.4-lab05-2026-09-24 - UNI: sin ISO colgada
+[OK   ] windows-server-gui-lab05-2026-09-24 - UNI: .vbox en D:\LAB 6 y existe
+[OK   ] windows-server-gui-lab05-2026-09-24 - UNI: disco en D:\LAB 6 y existe
+[OK   ] windows-server-gui-lab05-2026-09-24 - UNI: estado poweroff
+[OK   ] windows-server-gui-lab05-2026-09-24 - UNI: sin ISO colgada
+[OK   ] freebsd-14.5-lab06: .vbox en D:\LAB 6 y existe
+[OK   ] freebsd-14.5-lab06: disco en D:\LAB 6 y existe
+[OK   ] freebsd-14.5-lab06: estado poweroff
+[OK   ] freebsd-14.5-lab06: sin ISO colgada
+
+== 3. Git y secretos
+[AVISO] git con cambios sin confirmar: M informe/Informe-Laboratorio-06-AYSR.docx;  M informe/Informe-Laboratorio-06-AYSR.pdf;  M informe/fuente/config.json;  M informe/fuente/construir_config.py
+[OK   ] ningun secreto, disco ni descarga esta en git
+[OK   ] claves de laboratorio: solo en archivos locales (revisar abajo)
+[OK   ] git actual no contiene la clave de Windows de laboratorio en archivos rastreados (tools/vm.py la usa: ver aviso)
+[AVISO] tools/vm.py contiene claves de las VM de laboratorio (credenciales de practica, no personales); no subir el repo a un sitio publico
+
+== 4. Punto 1: routers (comandos generados)
+[OK   ] camilo/camilo-Router0-Camilo.txt: trae todos los requisitos de la guia
+[OK   ] camilo/camilo-Router1-Aguirre.txt: trae todos los requisitos de la guia
+[OK   ] juan/juan-Router0-Juan.txt: trae todos los requisitos de la guia
+[OK   ] juan/juan-Router1-Rangel.txt: trae todos los requisitos de la guia
+[OK   ] simulacion: 2 de 6 sin rutas y 6 de 6 con rutas, en los dos montajes
+[OK   ] camilo: .pkt mas reciente 'camilo-lab06-multiusuario.pkt' guardado el 2026-10-15 22:49 (despues de la prueba sin rutas)
+[OK   ] camilo: capturas de Packet Tracer presentes (13)
+[OK   ] archivos .pkt presentes: montaje de Juan, config manual y unión multiusuario de los dos
+[OK   ] evidencia multiusuario presente (9 capturas)
+
+== 5. Punto 3: aplicacion (codigo)
+[OK   ] index.php usa sentencias preparadas (PDO)
+[OK   ] index.php escapa la salida (XSS)
+[OK   ] lib.php aplica 30 %, 30 % y 40 %
+[OK   ] no hay config.php con claves dentro de webapp/ (solo el ejemplo)
+
+== 6. Informe y guia
+[OK   ] informe PDF: 24 paginas
+[OK   ] secciones: 'Router Simulation'
+[OK   ] secciones: 'Web Service Installation'
+[OK   ] secciones: 'Hosting Service Configuration'
+[OK   ] secciones: 'On-Premise Web Application'
+[OK   ] secciones: 'Pendientes y decisiones'
+[OK   ] secciones: 'Conclusiones'
+[OK   ] informe sin secciones en blanco ni marcas de pendiente
+[OK   ] informe sin caracteres de control
+[OK   ] informe docx con >= 6 imagenes
+[OK   ] ruta citada existe: D:\LAB 6\camilo\evidencias\freebsd-apache-pruebas.txt
+[OK   ] ruta citada existe: D:\LAB 6\camilo\evidencias\slackware-nginx-instalacion.txt
+[OK   ] ruta citada existe: D:\LAB 6\camilo\evidencias\webapp-postgres-lab5-prueba.txt
+[OK   ] ruta citada existe: D:\LAB 6\evidencias\acceso-otro-equipo-por-nombre.txt
+[OK   ] ruta citada existe: D:\LAB 6\evidencias\dns-pruebas.txt
+[OK   ] ruta citada existe: D:\LAB 6\evidencias\reinicio-arranque-automatico.txt
+[OK   ] guia de la U sin la ruta vieja clones-lab05
+
+== 7. Textos que citan rutas viejas
+[OK   ] ningun archivo del proyecto cita C:\...\Documents\LAB 6 ni clones-lab05
+
+== RESUMEN
+OK=69  FALLA=0  AVISO=3

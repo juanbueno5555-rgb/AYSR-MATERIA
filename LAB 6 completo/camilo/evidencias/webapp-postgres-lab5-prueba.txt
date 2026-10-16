@@ -1,0 +1,11 @@
+== 2026-10-03 15:18:31 Calculadora (FreeBSD, Apache+PHP) -> PostgreSQL 14 del Lab 5 en Slackware (192.168.82.10, base notas_lab06)
+POST Ana Prueba 4,0/3/5 -> HTTP 200; esperado 'Nota final: 4.10': OK
+POST Beto Prueba 2.5/2.5/2.5 -> HTTP 200; esperado 'Nota final: 2.50': OK
+POST Malo 7/abc/5 -> HTTP 200; esperado 'debe ser un número entre 0 y 5': OK
+
+--- Registros guardados, consultados directamente en PostgreSQL de Slackware
+id | estudiante  | nota1 | nota2 | nota3 | nota_final 
+----+-------------+-------+-------+-------+------------
+  1 | Ana Prueba  |  4.00 |  3.00 |  5.00 |       4.10
+  2 | Beto Prueba |  2.50 |  2.50 |  2.50 |       2.50
+(2 rows)

@@ -1,0 +1,11 @@
+== 2026-10-03 15:17:08 Pruebas DNS Lab 6 (modo casa). Slackware = puerto 5301, Solaris = puerto 5302 del PC
+apache.camilo.org.uk @127.0.0.1:5301 -> rcode=0 A=['192.168.82.14'] autoritativa=True
+nginx.camilo.org.uk @127.0.0.1:5301 -> rcode=0 A=['192.168.82.10'] autoritativa=True
+iis.camilo.org.uk @127.0.0.1:5301 -> rcode=0 A=['192.168.82.13'] autoritativa=True
+security.camilo.org.jp @127.0.0.1:5301 -> rcode=0 A=['192.168.82.11'] autoritativa=True
+network.juan.com.co @127.0.0.1:5301 -> rcode=0 A=['192.168.82.11'] autoritativa=True
+network.juan.com.co @127.0.0.1:5302 -> rcode=0 A=['192.168.82.11'] autoritativa=True
+security.camilo.org.jp @127.0.0.1:5302 -> rcode=0 A=['192.168.82.11'] autoritativa=True
+apache.camilo.org.uk @127.0.0.1:5302 -> rcode=0 A=['192.168.82.14'] autoritativa=True
+nginx.camilo.org.uk @127.0.0.1:5302 -> rcode=0 A=['192.168.82.10'] autoritativa=True
+iis.camilo.org.uk @127.0.0.1:5302 -> rcode=0 A=['192.168.82.13'] autoritativa=True

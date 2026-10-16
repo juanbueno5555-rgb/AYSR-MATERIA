@@ -1,0 +1,163 @@
+== 2026-10-03 12:19:13 freebsd-14.5-lab06: sh /root/php.sh (rc=0)
+Updating FreeBSD repository catalogue...
+FreeBSD repository is up to date.
+Updating FreeBSD-kmods repository catalogue...
+FreeBSD-kmods repository is up to date.
+All repositories are up to date.
+The following 9 package(s) will be affected (of 0 checked):
+
+New packages to be INSTALLED:
+	libargon2: 20190702_1 [FreeBSD]
+	mod_php83: 8.3.33 [FreeBSD]
+	oniguruma: 6.9.10 [FreeBSD]
+	php83: 8.3.33 [FreeBSD]
+	php83-mbstring: 8.3.33 [FreeBSD]
+	php83-pdo: 8.3.33 [FreeBSD]
+	php83-pdo_pgsql: 8.3.33 [FreeBSD]
+	php83-session: 8.3.33 [FreeBSD]
+	postgresql18-client: 18.6 [FreeBSD]
+
+Number of packages to be installed: 9
+
+The process will require 55 MiB more space.
+12 MiB to be downloaded.
+[1/9] Fetching php83-session-8.3.33: ...... done
+[2/9] Fetching php83-mbstring-8.3.33: .......... done
+[3/9] Fetching php83-pdo-8.3.33: ....... done
+[4/9] Fetching libargon2-20190702_1: ......... done
+[5/9] Fetching oniguruma-6.9.10: .......... done
+[6/9] Fetching php83-pdo_pgsql-8.3.33: ... done
+[7/9] Fetching postgresql18-client-18.6: .......... done
+[8/9] Fetching php83-8.3.33: .......... done
+[9/9] Fetching mod_php83-8.3.33: .......... done
+Checking integrity... done (0 conflicting)
+[1/9] Installing libargon2-20190702_1...
+[1/9] Extracting libargon2-20190702_1: .......... done
+[2/9] Installing mod_php83-8.3.33...
+[2/9] Extracting mod_php83-8.3.33: .... done
+[activating module `php' in /usr/local/etc/apache24/httpd.conf]
+[3/9] Installing oniguruma-6.9.10...
+[3/9] Extracting oniguruma-6.9.10: .......... done
+[4/9] Installing php83-8.3.33...
+[4/9] Extracting php83-8.3.33: .......... done
+[5/9] Installing php83-mbstring-8.3.33...
+[5/9] Extracting php83-mbstring-8.3.33: .......... done
+[6/9] Installing php83-pdo-8.3.33...
+[6/9] Extracting php83-pdo-8.3.33: .......... done
+[7/9] Installing php83-session-8.3.33...
+[7/9] Extracting php83-session-8.3.33: .......... done
+[8/9] Installing postgresql18-client-18.6...
+[8/9] Extracting postgresql18-client-18.6: .......... done
+[9/9] Installing php83-pdo_pgsql-8.3.33...
+[9/9] Extracting php83-pdo_pgsql-8.3.33: ......... done
+=====
+Message from mod_php83-8.3.33:
+
+--
+******************************************************************************
+
+Consider switching to php-fpm and mod_fast_cgi as per Apache httpd project
+recommendation. See https://cwiki.apache.org/confluence/display/HTTPD/PHP-FPM
+
+******************************************************************************
+
+If you are building PHP-based ports in poudriere(8) or Synth with ZTS enabled,
+add WITH_MPM=event to /etc/make.conf to prevent build failures.
+
+******************************************************************************
+
+Make sure index.php is part of your DirectoryIndex.
+
+You should add the following to your Apache configuration file:
+
+<FilesMatch "\.php$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+<FilesMatch "\.phps$">
+    SetHandler application/x-httpd-php-source
+</FilesMatch>
+
+******************************************************************************
+=====
+Message from oniguruma-6.9.10:
+
+--
+===>   NOTICE:
+
+This port is deprecated; you may wish to reconsider installing it:
+
+Project archived upstream.
+
+It is scheduled to be removed on or after 2026-12-01.
+=====
+Message from php83-mbstring-8.3.33:
+
+--
+This file has been added to automatically load the installed extension:
+/usr/local/etc/php/ext-20-mbstring.ini.sample
+=====
+Message from php83-pdo-8.3.33:
+
+--
+This file has been added to automatically load the installed extension:
+/usr/local/etc/php/ext-20-pdo.ini.sample
+=====
+Message from php83-session-8.3.33:
+
+--
+This file has been added to automatically load the installed extension:
+/usr/local/etc/php/ext-18-session.ini.sample
+=====
+Message from postgresql18-client-18.6:
+
+--
+The PostgreSQL port has a collection of "side orders":
+
+postgresql-docs
+  For all of the html documentation
+
+p5-Pg
+  A perl5 API for client access to PostgreSQL databases.
+
+postgresql-tcltk
+  If you want tcl/tk client support.
+
+postgresql-jdbc
+  For Java JDBC support.
+
+postgresql-odbc
+  For client access from unix applications using ODBC as access
+  method. Not needed to access unix PostgreSQL servers from Win32
+  using ODBC. See below.
+
+ruby-postgres, py-psycopg
+  For client access to PostgreSQL databases using the ruby & python
+  languages.
+
+postgresql-plperl, postgresql-pltcl & postgresql-plruby
+  For using perl5, tcl & ruby as procedural languages.
+
+postgresql-contrib
+  Lots of contributed utilities, postgresql functions and
+  datatypes. There you find pg_standby, pgcrypto and many other cool
+  things.
+
+etc...
+=====
+Message from php83-pdo_pgsql-8.3.33:
+
+--
+This file has been added to automatically load the installed extension:
+/usr/local/etc/php/ext-30-pdo_pgsql.ini.sample
+Performing sanity check on apache24 configuration:
+Syntax OK
+Performing sanity check on apache24 configuration:
+Syntax OK
+Stopping apache24.
+Waiting for PIDS: 999.
+Performing sanity check on apache24 configuration:
+Syntax OK
+Starting apache24.
+PHP 8.3.33 (cli) (built: Aug 27 2026 02:51:05) (NTS)
+mbstring
+pdo_pgsql

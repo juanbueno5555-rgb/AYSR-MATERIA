@@ -1,0 +1,80 @@
+Camilo Lab06 - observed Packet Tracer evidence
+Date: 2026-10-04
+Status: Partial verification; native topology, static routing, six-pair ICMP and traceroute completed.
+
+Native artifact: D:/LAB 6/routers/salida/camilo-lab06.pkt
+Saved through Packet Tracer Save As UI. Filesystem existence checked: 50,868 bytes.
+No existing command file or .pkt was overwritten.
+
+Topology and addressing (mask 255.0.0.0 throughout)
+Existing four PCs and two Cisco 1941 routers preserved/reused.
+HWIC-2T installed in slot 0 on each router.
+PC0 FastEthernet0: 72.0.0.2, gateway 72.0.0.1 -> Camilo GigabitEthernet0/0 72.0.0.1.
+PC1 FastEthernet0: 73.0.0.2, gateway 73.0.0.1 -> Camilo GigabitEthernet0/1 73.0.0.1.
+PC2 FastEthernet0: 74.0.0.2, gateway 74.0.0.1 -> Aguirre GigabitEthernet0/0 74.0.0.1.
+PC3 FastEthernet0: 75.0.0.2, gateway 75.0.0.1 -> Aguirre GigabitEthernet0/1 75.0.0.1.
+Four Ethernet links use copper crossover.
+Camilo Serial0/0/0 20.0.0.1 DCE -> Aguirre Serial0/0/0 20.0.0.2 DTE.
+Camilo DCE clock rate 64000 in imported configuration.
+All five links observed with green endpoint indicators.
+PC addresses, masks and gateways individually observed in Desktop IP Configuration.
+
+Configuration method
+Inspected existing PCs, no-route router, full-route router and verification text files read-only.
+Native Config > Running Config > Merge loaded each sin-rutas file before baseline tests.
+Later Merge loaded camilo-Router0-Camilo.txt and camilo-Router1-Aguirre.txt.
+Each full-route merge displayed "Configuration merged successfully."
+Existing files include hostname, required RECO banner, no ip domain-lookup, enable secret,
+console and VTY passwords/login/logging synchronous, interface descriptions and no shutdown.
+Banner and password prompts observed; exhaustive running-config readback not performed.
+Both routers' Config > NVRAM Save produced actual CLI output:
+copy running-config startup-config
+Destination filename [startup-config]?
+Building configuration...
+[OK]
+
+Pre-route functional evidence
+Packet Tracer Add Simple PDU creates ICMP probes; these were used instead of typed ping.
+PC0 -> PC1: initially Failed; one replay Successful.
+PC2 -> PC3: initially Failed; one replay Successful.
+Initial loss is consistent with ARP initialization; no packet-level ARP trace was captured.
+PC0 -> PC2: Failed before remote static routes.
+Other three cross-router pairs were not tested in the baseline phase.
+
+Post-route functional evidence
+All six unordered pairs observed Successful in the native ICMP PDU list:
+PC0 -> PC1: Successful (replayed after routes)
+PC0 -> PC2: Successful (replayed after routes)
+PC0 -> PC3: Successful
+PC1 -> PC2: Successful
+PC1 -> PC3: Successful
+PC2 -> PC3: Successful (replayed after routes)
+These are observed single-PDU ICMP outcomes, not fabricated four-packet ping statistics.
+
+Camilo CLI: sh ip ro
+Gateway of last resort is not set.
+C 20.0.0.0/8 Serial0/0/0; L 20.0.0.1/32 Serial0/0/0
+C 72.0.0.0/8 GigabitEthernet0/0; L 72.0.0.1/32 GigabitEthernet0/0
+C 73.0.0.0/8 GigabitEthernet0/1; L 73.0.0.1/32 GigabitEthernet0/1
+S 74.0.0.0/8 is directly connected, Serial0/0/0
+S 75.0.0.0/8 is directly connected, Serial0/0/0
+
+PC0 simulated Command Prompt: tracert 75.0.0.2
+Tracing route to 75.0.0.2 over a maximum of 30 hops:
+1   5 ms   0 ms   0 ms   72.0.0.1
+2   1 ms   2 ms   2 ms   20.0.0.2
+3   2 ms   0 ms   2 ms   75.0.0.2
+Trace complete.
+
+Pending/deviations
+Console RS232 cable and Desktop Terminal setup were not performed; native config Merge was used.
+show ip interface brief on both routers and Aguirre show ip route readback remain pending.
+Full running/startup config readback remains pending; save [OK] was observed on both.
+No Multiuser connection with Juan was attempted; explicitly outside individual local scope.
+No extra hosts were added to invent a same-LAN test; one host per LAN is retained.
+No deterministic source unit-test runner applies; observed network behavior was used.
+
+UI input finding
+Unicode type_text was ignored in Cisco/PC simulated CLI. Physical press_key worked after
+clicking the editable work surface. File picker and normal fields accepted type_text.
+Main Packet Tracer workspace is left open for independent spot checking.

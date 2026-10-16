@@ -1,0 +1,16 @@
+== 2026-10-05 04:48:41 Mover las 3 VM ' - UNI' de D:\LAB 5 a D:\LAB 6\1-MAQUINAS-VIRTUALES (VBoxManage movevm)
+--- slackware-15.0-lab05-2026-09-24 - UNI
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Machine has been successfully moved into D:\LAB 6\1-MAQUINAS-VIRTUALES
+
+CfgFile="D:\\LAB 6\\1-MAQUINAS-VIRTUALES\\slackware-15.0-lab05-2026-09-24 - UNI\\slackware-15.0-lab05-2026-09-24 - UNI.vbox"
+--- solaris-11.4-lab05-2026-09-24 - UNI
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Machine has been successfully moved into D:\LAB 6\1-MAQUINAS-VIRTUALES
+
+CfgFile="D:\\LAB 6\\1-MAQUINAS-VIRTUALES\\solaris-11.4-lab05-2026-09-24 - UNI\\solaris-11.4-lab05-2026-09-24 - UNI.vbox"
+--- windows-server-gui-lab05-2026-09-24 - UNI
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Machine has been successfully moved into D:\LAB 6\1-MAQUINAS-VIRTUALES
+
+CfgFile="D:\\LAB 6\\1-MAQUINAS-VIRTUALES\\windows-server-gui-lab05-2026-09-24 - UNI\\windows-server-gui-lab05-2026-09-24 - UNI.vbox"

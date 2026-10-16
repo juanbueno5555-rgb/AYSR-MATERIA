@@ -1,0 +1,23 @@
+== 2026-10-03 15:23:18 2.1.f y 2.1.g / 2.2: desde OTRA maquina (FreeBSD, red interna lab-uni) por NOMBRE, resolviendo con los BIND de Slackware (192.168.82.10) y Solaris (192.168.82.11)
+nameserver 192.168.82.10
+nameserver 192.168.82.11
+--- apache.camilo.org.uk
+apache.camilo.org.uk has address 192.168.82.14
+<html lang="es"><head><meta charset="utf-8"><title>Apache en FreeBSD</title></head>
+<body><h1>Apache en FreeBSD</h1><p>Laboratorio 6 de AYSR: Camilo Aguirre y Juan David Rangel.</p></body></html>
+--- nginx.camilo.org.uk
+nginx.camilo.org.uk has address 192.168.82.10
+<html lang="es"><head><meta charset="utf-8"><title>Nginx en Slackware</title></head>
+<body><h1>Nginx en Slackware</h1><p>Laboratorio 6 de AYSR: Camilo Aguirre y Juan David Rangel.</p></body></html>
+--- iis.camilo.org.uk
+iis.camilo.org.uk has address 192.168.82.13
+<html lang="es"><head><meta charset="utf-8"><title>IIS en Windows Server</title></head>
+<body><h1>IIS en Windows Server</h1><p>Laboratorio 6 de AYSR: Camilo Aguirre y Juan David Rangel.</p></body></html>
+--- network.juan.com.co
+network.juan.com.co has address 192.168.82.11
+<html lang="es"><head><meta charset="utf-8"><title>Sitio network</title></head>
+<body><h1>Sitio network</h1><p>Hosting virtual en Solaris. Laboratorio 6 de AYSR.</p></body></html>
+--- security.camilo.org.jp
+security.camilo.org.jp has address 192.168.82.11
+<html lang="es"><head><meta charset="utf-8"><title>Sitio security</title></head>
+<body><h1>Sitio security</h1><p>Hosting virtual en Solaris. Laboratorio 6 de AYSR.</p></body></html>

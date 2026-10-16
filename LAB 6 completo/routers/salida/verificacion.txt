@@ -1,0 +1,46 @@
+
+=== camilo (Student 02): Router0=Camilo, Router1=Aguirre ===
+Configuracion de los PC (Desktop > IP Configuration):
+  PC0: IP 72.0.0.2  Mascara 255.0.0.0  Gateway 72.0.0.1
+  PC1: IP 73.0.0.2  Mascara 255.0.0.0  Gateway 73.0.0.1
+  PC2: IP 74.0.0.2  Mascara 255.0.0.0  Gateway 74.0.0.1
+  PC3: IP 75.0.0.2  Mascara 255.0.0.0  Gateway 75.0.0.1
+  Alcance SIN rutas estaticas (solo redes conectadas):
+    PC0 -> PC1: OK via PC0 > Router0 > PC1
+    PC0 -> PC2: NO LLEGA
+    PC0 -> PC3: NO LLEGA
+    PC1 -> PC2: NO LLEGA
+    PC1 -> PC3: NO LLEGA
+    PC2 -> PC3: OK via PC2 > Router1 > PC3
+    resumen: 2 alcanzables, 4 no alcanzables
+  Alcance CON rutas estaticas:
+    PC0 -> PC1: OK via PC0 > Router0 > PC1
+    PC0 -> PC2: OK via PC0 > Router0 > Router1 > PC2
+    PC0 -> PC3: OK via PC0 > Router0 > Router1 > PC3
+    PC1 -> PC2: OK via PC1 > Router0 > Router1 > PC2
+    PC1 -> PC3: OK via PC1 > Router0 > Router1 > PC3
+    PC2 -> PC3: OK via PC2 > Router1 > PC3
+    resumen: 6 alcanzables, 0 no alcanzables
+
+=== juan (Student 01): Router0=Juan, Router1=Rangel ===
+Configuracion de los PC (Desktop > IP Configuration):
+  PC0: IP 132.18.0.2  Mascara 255.255.0.0  Gateway 132.18.0.1
+  PC1: IP 132.19.0.2  Mascara 255.255.0.0  Gateway 132.19.0.1
+  PC2: IP 132.20.0.2  Mascara 255.255.0.0  Gateway 132.20.0.1
+  PC3: IP 132.21.0.2  Mascara 255.255.0.0  Gateway 132.21.0.1
+  Alcance SIN rutas estaticas (solo redes conectadas):
+    PC0 -> PC1: OK via PC0 > Router0 > PC1
+    PC0 -> PC2: NO LLEGA
+    PC0 -> PC3: NO LLEGA
+    PC1 -> PC2: NO LLEGA
+    PC1 -> PC3: NO LLEGA
+    PC2 -> PC3: OK via PC2 > Router1 > PC3
+    resumen: 2 alcanzables, 4 no alcanzables
+  Alcance CON rutas estaticas:
+    PC0 -> PC1: OK via PC0 > Router0 > PC1
+    PC0 -> PC2: OK via PC0 > Router0 > Router1 > PC2
+    PC0 -> PC3: OK via PC0 > Router0 > Router1 > PC3
+    PC1 -> PC2: OK via PC1 > Router0 > Router1 > PC2
+    PC1 -> PC3: OK via PC1 > Router0 > Router1 > PC3
+    PC2 -> PC3: OK via PC2 > Router1 > PC3
+    resumen: 6 alcanzables, 0 no alcanzables

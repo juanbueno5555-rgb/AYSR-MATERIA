@@ -1,0 +1,146 @@
+Revision Lab 6 - 2026-10-15 23:14:37
+
+== 1. Carpeta D:\LAB 6 y rutas
+[OK   ] existe 0-GUIA-OFICIAL\Laboratory_No.06.pdf
+[OK   ] existe 00-LEEME-PRIMERO.md
+[OK   ] existe LEEME-LAB6.md
+[OK   ] existe QUE HACES EN LA U (Lab 6).pdf
+[OK   ] existe informe\Informe-Laboratorio-06-AYSR.docx
+[OK   ] existe informe\Informe-Laboratorio-06-AYSR.pdf
+[OK   ] existe camilo\packet-tracer\camilo-lab06 xd.pkt
+[OK   ] existe camilo\LEEME-CAMILO.md
+[OK   ] existe juan\LEEME-JUAN.md
+[OK   ] existe juan\MENSAJE-PARA-JUAN.md
+[OK   ] existe webapp\index.php
+[OK   ] existe webapp\lib.php
+[OK   ] existe webapp\schema.sql
+[OK   ] existe dns\generar_zonas.py
+[OK   ] existe hosting\solaris\instalar.sh
+[OK   ] existe webservers\iis-windows\instalar.ps1
+[OK   ] existe webservers\nginx-slackware\instalar.sh
+[OK   ] existe webservers\freebsd-apache\instalar.sh
+[OK   ] no queda _descargas en C:
+[AVISO] SIGUE la copia vieja en C:\Users\camil\Documents\LAB 6 (duplicado, pendiente de borrar con permiso)
+
+== 2. Maquinas virtuales: registro, ruta y estado
+[OK   ] slackware-15.0-lab05-2026-09-24 - UNI: .vbox en D:\LAB 6 y existe
+[OK   ] slackware-15.0-lab05-2026-09-24 - UNI: disco en D:\LAB 6 y existe
+[OK   ] slackware-15.0-lab05-2026-09-24 - UNI: estado running
+[OK   ] slackware-15.0-lab05-2026-09-24 - UNI: sin ISO colgada
+[OK   ] solaris-11.4-lab05-2026-09-24 - UNI: .vbox en D:\LAB 6 y existe
+[OK   ] solaris-11.4-lab05-2026-09-24 - UNI: disco en D:\LAB 6 y existe
+[OK   ] solaris-11.4-lab05-2026-09-24 - UNI: estado running
+[OK   ] solaris-11.4-lab05-2026-09-24 - UNI: sin ISO colgada
+[OK   ] windows-server-gui-lab05-2026-09-24 - UNI: .vbox en D:\LAB 6 y existe
+[OK   ] windows-server-gui-lab05-2026-09-24 - UNI: disco en D:\LAB 6 y existe
+[OK   ] windows-server-gui-lab05-2026-09-24 - UNI: estado poweroff
+[OK   ] windows-server-gui-lab05-2026-09-24 - UNI: sin ISO colgada
+[OK   ] freebsd-14.5-lab06: .vbox en D:\LAB 6 y existe
+[OK   ] freebsd-14.5-lab06: disco en D:\LAB 6 y existe
+[OK   ] freebsd-14.5-lab06: estado poweroff
+[OK   ] freebsd-14.5-lab06: sin ISO colgada
+
+== 3. Git y secretos
+[AVISO] git con cambios sin confirmar: M "QUE HACES EN LA U (Lab 6).docx";  M evidencias/revision-lab06-vivo-salida.txt;  M evidencias/revision-lab06.txt;  M informe/construir.py;  M tools/revisar_lab06.py
+[OK   ] ningun secreto, disco ni descarga esta en git
+[OK   ] claves de laboratorio: solo en archivos locales (revisar abajo)
+[OK   ] git actual no contiene la clave de Windows de laboratorio en archivos rastreados (tools/vm.py la usa: ver aviso)
+[AVISO] tools/vm.py contiene claves de las VM de laboratorio (credenciales de practica, no personales); no subir el repo a un sitio publico
+
+== 4. Punto 1: routers (comandos generados)
+[OK   ] camilo/camilo-Router0-Camilo.txt: trae todos los requisitos de la guia
+[OK   ] camilo/camilo-Router1-Aguirre.txt: trae todos los requisitos de la guia
+[OK   ] juan/juan-Router0-Juan.txt: trae todos los requisitos de la guia
+[OK   ] juan/juan-Router1-Rangel.txt: trae todos los requisitos de la guia
+[OK   ] simulacion: 2 de 6 sin rutas y 6 de 6 con rutas, en los dos montajes
+[OK   ] camilo: .pkt mas reciente 'camilo-lab06-multiusuario.pkt' guardado el 2026-10-15 22:49 (despues de la prueba sin rutas)
+[OK   ] camilo: capturas de Packet Tracer presentes (13)
+[OK   ] archivos .pkt presentes: montaje de Juan, config manual y unión multiusuario de los dos
+[OK   ] evidencia multiusuario presente (9 capturas)
+
+== 5. Punto 3: aplicacion (codigo)
+[OK   ] index.php usa sentencias preparadas (PDO)
+[OK   ] index.php escapa la salida (XSS)
+[OK   ] lib.php aplica 30 %, 30 % y 40 %
+[OK   ] no hay config.php con claves dentro de webapp/ (solo el ejemplo)
+
+== 6. Informe y guia
+[OK   ] informe PDF: 30 paginas
+[OK   ] secciones: 'Router Simulation'
+[OK   ] secciones: 'Web Service Installation'
+[OK   ] secciones: 'Hosting Service Configuration'
+[OK   ] secciones: 'On-Premise Web Application'
+[OK   ] secciones: 'Pendientes y decisiones'
+[OK   ] secciones: 'Conclusiones'
+[OK   ] informe sin secciones en blanco ni marcas de pendiente
+[OK   ] informe sin caracteres de control
+[OK   ] informe docx con >= 6 imagenes
+[OK   ] ruta citada existe: D:\LAB 6\camilo\evidencias\freebsd-apache-pruebas.txt
+[OK   ] ruta citada existe: D:\LAB 6\camilo\evidencias\slackware-nginx-instalacion.txt
+[OK   ] ruta citada existe: D:\LAB 6\camilo\packet-tracer\camilo-lab06-config-manual.pkt
+[OK   ] ruta citada existe: D:\LAB 6\evidencias\acceso-otro-equipo-por-nombre.txt
+[OK   ] ruta citada existe: D:\LAB 6\evidencias\reinicio-arranque-automatico.txt
+[OK   ] ruta citada existe: D:\LAB 6\routers\salida\verificacion.txt
+[OK   ] guia de la U sin la ruta vieja clones-lab05
+
+== 7. Textos que citan rutas viejas
+[OK   ] ningun archivo del proyecto cita C:\...\Documents\LAB 6 ni clones-lab05
+
+== 8. EN VIVO: arrancar las 4 VM desde D:\LAB 6
+[OK   ] arranca slackware-15.0-lab05-2026-09-24 - UNI
+[OK   ] arranca solaris-11.4-lab05-2026-09-24 - UNI
+[OK   ] arranca windows-server-gui-lab05-2026-09-24 - UNI
+[OK   ] arranca freebsd-14.5-lab06
+
+== 9. EN VIVO: punto 2.1 y 2.2, paginas y arranque automatico
+[OK   ] Apache FreeBSD (8081): HTTP 200 y muestra 'Apache en FreeBSD' (tras 117 s del arranque)
+[OK   ] Nginx Slackware (8082): HTTP 200 y muestra 'Nginx en Slackware' (tras 117 s del arranque)
+[OK   ] IIS Windows (8083): HTTP 200 y muestra 'IIS en Windows Server' (tras 133 s del arranque)
+[OK   ] Solaris vhost network (8084): HTTP 200 y muestra 'Sitio network' (tras 134 s del arranque)
+[OK   ] Solaris vhost security (8084): HTTP 200 y muestra 'Sitio security' (tras 134 s del arranque)
+[OK   ] 2.2: los dos nombres dan paginas DISTINTAS en el mismo Solaris
+
+== 10. EN VIVO: punto 2.1.g y 2.2.b, DNS
+[OK   ] DNS apache.camilo.org.uk @Slackware -> ['192.168.82.14']
+[OK   ] DNS nginx.camilo.org.uk @Slackware -> ['192.168.82.10']
+[OK   ] DNS iis.camilo.org.uk @Slackware -> ['192.168.82.13']
+[OK   ] DNS security.camilo.org.jp @Slackware -> ['192.168.82.11']
+[OK   ] DNS network.juan.com.co @Slackware -> ['192.168.82.11']
+[OK   ] DNS network.juan.com.co @Solaris -> ['192.168.82.11']
+[OK   ] DNS security.camilo.org.jp @Solaris -> ['192.168.82.11']
+[OK   ] DNS apache.camilo.org.uk @Solaris -> ['192.168.82.14']
+[OK   ] DNS nginx.camilo.org.uk @Solaris -> ['192.168.82.10']
+[OK   ] DNS iis.camilo.org.uk @Solaris -> ['192.168.82.13']
+[OK   ] BIND slack: named.conf y zonas validan (conf-ok OK zone camilo.org.uk/IN: not loaded due to errors. Keyboard-interactive authentic)
+[OK   ] BIND sol: named.conf y zonas validan (conf-ok OK Keyboard-interactive authentication prompts from server: End of keyboard-intera)
+
+== 11. EN VIVO: 2.1.f, acceso desde OTRA maquina por nombre (FreeBSD en la red interna)
+[OK   ] desde FreeBSD, http://apache.camilo.org.uk/ -> 'Apache en FreeBSD'
+[OK   ] desde FreeBSD, http://nginx.camilo.org.uk/ -> 'Nginx en Slackware'
+[OK   ] desde FreeBSD, http://iis.camilo.org.uk/ -> 'IIS en Windows Server'
+[OK   ] desde FreeBSD, http://network.juan.com.co/ -> 'Sitio network'
+[OK   ] desde FreeBSD, http://security.camilo.org.jp/ -> 'Sitio security'
+
+== 12. EN VIVO: 2.1.e, servicios habilitados para arrancar solos
+[OK   ] FreeBSD apache24_enable: YES
+[OK   ] Slackware rc.nginx en rc.local: 1 -rwxr-xr-x 1 root root 244 Oct 3 15:10 /etc/rc.d/rc.nginx Keyboard-i
+[OK   ] Solaris apache24: online - Keyboard-interactive authentication prompts from server: End 
+[OK   ] Windows W3SVC: Automatic
+
+== 13. EN VIVO: punto 3, calculadora y base de datos
+[OK   ] la pagina /notas/ carga y PHP no se ve como texto
+[OK   ] 4,0 / 3 / 5 -> 4.10 y guardado
+[OK   ] 2.5 x3 -> 2.50, no aprueba
+[OK   ] notas invalidas (7, abc) se rechazan
+[OK   ] nombre con <script> sale escapado
+[OK   ] PostgreSQL de Slackware (Lab 5) tiene los 3 registros validos de esta revision (el invalido no)
+[AVISO] registros de pruebas anteriores que quedan en la tabla (conviene borrarlos antes de mostrarla): ninguno
+[OK   ] filas de prueba antiguas (Ana Prueba y Beto Prueba) borradas de notas_lab06: DELETE 0
+[OK   ] registros de esta revision borrados (queda la tabla como estaba)
+[AVISO] notas_lab06 permite CONNECT a PUBLIC (a diferencia de las bases del Lab 5, que lo revocan): t
+
+== 14. Apagado ordenado
+[OK   ] las 4 VM quedaron apagadas (disco D se puede expulsar)
+
+== RESUMEN
+OK=109  FALLA=0  AVISO=5

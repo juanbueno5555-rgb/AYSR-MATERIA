@@ -1,0 +1,5 @@
+; Agregar al final de camilo.org.uk.hosts (Slackware, /etc/DNS) y SUBIR el serial de la zona.
+; Nombres de los 3 servidores web del punto 2.1 del Lab 6.
+apache.camilo.org.uk. IN A 192.168.82.14
+nginx.camilo.org.uk. IN A 192.168.82.10
+iis.camilo.org.uk. IN A 192.168.82.13
