@@ -1,0 +1,38 @@
+# Captura real con tshark (Wireshark), 2026-11-06. Interfaz Wi-Fi del PC, ping a la puerta de enlace 192.168.1.1
+# Comando: tshark -i 4 -f "icmp and host 192.168.1.1" -c 2 -w captura-ping.pcapng
+
+Frame 1: Packet, 74 bytes on wire (592 bits), 74 bytes captured (592 bits) on interface \Device\NPF_{F34E9E79-99E8-45F5-94BE-0A5B5A1D3FA4}, id 0
+Ethernet II, Src: Intel_26:2e:fb (bc:03:58:26:2e:fb), Dst: AskeyCompute_03:5d:70 (08:33:ed:03:5d:70)
+    Destination: AskeyCompute_03:5d:70 (08:33:ed:03:5d:70)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: Intel_26:2e:fb (bc:03:58:26:2e:fb)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+    [Stream index: 0]
+Internet Protocol Version 4, Src: 192.168.1.11, Dst: 192.168.1.1
+Internet Control Message Protocol
+
+Frame 2: Packet, 78 bytes on wire (624 bits), 78 bytes captured (624 bits) on interface \Device\NPF_{F34E9E79-99E8-45F5-94BE-0A5B5A1D3FA4}, id 0
+Ethernet II, Src: AskeyCompute_03:5d:70 (08:33:ed:03:5d:70), Dst: Intel_26:2e:fb (bc:03:58:26:2e:fb)
+    Destination: Intel_26:2e:fb (bc:03:58:26:2e:fb)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: AskeyCompute_03:5d:70 (08:33:ed:03:5d:70)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: 802.1Q Virtual LAN (0x8100)
+    [Stream index: 0]
+802.1Q Virtual LAN, PRI: 0, DEI: 0, ID: 0
+    000. .... .... .... = Priority: Best Effort (default) (0)
+    ...0 .... .... .... = DEI: Ineligible
+    .... 0000 0000 0000 = ID: 0
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 192.168.1.1, Dst: 192.168.1.11
+Internet Control Message Protocol
+
+
+## Resumen
+1	bc:03:58:26:2e:fb	08:33:ed:03:5d:70	0x0800	74	192.168.1.11	192.168.1.1	8
+2	08:33:ed:03:5d:70	bc:03:58:26:2e:fb	0x8100	78	192.168.1.1	192.168.1.11	0

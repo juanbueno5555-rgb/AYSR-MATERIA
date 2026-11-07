@@ -1,6 +1,12 @@
 ! Lab 8, punto 4: dos VLAN (systems = 50, others = 55) y trunk entre switches.
-! Se aplica sobre la configuracion basica. Los numeros de puerto son EJEMPLO: ajustarlos al diagrama de la guia.
-! Segun la guia: PC1 y PC3 van en "systems"; PC2 y PC0 van en "others".
+! COMPROBADO en Packet Tracer (proyecto Lab8-Punto4-VLAN.pkt): show vlan brief, show interfaces trunk y pings.
+!
+! Segun el TEXTO de la guia: PC1 y PC3 van en "systems" (VLAN 50); PC2 y PC0 van en "others" (VLAN 55).
+! (El dibujo de la guia pinta PC0 y PC2 en el circulo azul de systems: contradice el texto; se siguio el texto.)
+! Puertos del proyecto: en Switch0 -> Fa0/1 PC0, Fa0/2 PC1, Fa0/3 trunk hacia Switch1.
+!                       en Switch1 -> Fa0/1 PC2, Fa0/2 PC3, Fa0/3 trunk hacia Switch0.
+
+! ---------- Switch0 ----------
 configure terminal
 vlan 50
  name systems
@@ -8,29 +14,31 @@ vlan 50
 vlan 55
  name others
  exit
-
-! Puertos de acceso (un PC por puerto, pertenece a una sola VLAN)
 interface FastEthernet0/1
+ description Enlace hacia PC0
+ switchport access vlan 55
  switchport mode access
- switchport access vlan 50
  exit
 interface FastEthernet0/2
+ description Enlace hacia PC1
+ switchport access vlan 50
  switchport mode access
- switchport access vlan 55
  exit
-
-! Enlace entre switches: trunk, para que lleve las dos VLAN por el mismo cable (etiquetas 802.1Q)
-interface FastEthernet0/24
- switchport mode trunk
- ! En switches 2960 antiguos el trunk 802.1Q es el unico modo; en otros modelos agregar antes: switchport trunk encapsulation dot1q
+interface FastEthernet0/3
+ description Enlace troncal hacia Switch1
  switchport trunk allowed vlan 50,55
+ switchport mode trunk
  exit
 end
-
-! Verificacion
 show vlan brief
 show interfaces trunk
 copy running-config startup-config
+
+! ---------- Switch1 ----------
+! Crear las mismas VLAN y poner: Fa0/1 (PC2) en la VLAN 55, Fa0/2 (PC3) en la VLAN 50 y Fa0/3 como trunk (50,55).
+
+! Nota: show vlan brief NO lista los puertos trunk; el puerto Fa0/3 se ve con show interfaces trunk.
+! En switches 2960 antiguos el trunk es solo 802.1Q. En otros modelos agregar antes: switchport trunk encapsulation dot1q
 
 ! Al terminar la practica (la guia pide borrar la configuracion de los switches):
 !   erase startup-config

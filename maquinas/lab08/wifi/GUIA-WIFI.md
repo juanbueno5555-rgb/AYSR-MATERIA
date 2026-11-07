@@ -1,7 +1,7 @@
 # WiFi (Lab 8, puntos 5 a 8 de la parte de redes)
 
-> Estado: guía escrita a partir del enunciado. **No se ha ejecutado**: los puntos 5 y 6 son proyectos de Packet Tracer
-> que cada estudiante arma, y los puntos 7 y 8 requieren el router físico, el celular y la app WiFi Analyzer.
+> Estado: el **punto 5 está armado y verificado** en Packet Tracer (`../packet-tracer/Lab8-Punto5-wifi.pkt`), salvo que los laptops
+> siguen sin tarjeta WiFi. El **punto 6 no se construyó**. Los puntos 7 y 8 requieren el router físico, el celular y la app WiFi Analyzer.
 > Los datos que dependen del diagrama (colores, qué equipo va en qué red) están en el PDF de la guía.
 
 ## Datos de configuración (del enunciado)
@@ -14,9 +14,9 @@
 | IP del router hacia la LAN cableada | 65.148.77.200, máscara 255.255.255.0 |
 | Red wireless | 192.168.0.0/24; router en 192.168.0.1 |
 | DHCP de los móviles | Estudiante 1: 192.168.0.10 a .50 · Estudiante 2: .60 a .100 · Estudiante 3: .110 a .150 |
-| Seguridad | WPA2-PSK con AES; SSID = nombre del estudiante; clave `SECURITY R` |
+| Seguridad | WPA2-PSK con AES; SSID = nombre del estudiante; clave `SECURITYR` (Packet Tracer no acepta espacios en la clave, por eso no es "SECURITY R") |
 | Canal | uno específico (en Packet Tracer: 1, 6 u 11 en 2.4 GHz) |
-| Access Point | SSID = "Apellido Estudiante"; clave `SECURITY AP`; equipos conectados con IP 65.148.77.100 a .120 / 255.255.255.0 |
+| Access Point | SSID = "Apellido Estudiante"; clave `SECURITYAP` (sin espacio, por la misma razón); equipos conectados con IP 65.148.77.100 a .120 / 255.255.255.0 |
 
 Preguntas que hay que responder:
 - **¿Qué canales se pueden configurar?** En 2.4 GHz los canales 1 a 11 (en Colombia/EE. UU.); solo 1, 6 y 11 no se pisan entre sí.
@@ -57,11 +57,25 @@ Pruebas con el celular:
 Con WiFi Analyzer: tabla con **nombre, banda (2.4 / 5 GHz), canal y señal**. Preguntas de la guía: ¿hay redes en 2.4 GHz, 5 GHz y 60 GHz?
 Lo normal en una casa es 2.4 y 5 GHz; 60 GHz (WiGig, 802.11ad) casi no aparece en celulares comunes.
 
-## Resultados (completar en la práctica)
+## Resultados del punto 5 (Packet Tracer, comprobados el 2026-11-06)
 | Prueba | Resultado |
 |---|---|
-| Ping celular → equipos del diagrama | _pendiente_ |
+| Router: Internet 65.148.77.200/24, gateway 65.148.77.1, LAN 192.168.0.1, DHCP desde .10, WPA2 Personal AES, canal 6, SSID `Camilo Aguirre`, clave `SECURITYR` | Configurado |
+| AP: SSID `Aguirre Camilo`, WPA2-PSK AES, canal 1, clave `SECURITYAP` | Configurado |
+| Smartphone0 → router por WiFi | Se asoció y recibió IP por DHCP |
+| PC0 (cableado al router) por DHCP | 192.168.0.12 |
+| PC0 → 192.168.0.1 (router) | 4/4 respuestas, TTL 255 |
+| PC0 → 65.148.77.3 (PC1, red cableada) | Responde (3/4, el primero se pierde por ARP), TTL 127 |
+| PC1 → 192.168.0.12 (PC0, detrás del router) | **100 % perdido**: NAT, no se inician conexiones hacia la red inalámbrica |
+| Smartphone1 → AP, IP estática 65.148.77.116/24 | Configurado |
+| Laptop0 y Laptop1 inalámbricos | **Pendiente**: los laptops de Packet Tracer traen tarjeta Ethernet; hay que apagarlos, quitar el módulo y poner `WPC300N` |
+
+## Pendiente en el laboratorio (puntos 6, 7 y 8)
+| Prueba | Resultado |
+|---|---|
+| Punto 6: LAN cableada e inalámbrica con tres redes y VLAN por colores | _no construido_ |
+| Ping celular → equipos del diagrama (punto 7) | _pendiente_ |
 | Ping celular → Internet | _pendiente_ |
 | Redes y canales en el salón | _pendiente_ |
 | Red visible con el beacon desactivado | _pendiente_ |
-| Redes cerca de la casa | _pendiente_ |
+| Redes cerca de la casa (punto 8) | _pendiente_ |

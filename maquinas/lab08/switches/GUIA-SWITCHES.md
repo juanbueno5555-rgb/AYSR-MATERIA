@@ -1,7 +1,10 @@
 # Switches, Ethernet y VLAN (Lab 8, puntos 1 a 4 de la parte de redes)
 
-> Estado: estos pasos y archivos de configuración están escritos pero **no se han ejecutado en equipos**. Los switches,
-> los PC y Wireshark se usan en el laboratorio. Los números de puerto y las letras del grupo vienen del diagrama de la guía.
+> Estado: la **captura de Wireshark** se hizo de verdad (`../evidencias/captura-ping-trama.txt`). Los puntos 2, 3 y 4 están **armados y verificados en Packet Tracer**
+> (`../packet-tracer/`), salvo el análisis en modo simulación y el experimento de spanning tree del punto 3, que quedan por hacer.
+> Con los switches físicos del salón nada se ha ejecutado todavía.
+
+> Direcciones: punto 1 y 4 → estudiante 1: 183.24.30.A a .D con máscara 255.255.0.0 (en el proyecto A..D = 11..14, gateway 183.24.30.1); estudiante 2 usa 183.24.50.x y el 3 usa 183.24.70.x. Punto 3 → 65.148.77.x/24, gateway 65.148.77.1, estudiante 1 .100 a .120.
 
 ## Conceptos mínimos
 - **Switch:** reenvía tramas según la **dirección MAC**. Aprende en qué puerto está cada MAC mirando la MAC de origen de cada trama.
@@ -36,7 +39,8 @@ clave del modo privilegiado, revisar (`show running-config`) y guardar (`copy ru
 5. Unir los proyectos del equipo (si se está solo, pedir uno a otro grupo e indicar quién lo dio).
 
 ## Punto 4: VLAN
-Usar `switch-vlan.txt`. Comprobar con `show vlan brief` y `show interfaces trunk`.
+Usar `switch-vlan.txt` (puertos del proyecto: Fa0/1 y Fa0/2 para los PC, Fa0/3 trunk). Comprobar con `show vlan brief` y `show interfaces trunk`.
+**Comprobado:** ping PC1→PC3 (VLAN 50, cruza el trunk) responde 4/4; ping PC1→PC0 (VLAN 55) se queda sin respuesta. Ojo: `show vlan brief` no lista el puerto trunk.
 - PC1 y PC3 (systems, VLAN 50) se ven entre sí. PC2 y PC0 (others, VLAN 55) se ven entre sí.
 - Un PC de systems **no** debe poder hacer ping a uno de others.
 - Sin trunk, los PC de la misma VLAN en switches distintos no se ven; con trunk sí.
