@@ -1,0 +1,31 @@
+! Lab 8, puntos 2 y 3: configuracion basica de un switch Cisco Catalyst.
+! Pegar en la consola del switch. Si pregunta "Continue with configuration dialog? [yes/no]" responder: no
+! Cambiar el nombre por el del estudiante y las interfaces por las que se usen realmente.
+enable
+configure terminal
+hostname Aguirre
+banner motd #Exclusive use for RECO students#
+no ip domain-lookup
+enable secret ClaveE
+line console 0
+ password ClaveC
+ login
+ logging synchronous
+ exit
+line vty 0 15
+ password ClaveT
+ login
+ logging synchronous
+ exit
+interface FastEthernet0/1
+ description Enlace hacia PC1
+ exit
+interface FastEthernet0/2
+ description Enlace hacia PC2
+ exit
+interface FastEthernet0/24
+ description Enlace hacia otro switch
+ exit
+end
+show running-config
+copy running-config startup-config

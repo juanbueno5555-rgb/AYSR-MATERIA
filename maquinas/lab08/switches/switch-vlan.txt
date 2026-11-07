@@ -1,0 +1,38 @@
+! Lab 8, punto 4: dos VLAN (systems = 50, others = 55) y trunk entre switches.
+! Se aplica sobre la configuracion basica. Los numeros de puerto son EJEMPLO: ajustarlos al diagrama de la guia.
+! Segun la guia: PC1 y PC3 van en "systems"; PC2 y PC0 van en "others".
+configure terminal
+vlan 50
+ name systems
+ exit
+vlan 55
+ name others
+ exit
+
+! Puertos de acceso (un PC por puerto, pertenece a una sola VLAN)
+interface FastEthernet0/1
+ switchport mode access
+ switchport access vlan 50
+ exit
+interface FastEthernet0/2
+ switchport mode access
+ switchport access vlan 55
+ exit
+
+! Enlace entre switches: trunk, para que lleve las dos VLAN por el mismo cable (etiquetas 802.1Q)
+interface FastEthernet0/24
+ switchport mode trunk
+ ! En switches 2960 antiguos el trunk 802.1Q es el unico modo; en otros modelos agregar antes: switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 50,55
+ exit
+end
+
+! Verificacion
+show vlan brief
+show interfaces trunk
+copy running-config startup-config
+
+! Al terminar la practica (la guia pide borrar la configuracion de los switches):
+!   erase startup-config
+!   delete vlan.dat
+!   reload

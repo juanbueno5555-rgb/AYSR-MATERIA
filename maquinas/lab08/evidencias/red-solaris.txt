@@ -1,0 +1,164 @@
+# Evidencia Lab 8 (2026-11-06) - solaris
+# uname: SunOS solaris 5.11 11.4.0.15.0 i86pc i386 i86pc
+
+## info_red.sh, opciones 1, 2, 3, 5 y 6
+=========== Informacion de red (SunOS) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Interfaces e IP ===
+Muestra cada tarjeta de red con su IP, mascara, MAC y si esta activa (UP).
+
+lo0: flags=2001000849<UP,LOOPBACK,RUNNING,MULTICAST,IPv4,VIRTUAL> mtu 8232 index 1
+	inet 127.0.0.1 netmask ff000000 
+net0: flags=100001004843<UP,BROADCAST,RUNNING,MULTICAST,DHCP,IPv4,PHYSRUNNING> mtu 1500 index 2
+	inet 10.0.2.15 netmask ffffff00 broadcast 10.0.2.255
+	ether 8:0:27:b8:f1:2b 
+net0:1: flags=100001000843<UP,BROADCAST,RUNNING,MULTICAST,IPv4,PHYSRUNNING> mtu 1500 index 2
+	inet 10.2.78.75 netmask ffff0000 broadcast 10.2.255.255
+net1: flags=100001000843<UP,BROADCAST,RUNNING,MULTICAST,IPv4,PHYSRUNNING> mtu 1500 index 3
+	inet 192.168.82.11 netmask ffffff00 broadcast 192.168.82.255
+	ether 8:0:27:ed:d6:c2 
+lo0: flags=2002000849<UP,LOOPBACK,RUNNING,MULTICAST,IPv6,VIRTUAL> mtu 8252 index 1
+	inet6 ::1/128 
+net0: flags=120002000840<RUNNING,MULTICAST,IPv6,PHYSRUNNING> mtu 1500 index 2
+	inet6 ::/0 
+	ether 8:0:27:b8:f1:2b 
+net1: flags=120002000840<RUNNING,MULTICAST,IPv6,PHYSRUNNING> mtu 1500 index 3
+	inet6 ::/0 
+	ether 8:0:27:ed:d6:c2 
+
+Presione Enter para volver al menu... =========== Informacion de red (SunOS) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Tabla de rutas ===
+Dice por que interfaz y por que gateway sale cada destino. La linea 'default' o '0.0.0.0' es la puerta de enlace.
+
+
+Routing Table: IPv4
+  Destination           Gateway           Flags  Ref     Use     Interface 
+-------------------- -------------------- ----- ----- ---------- --------- 
+default              10.0.2.2             UG        1          0 net0      
+10.0.2.0             10.0.2.15            U         3         39 net0      
+10.2.0.0             10.2.78.75           U         2          0 net0      
+127.0.0.1            127.0.0.1            UH        2        294 lo0       
+192.168.82.0         192.168.82.11        U         3         58 net1      
+
+Routing Table: IPv6
+  Destination/Mask            Gateway                   Flags Ref   Use    If   
+--------------------------- --------------------------- ----- --- ------- ----- 
+::1                         ::1                         UH      2       2 lo0   
+
+Presione Enter para volver al menu... =========== Informacion de red (SunOS) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Puertos en escucha ===
+Servicios esperando conexiones: la columna de direccion termina en :PUERTO (80=web, 53=DNS, 161=SNMP).
+
+127.0.0.1.5999             *.*                  0      0  256000      0 LISTEN
+127.0.0.1.4999             *.*                  0      0  256000      0 LISTEN
+      *.22                 *.*                  0      0  256000      0 LISTEN
+127.0.0.1.53               *.*                  0      0  256000      0 LISTEN
+10.2.78.75.53              *.*                  0      0  256000      0 LISTEN
+192.168.82.11.53           *.*                  0      0  256000      0 LISTEN
+127.0.0.1.953              *.*                  0      0  256000      0 LISTEN
+127.0.0.1.631              *.*                  0      0  256000      0 LISTEN
+      *.111                *.*                  0      0  256000      0 LISTEN
+      *.111                *.*                  0      0  256000      0 LISTEN
+      *.445                *.*                  0      0  256000      0 LISTEN
+      *.139                *.*                  0      0  256000      0 LISTEN
+      *.80                 *.*                  0      0  256000      0 LISTEN
+      *.6787               *.*                  0      0  256000      0 LISTEN
+      *.515                *.*                  0      0  256000      0 LISTEN
+10.0.2.15.53               *.*                  0      0  256000      0 LISTEN
+
+Presione Enter para volver al menu... =========== Informacion de red (SunOS) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Paquetes por interfaz ===
+Paquetes recibidos y enviados por cada interfaz, con errores y descartados. Muchos errores indican cable o duplex malos.
+
+Name  Mtu  Net/Dest      Address        Ipkts  Ierrs Opkts  Oerrs Collis Queue 
+lo0   8232 loopback      solaris.lab.local 180    0     180    0     0      0     
+net0  1500 10.0.2.0      10.0.2.15      208    0     196    0     0      0     
+net1  1500 192.168.82.0  192.168.82.11  102    0     72     0     0      0     
+
+Name  Mtu  Net/Dest                    Address                     Ipkts  Ierrs Opkts  Oerrs Collis
+lo0   8252 ::1                         ::1                         180    0     180    0     0     
+net0  1500 default                     ::                          210    0     198    0     0     
+net1  1500 default                     ::                          105    0     75     0     0     
+
+Presione Enter para volver al menu... =========== Informacion de red (SunOS) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Velocidad y estado del enlace ===
+Velocidad (10/100/1000 Mb/s), duplex y si hay cable conectado.
+
+LINK                CLASS     MTU    STATE    OVER
+net0                phys      1500   up       --
+net1                phys      1500   up       --
+LINK            MEDIA         STATE      SPEED  DUPLEX    DEVICE
+net0            Ethernet      up         1000   full      e1000g0
+net1            Ethernet      up         1000   full      e1000g1
+
+Presione Enter para volver al menu... =========== Informacion de red (SunOS) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+## puerto.sh
+$ sh puerto.sh 22
+Puerto 22 en 127.0.0.1: SI esta abierto
+Servicio segun /etc/services: ssh
+Escuchando:       *.22                 *.*                  0      0  256000      0 LISTEN
+
+$ sh puerto.sh 80
+Puerto 80 en 127.0.0.1: SI esta abierto
+Servicio segun /etc/services: http
+Escuchando:       *.80                 *.*                  0      0  256000      0 LISTEN
+
+$ sh puerto.sh 5432
+Puerto 5432 en 127.0.0.1: NO esta abierto (servicio habitual: desconocido)
+
+$ sh puerto.sh 9
+Puerto 9 en 127.0.0.1: NO esta abierto (servicio habitual: discard)
+

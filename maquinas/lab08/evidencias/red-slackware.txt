@@ -1,0 +1,184 @@
+# Evidencia Lab 8 (2026-11-06) - slackware
+# uname: Linux slackware 5.15.19-smp #1 SMP PREEMPT Wed Feb 2 01:25:47 CST 2022 i686 12th Gen Intel(R) Core(TM) i7-12650H GenuineIntel GNU/Linux
+
+## info_red.sh, opciones 1, 2, 3, 5 y 6
+=========== Informacion de red (Linux) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Interfaces e IP ===
+Muestra cada tarjeta de red con su IP, mascara, MAC y si esta activa (UP).
+
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.2.15  netmask 255.255.255.0  broadcast 10.0.2.255
+        ether 08:00:27:0a:46:19  txqueuelen 1000  (Ethernet)
+        RX packets 261772  bytes 383607203 (365.8 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 21787  bytes 4263758 (4.0 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.82.10  netmask 255.255.255.0  broadcast 192.168.82.255
+        ether 08:00:27:c0:a9:6d  txqueuelen 1000  (Ethernet)
+        RX packets 53743  bytes 24387538 (23.2 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 54303  bytes 11122715 (10.6 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 44258  bytes 28429752 (27.1 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 44258  bytes 28429752 (27.1 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+Presione Enter para volver al menu... =========== Informacion de red (Linux) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Tabla de rutas ===
+Dice por que interfaz y por que gateway sale cada destino. La linea 'default' o '0.0.0.0' es la puerta de enlace.
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.0.2.2        0.0.0.0         UG    1002   0        0 eth0
+10.0.2.0        0.0.0.0         255.255.255.0   U     1002   0        0 eth0
+127.0.0.0       0.0.0.0         255.0.0.0       U     0      0        0 lo
+192.168.82.0    0.0.0.0         255.255.255.0   U     0      0        0 eth1
+
+Presione Enter para volver al menu... =========== Informacion de red (Linux) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Puertos en escucha ===
+Servicios esperando conexiones: la columna de direccion termina en :PUERTO (80=web, 53=DNS, 161=SNMP).
+
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 0.0.0.0:9116            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:9090            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:445             0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:5432            0.0.0.0:*               LISTEN     
+tcp        0      0 192.168.82.10:53        0.0.0.0:*               LISTEN     
+tcp        0      0 192.168.82.10:53        0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:953           0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:139             0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN     
+tcp        0      0 10.0.2.15:53            0.0.0.0:*               LISTEN     
+tcp        0      0 10.0.2.15:53            0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN     
+udp        0      0 192.168.82.255:137      0.0.0.0:*                          
+udp        0      0 192.168.82.10:137       0.0.0.0:*                          
+udp        0      0 10.0.2.255:137          0.0.0.0:*                          
+udp        0      0 10.0.2.15:137           0.0.0.0:*                          
+udp        0      0 0.0.0.0:137             0.0.0.0:*                          
+udp        0      0 192.168.82.255:138      0.0.0.0:*                          
+udp        0      0 192.168.82.10:138       0.0.0.0:*                          
+udp        0      0 10.0.2.255:138          0.0.0.0:*                          
+udp        0      0 10.0.2.15:138           0.0.0.0:*                          
+udp        0      0 0.0.0.0:138             0.0.0.0:*                          
+udp        0      0 0.0.0.0:161             0.0.0.0:*                          
+udp        0      0 10.0.2.15:53            0.0.0.0:*                          
+udp        0      0 10.0.2.15:53            0.0.0.0:*                          
+udp        0      0 192.168.82.10:53        0.0.0.0:*                          
+udp        0      0 192.168.82.10:53        0.0.0.0:*                          
+udp        0      0 127.0.0.1:53            0.0.0.0:*                          
+udp        0      0 127.0.0.1:53            0.0.0.0:*                          
+udp        0      0 10.0.2.15:68            0.0.0.0:*                          
+udp        0      0 10.0.2.15:123           0.0.0.0:*                          
+udp        0      0 192.168.82.10:123       0.0.0.0:*                          
+udp        0      0 127.0.0.1:123           0.0.0.0:*                          
+udp        0      0 0.0.0.0:123             0.0.0.0:*                          
+
+Presione Enter para volver al menu... =========== Informacion de red (Linux) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Paquetes por interfaz ===
+Paquetes recibidos y enviados por cada interfaz, con errores y descartados. Muchos errores indican cable o duplex malos.
+
+Kernel Interface table
+Iface      MTU    RX-OK RX-ERR RX-DRP RX-OVR    TX-OK TX-ERR TX-DRP TX-OVR Flg
+eth0      1500   261787      0      0 0         21800      0      0      0 BMRU
+eth1      1500    53743      0      0 0         54303      0      0      0 BMRU
+lo       65536    44258      0      0 0         44258      0      0      0 LRU
+
+Presione Enter para volver al menu... =========== Informacion de red (Linux) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+=== Velocidad y estado del enlace ===
+Velocidad (10/100/1000 Mb/s), duplex y si hay cable conectado.
+
+--- eth0
+	Speed: Unknown!
+	Duplex: Unknown! (255)
+	Link detected: yes
+--- eth1
+	Speed: Unknown!
+	Duplex: Unknown! (255)
+	Link detected: yes
+
+Presione Enter para volver al menu... =========== Informacion de red (Linux) ===========
+ 1) Interfaces e IP              (ifconfig)
+ 2) Tabla de rutas               (route / netstat -r)
+ 3) Puertos en escucha           (netstat -l)
+ 4) Conexiones activas           (netstat -t)
+ 5) Paquetes por interfaz        (netstat -i)
+ 6) Velocidad y estado del enlace (ethtool / dladm)
+ 7) Trafico acumulado            (vnstat)
+ 0) Salir
+Opcion: 
+## puerto.sh
+$ sh puerto.sh 22
+Puerto 22 en 127.0.0.1: SI esta abierto
+Servicio segun /etc/services: ssh
+Escuchando: LISTEN 0      0            0.0.0.0:22        0.0.0.0:*          
+
+$ sh puerto.sh 80
+Puerto 80 en 127.0.0.1: SI esta abierto
+Servicio segun /etc/services: http
+Escuchando: LISTEN 0      0            0.0.0.0:80        0.0.0.0:*          
+
+$ sh puerto.sh 5432
+Puerto 5432 en 127.0.0.1: SI esta abierto
+Servicio segun /etc/services: postgresql
+Escuchando: LISTEN 0      0            0.0.0.0:5432      0.0.0.0:*          
+
+$ sh puerto.sh 9
+Puerto 9 en 127.0.0.1: NO esta abierto (servicio habitual: discard)
+
